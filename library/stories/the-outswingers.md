@@ -1,0 +1,41 @@
+# The Outswingers
+
+*A parody of "The Outsiders"*
+
+When I stepped out into the bright sunlight from the darkness of the movie house, I had only two things on my mind: Steve McQueen and a mango to go. I got jumped instead.
+
+That's what comes of being a Greaser, east side of the canopy, fur greased back and tails unkempt, out alone after dark. The Socs — the Socials, the west-side chimps with groomed coats and silver-spoon bananas — came out of the night in a pack of five, rings glinting, and had me pinned with a blade at my throat before I could swing twice. "Need a haircut, greaser?" one said, until my troop came hollering up the street and the Socs scattered like startled pigeons.
+
+I'm Ponyboy. Fourteen, a yearling chimp, light brown fur, and I like movies and sunsets, which is a dangerous thing to admit east of the canopy. I live with Darry and Sodapop, my brothers, since a vine snapped under our parents. Darry works two jobs and hollers; Sodapop grins and drops out of things. And there's Johnny Cade, little Johnny, whose father hits him and whose mother wishes loudly that he'd never been born, so he sleeps in our lot more than his own. He'd been jumped too, once, badly, by a Soc wearing rings. He never got over it. He went from being a scrawny little monkey to a scrawny little monkey who carried a blade. The gang rounded out with Two-Bit Mathews, who had a rusty grin, a black-handled switchblade, and a genius for making even Socs laugh; Steve Randle, Sodapop's best friend, who could rig a hammock out of anything with a stem; and Dallas Winston — Dally — cold-eyed and jail-raised in the west, who'd seen everything twice and didn't care to talk about it once.
+
+The night everything happened started at the drive-in with Dally and two Soc girls, Marcia and Cherry. Dally talked dirty until Cherry told him off — so crisply that he actually left, which none of us had ever seen — and Two-Bit moved in on Marcia, and somehow Cherry and I ended up talking. She got me. "Things are rough all over," she told me when I told her about Johnny, and I didn't believe her, because it's hard to see past the fur you're born in. I told her I watched sunsets. She watched them too, from the west side. Same sun. A blue Mustang crept past us twice on the walk home, and Cherry sent me off before it could stop, because a Greaser walking with a Soc girl is a rumor with teeth.
+
+Late that night I fell asleep in the lot with Johnny, got home past Darry's patience, and Darry slapped me. He'd never hit me in his life. I ran, and Johnny came with me, down to the park, to the old stone water trough — and the Socs found us there. Out of the same blue Mustang, drunk on more than fermented sap. Bob, Cherry's boyfriend, handsome and mean with his rings, held my head under the water, and the trough water went white, and the canopy lights went green and dim —
+
+I woke on the pavement, coughing, with Johnny beside me and his blade in his hand and Bob lying still on the ground.
+
+"I killed him," Johnny said. "They were drowning you, Ponyboy. They were going to beat you to a pulp."
+
+We ran to Dally, who looked at us for one long second, gave us fifty bucks and directions, and sent us up the mountain to the abandoned chapel on Jay Ridge with orders to bleach our fur and stay put. The chapel was a dusty little ruin with a back room full of hymnals and mice. We bleached in the stream until we looked like two elderly albinos, lived on banana bars, and read *Gone with the Canopy*, which Johnny had bought because he'd heard it was about gallant southern gentlemonkeys. "Dally's got gallantry too," he said, surprising me. "You just have to squint."
+
+One dawn he was up on the windowsill, watching the sunrise, and recited a poem I never forgot, because I'd never known a Greaser who knew poems. "Nature's first banana's green," he said, "her hardest hue to peel. Her early leaf's a flower; but only so an hour." Robert Frost. It means, Johnny told me, that the green things are gold for a little while, and nothing gold stays. Then he said the bravest dumb thing I ever heard: "I'm going back, Pony. I'm turning myself in. I don't have a record — they'd go easy. Blind squirrels have gotten off with worse." We were still arguing about it — Dally would skin him, I knew — when we came back from foraging and found the chapel on fire.
+
+A cigarette butt, maybe ours, God — and a school troop of little monkeys trapped inside, screaming, on a picnic trip. We went in through a window, because we were Greasers and light and used to going through windows, and I passed the little ones out one by one until the roof timber came down on Johnny's back and Dally — who'd come tearing up the mountain the moment he heard — beat the fire off mine. I came out with my eyebrows gone, which on a chimp is a serious cosmetic event. Johnny came out on a stretcher, and did not come out again.
+
+They had him in the burn ward with a broken back, and the doctors said if he lived he'd never swing again. The whole gang came in shifts. Cherry came too — Cherry the spy now, telling the courts Bob had been drunk, passing us word of the Socs' plans — and one of them came himself: Randy, Bob's best friend, who cornered me in the corridor. "I'm not going to the rumble," he said. "It doesn't do any good. Greasers will still be Greasers when it's over, and Socs will still be Socs, and I'm sick of it." It was the first sensible thing anyone had said to me in weeks, and he'd come to a hospital to say it.
+
+The rumble was set for that night in the vacant lot — skin only, no blades, first troop to run loses. And then, unbelievable, Dally showed up, checked out of his own hospital against every rule they had. "The doctor wouldn't let me out," he said, cracking his bandaged arm like a whip, "so I didn't ask." He looked around at us and said what we were all thinking: "Let's do it for Johnny."
+
+Darry faced off first against Paul Holden, an old football buddy from the west side. "Hello, Darrel." "Hello, Paul." Then somebody threw the first punch, and after that it was tails and teeth and dust. I took two in the ribs and gave back better than I got, and it ended the way we'd sworn it would: the Socs ran for their cars. We'd beaten them. Twenty Greasers stood in the lot, bleeding and grinning, champions of absolutely nothing that mattered.
+
+"Come on, kid," Dally said, dragging me toward a borrowed car. "Let's go tell Johnny."
+
+Johnny wasn't fooled by our bruises. "Useless," he said, barely a breath. "Fighting's no good. It doesn't solve anything, Ponyboy." He was quiet a while, and then: "Listen, Pony. I've been thinking about that poem. It's the green that stays. Stay gold, Ponyboy. Tell Dally. Tell him to look at a sunset. Stay gold." And then he wasn't saying anything at all, ever again.
+
+Dally couldn't take it. Dally, tough so long he'd turned hard all the way through, ran out of the hospital, robbed a fruit stand the same hour, and rang Darry from a phone booth with the keepers closing in, laughing and crying at once. We reached the vacant lot in time to see him under the streetlight, blade up, wanting the darts, wanting anything but a world without Johnny. They gave him what he wanted. He was dead before he hit the ground. I knew it even while I kept screaming that I didn't.
+
+I was sick for days, delirious, fighting off two deaths I refused to deliver to myself. When Johnny's things were packed, the nurse found his copy of *Gone with the Canopy*, and inside it a note addressed to me. There's still lots of good in the world, he'd written, and we could start by seeing it. When the nurse handed it over, Darry cried, actually cried, and I understood my brothers had been losing me and each other all along, in the dark, politely.
+
+Stay gold, I wrote in my English theme that spring, while the courts decided if Darry and Soda got to keep me, and the three of us held on so hard at the verdict that Soda swore never again to sleep in doorways — a lie we were all grateful for. A theme is just a story you were told to tell, and I told this one so that some other kid, east of the canopy or west, might read it and look up at dusk.
+
+When I stepped out into the bright sunlight, I had only two things on my mind: Paul Newman and a ride home.

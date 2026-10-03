@@ -1,0 +1,4586 @@
+[
+ {
+  "slug": "the-apes-of-wrath",
+  "original": "The Grapes of Wrath",
+  "parody": "The Apes of Wrath",
+  "phase": "R1",
+  "words": 1459,
+  "minutes": 7
+ },
+ {
+  "slug": "the-great-gibbonsby",
+  "original": "The Great Gatsby",
+  "parody": "The Great Gibbonsby",
+  "phase": "R1",
+  "words": 1518,
+  "minutes": 8
+ },
+ {
+  "slug": "primate-and-prejudice",
+  "original": "Pride and Prejudice",
+  "parody": "Primate and Prejudice",
+  "phase": "R1",
+  "words": 1604,
+  "minutes": 8
+ },
+ {
+  "slug": "great-ape-expectations",
+  "original": "Great Expectations",
+  "parody": "Great Ape Expectations",
+  "phase": "R1",
+  "words": 1609,
+  "minutes": 8
+ },
+ {
+  "slug": "a-tail-of-two-chimps",
+  "original": "A Tale of Two Cities",
+  "parody": "A Tail of Two Chimps",
+  "phase": "R1",
+  "words": 1488,
+  "minutes": 7
+ },
+ {
+  "slug": "climb-and-punishment",
+  "original": "Crime and Punishment",
+  "parody": "Climb and Punishment",
+  "phase": "R1",
+  "words": 1432,
+  "minutes": 7
+ },
+ {
+  "slug": "war-and-peels",
+  "original": "War and Peace",
+  "parody": "War and Peels",
+  "phase": "R1",
+  "words": 1286,
+  "minutes": 6
+ },
+ {
+  "slug": "banana-karenina",
+  "original": "Anna Karenina",
+  "parody": "Banana Karenina",
+  "phase": "R1",
+  "words": 1244,
+  "minutes": 6
+ },
+ {
+  "slug": "madame-bonobary",
+  "original": "Madame Bovary",
+  "parody": "Madame Bonobary",
+  "phase": "R1",
+  "words": 1283,
+  "minutes": 6
+ },
+ {
+  "slug": "the-brothers-bananazov",
+  "original": "The Brothers Karamazov",
+  "parody": "The Brothers Bananazov",
+  "phase": "R1",
+  "words": 1478,
+  "minutes": 7
+ },
+ {
+  "slug": "the-count-of-monkey-cristo",
+  "original": "The Count of Monte Cristo",
+  "parody": "The Count of Monkey Cristo",
+  "phase": "R1",
+  "words": 1291,
+  "minutes": 6
+ },
+ {
+  "slug": "the-three-macaque-teers",
+  "original": "The Three Musketeers",
+  "parody": "The Three Macaque-teers",
+  "phase": "R1",
+  "words": 1251,
+  "minutes": 6
+ },
+ {
+  "slug": "of-lice-and-chimps",
+  "original": "Of Mice and Men",
+  "parody": "Of Lice and Chimps",
+  "phase": "R1",
+  "words": 1321,
+  "minutes": 7
+ },
+ {
+  "slug": "lord-of-the-vines",
+  "original": "Lord of the Flies",
+  "parody": "Lord of the Vines",
+  "phase": "R1",
+  "words": 1232,
+  "minutes": 6
+ },
+ {
+  "slug": "the-scratcher-in-the-rye",
+  "original": "The Catcher in the Rye",
+  "parody": "The Scratcher in the Rye",
+  "phase": "R1",
+  "words": 1548,
+  "minutes": 8
+ },
+ {
+  "slug": "jane-hair",
+  "original": "Jane Eyre",
+  "parody": "Jane Hair",
+  "phase": "R1",
+  "words": 1597,
+  "minutes": 8
+ },
+ {
+  "slug": "oliver-twigs",
+  "original": "Oliver Twist",
+  "parody": "Oliver Twigs",
+  "phase": "R1",
+  "words": 1353,
+  "minutes": 7
+ },
+ {
+  "slug": "a-chimpmas-carol",
+  "original": "A Christmas Carol",
+  "parody": "A Chimpmas Carol",
+  "phase": "R1",
+  "words": 1601,
+  "minutes": 8
+ },
+ {
+  "slug": "eek-house",
+  "original": "Bleak House",
+  "parody": "Eek House",
+  "phase": "R1",
+  "words": 1487,
+  "minutes": 7
+ },
+ {
+  "slug": "hard-climbs",
+  "original": "Hard Times",
+  "parody": "Hard Climbs",
+  "phase": "R1",
+  "words": 1605,
+  "minutes": 8
+ },
+ {
+  "slug": "david-copperpeel",
+  "original": "David Copperfield",
+  "parody": "David Copperpeel",
+  "phase": "R1",
+  "words": 1466,
+  "minutes": 7
+ },
+ {
+  "slug": "the-peel",
+  "original": "The Pearl",
+  "parody": "The Peel",
+  "phase": "R1",
+  "words": 1466,
+  "minutes": 7
+ },
+ {
+  "slug": "the-old-ape-and-the-tree",
+  "original": "The Old Man and the Sea",
+  "parody": "The Old Ape and the Tree",
+  "phase": "R1",
+  "words": 1283,
+  "minutes": 6
+ },
+ {
+  "slug": "for-whom-the-baboon-howls",
+  "original": "For Whom the Bell Tolls",
+  "parody": "For Whom the Baboon Howls",
+  "phase": "R1",
+  "words": 1210,
+  "minutes": 6
+ },
+ {
+  "slug": "heart-of-barkness",
+  "original": "Heart of Darkness",
+  "parody": "Heart of Barkness",
+  "phase": "R1",
+  "words": 1371,
+  "minutes": 7
+ },
+ {
+  "slug": "gorillas-travels",
+  "original": "Gulliver's Travels",
+  "parody": "Gorilla's Travels",
+  "phase": "R1",
+  "words": 1252,
+  "minutes": 6
+ },
+ {
+  "slug": "chimpnapped",
+  "original": "Kidnapped",
+  "parody": "Chimpnapped",
+  "phase": "R1",
+  "words": 1301,
+  "minutes": 7
+ },
+ {
+  "slug": "the-swing-family-robinson",
+  "original": "The Swiss Family Robinson",
+  "parody": "The Swing Family Robinson",
+  "phase": "R1",
+  "words": 1305,
+  "minutes": 7
+ },
+ {
+  "slug": "nineteen-apey-four",
+  "original": "Nineteen Eighty-Four",
+  "parody": "Nineteen Apey-Four",
+  "phase": "R1",
+  "words": 1354,
+  "minutes": 7
+ },
+ {
+  "slug": "scratch-22",
+  "original": "Catch-22",
+  "parody": "Scratch-22",
+  "phase": "R1",
+  "words": 1291,
+  "minutes": 6
+ },
+ {
+  "slug": "fur-enheit-451",
+  "original": "Fahrenheit 451",
+  "parody": "Fur-enheit 451",
+  "phase": "R1",
+  "words": 1616,
+  "minutes": 8
+ },
+ {
+  "slug": "slaughterlouse-five",
+  "original": "Slaughterhouse-Five",
+  "parody": "Slaughterlouse-Five",
+  "phase": "R1",
+  "words": 1451,
+  "minutes": 7
+ },
+ {
+  "slug": "a-clockwork-orangutan",
+  "original": "A Clockwork Orange",
+  "parody": "A Clockwork Orangutan",
+  "phase": "R1",
+  "words": 1509,
+  "minutes": 8
+ },
+ {
+  "slug": "fur-and-loathing-in-las-vegas",
+  "original": "Fear and Loathing in Las Vegas",
+  "parody": "Fur and Loathing in Las Vegas",
+  "phase": "R1",
+  "words": 1562,
+  "minutes": 8
+ },
+ {
+  "slug": "the-unbearable-lice-ness-of-being",
+  "original": "The Unbearable Lightness of Being",
+  "parody": "The Unbearable Lice-ness of Being",
+  "phase": "R1",
+  "words": 1539,
+  "minutes": 8
+ },
+ {
+  "slug": "the-metamarmoset",
+  "original": "The Metamorphosis",
+  "parody": "The Metamarmoset",
+  "phase": "R1",
+  "words": 1406,
+  "minutes": 7
+ },
+ {
+  "slug": "love-in-the-time-of-gorillas",
+  "original": "Love in the Time of Cholera",
+  "parody": "Love in the Time of Gorillas",
+  "phase": "R1",
+  "words": 1329,
+  "minutes": 7
+ },
+ {
+  "slug": "groom",
+  "original": "Room",
+  "parody": "Groom",
+  "phase": "R1",
+  "words": 1572,
+  "minutes": 8
+ },
+ {
+  "slug": "the-perks-of-being-a-wallclimber",
+  "original": "The Perks of Being a Wallflower",
+  "parody": "The Perks of Being a Wallclimber",
+  "phase": "R1",
+  "words": 1366,
+  "minutes": 7
+ },
+ {
+  "slug": "the-swing-in-the-willows",
+  "original": "The Wind in the Willows",
+  "parody": "The Swing in the Willows",
+  "phase": "R1",
+  "words": 1401,
+  "minutes": 7
+ },
+ {
+  "slug": "the-gibbon-tree",
+  "original": "The Giving Tree",
+  "parody": "The Gibbon Tree",
+  "phase": "R1",
+  "words": 1268,
+  "minutes": 6
+ },
+ {
+  "slug": "anne-of-green-gibbons",
+  "original": "Anne of Green Gables",
+  "parody": "Anne of Green Gibbons",
+  "phase": "R1",
+  "words": 1573,
+  "minutes": 8
+ },
+ {
+  "slug": "pollybanana",
+  "original": "Pollyanna",
+  "parody": "Pollybanana",
+  "phase": "R1",
+  "words": 1393,
+  "minutes": 7
+ },
+ {
+  "slug": "peter-panzee",
+  "original": "Peter Pan",
+  "parody": "Peter Panzee",
+  "phase": "R1",
+  "words": 1400,
+  "minutes": 7
+ },
+ {
+  "slug": "winnie-the-ooh-ooh",
+  "original": "Winnie-the-Pooh",
+  "parody": "Winnie-the-Ooh-Ooh",
+  "phase": "R1",
+  "words": 1494,
+  "minutes": 7
+ },
+ {
+  "slug": "charlie-and-the-chimpolate-factory",
+  "original": "Charlie and the Chocolate Factory",
+  "parody": "Charlie and the Chimpolate Factory",
+  "phase": "R1",
+  "words": 1495,
+  "minutes": 7
+ },
+ {
+  "slug": "james-and-the-giant-peel",
+  "original": "James and the Giant Peach",
+  "parody": "James and the Giant Peel",
+  "phase": "R1",
+  "words": 1260,
+  "minutes": 6
+ },
+ {
+  "slug": "the-big-friendly-gorilla",
+  "original": "The BFG",
+  "parody": "The Big Friendly Gorilla",
+  "phase": "R1",
+  "words": 1275,
+  "minutes": 6
+ },
+ {
+  "slug": "the-nits",
+  "original": "The Twits",
+  "parody": "The Nits",
+  "phase": "R1",
+  "words": 1256,
+  "minutes": 6
+ },
+ {
+  "slug": "the-itches",
+  "original": "The Witches",
+  "parody": "The Itches",
+  "phase": "R1",
+  "words": 1228,
+  "minutes": 6
+ },
+ {
+  "slug": "the-magic-swinger",
+  "original": "The Magic Finger",
+  "parody": "The Magic Swinger",
+  "phase": "R1",
+  "words": 1271,
+  "minutes": 6
+ },
+ {
+  "slug": "the-gorillalo",
+  "original": "The Gruffalo",
+  "parody": "The Gorillalo",
+  "phase": "R1",
+  "words": 1233,
+  "minutes": 6
+ },
+ {
+  "slug": "the-ape-in-the-cape",
+  "original": "The Cat in the Hat",
+  "parody": "The Ape in the Cape",
+  "phase": "R1",
+  "words": 1235,
+  "minutes": 6
+ },
+ {
+  "slug": "horton-hears-an-ooh",
+  "original": "Horton Hears a Who!",
+  "parody": "Horton Hears an Ooh!",
+  "phase": "R1",
+  "words": 1223,
+  "minutes": 6
+ },
+ {
+  "slug": "horton-scratches-a-leg",
+  "original": "Horton Hatches the Egg",
+  "parody": "Horton Scratches a Leg",
+  "phase": "R1",
+  "words": 1221,
+  "minutes": 6
+ },
+ {
+  "slug": "where-the-wild-swings-are",
+  "original": "Where the Wild Things Are",
+  "parody": "Where the Wild Swings Are",
+  "phase": "R1",
+  "words": 1239,
+  "minutes": 6
+ },
+ {
+  "slug": "where-the-sidebranch-bends",
+  "original": "Where the Sidewalk Ends",
+  "parody": "Where the Sidebranch Bends",
+  "phase": "R1",
+  "words": 1218,
+  "minutes": 6
+ },
+ {
+  "slug": "the-very-hungry-capuchin",
+  "original": "The Very Hungry Caterpillar",
+  "parody": "The Very Hungry Capuchin",
+  "phase": "R1",
+  "words": 1226,
+  "minutes": 6
+ },
+ {
+  "slug": "the-primate-bride",
+  "original": "The Princess Bride",
+  "parody": "The Primate Bride",
+  "phase": "R1",
+  "words": 1235,
+  "minutes": 6
+ },
+ {
+  "slug": "the-neverending-tail",
+  "original": "The Neverending Story",
+  "parody": "The Neverending Tail",
+  "phase": "R1",
+  "words": 1253,
+  "minutes": 6
+ },
+ {
+  "slug": "diary-of-a-chimpy-kid",
+  "original": "Diary of a Wimpy Kid",
+  "parody": "Diary of a Chimpy Kid",
+  "phase": "R1",
+  "words": 1398,
+  "minutes": 7
+ },
+ {
+  "slug": "bridge-to-treebithia",
+  "original": "Bridge to Terabithia",
+  "parody": "Bridge to Treebithia",
+  "phase": "R1",
+  "words": 1218,
+  "minutes": 6
+ },
+ {
+  "slug": "the-gibbon",
+  "original": "The Giver",
+  "parody": "The Gibbon",
+  "phase": "R1",
+  "words": 1491,
+  "minutes": 7
+ },
+ {
+  "slug": "the-golden-chimpass",
+  "original": "The Golden Compass",
+  "parody": "The Golden Chimpass",
+  "phase": "R1",
+  "words": 1324,
+  "minutes": 7
+ },
+ {
+  "slug": "a-series-of-unfortunate-descents",
+  "original": "A Series of Unfortunate Events",
+  "parody": "A Series of Unfortunate Descents",
+  "phase": "R1",
+  "words": 1447,
+  "minutes": 7
+ },
+ {
+  "slug": "miss-peregrines-home-for-peculiar-chimpdren",
+  "original": "Miss Peregrine's Home for Peculiar Children",
+  "parody": "Miss Peregrine's Home for Peculiar Chimpdren",
+  "phase": "R1",
+  "words": 1369,
+  "minutes": 7
+ },
+ {
+  "slug": "cindergorilla",
+  "original": "Cinderella",
+  "parody": "Cindergorilla",
+  "phase": "R1",
+  "words": 1307,
+  "minutes": 7
+ },
+ {
+  "slug": "swinging-beauty",
+  "original": "Sleeping Beauty",
+  "parody": "Swinging Beauty",
+  "phase": "R1",
+  "words": 1266,
+  "minutes": 6
+ },
+ {
+  "slug": "beauty-and-the-fleas",
+  "original": "Beauty and the Beast",
+  "parody": "Beauty and the Fleas",
+  "phase": "R1",
+  "words": 1287,
+  "minutes": 6
+ },
+ {
+  "slug": "macaque-and-the-beanstalk",
+  "original": "Jack and the Beanstalk",
+  "parody": "Macaque and the Beanstalk",
+  "phase": "R1",
+  "words": 1268,
+  "minutes": 6
+ },
+ {
+  "slug": "rumpelstiltswing",
+  "original": "Rumpelstiltskin",
+  "parody": "Rumpelstiltswing",
+  "phase": "R1",
+  "words": 1316,
+  "minutes": 7
+ },
+ {
+  "slug": "chimpelina",
+  "original": "Thumbelina",
+  "parody": "Chimpelina",
+  "phase": "R1",
+  "words": 1243,
+  "minutes": 6
+ },
+ {
+  "slug": "chimpocchio",
+  "original": "Pinocchio",
+  "parody": "Chimpocchio",
+  "phase": "R1",
+  "words": 1301,
+  "minutes": 7
+ },
+ {
+  "slug": "the-princess-and-the-flea",
+  "original": "The Princess and the Pea",
+  "parody": "The Princess and the Flea",
+  "phase": "R1",
+  "words": 1232,
+  "minutes": 6
+ },
+ {
+  "slug": "the-pied-peeler-of-hamelin",
+  "original": "The Pied Piper of Hamelin",
+  "parody": "The Pied Peeler of Hamelin",
+  "phase": "R1",
+  "words": 1254,
+  "minutes": 6
+ },
+ {
+  "slug": "the-emperors-new-groves",
+  "original": "The Emperor's New Clothes",
+  "parody": "The Emperor's New Groves",
+  "phase": "R1",
+  "words": 1412,
+  "minutes": 7
+ },
+ {
+  "slug": "little-red-climbing-hood",
+  "original": "Little Red Riding Hood",
+  "parody": "Little Red Climbing Hood",
+  "phase": "R1",
+  "words": 1244,
+  "minutes": 6
+ },
+ {
+  "slug": "goldilocks-and-the-three-bare-bottoms",
+  "original": "Goldilocks and the Three Bears",
+  "parody": "Goldilocks and the Three Bare Bottoms",
+  "phase": "R1",
+  "words": 1289,
+  "minutes": 6
+ },
+ {
+  "slug": "the-three-little-twigs",
+  "original": "The Three Little Pigs",
+  "parody": "The Three Little Twigs",
+  "phase": "R1",
+  "words": 1218,
+  "minutes": 6
+ },
+ {
+  "slug": "the-three-silly-apes-gruff",
+  "original": "The Three Billy Goats Gruff",
+  "parody": "The Three Silly Apes Gruff",
+  "phase": "R1",
+  "words": 1238,
+  "minutes": 6
+ },
+ {
+  "slug": "the-gingerbread-mandrill",
+  "original": "The Gingerbread Man",
+  "parody": "The Gingerbread Mandrill",
+  "phase": "R1",
+  "words": 1260,
+  "minutes": 6
+ },
+ {
+  "slug": "chimpkin-little",
+  "original": "Chicken Little",
+  "parody": "Chimpkin Little",
+  "phase": "R1",
+  "words": 1223,
+  "minutes": 6
+ },
+ {
+  "slug": "the-fox-and-the-great-apes",
+  "original": "The Fox and the Grapes",
+  "parody": "The Fox and the Great Apes",
+  "phase": "R1",
+  "words": 1247,
+  "minutes": 6
+ },
+ {
+  "slug": "macaquebeth",
+  "original": "Macbeth",
+  "parody": "Macaquebeth",
+  "phase": "R1",
+  "words": 1471,
+  "minutes": 7
+ },
+ {
+  "slug": "chimplet",
+  "original": "Hamlet",
+  "parody": "Chimplet",
+  "phase": "R1",
+  "words": 1423,
+  "minutes": 7
+ },
+ {
+  "slug": "king-lemur",
+  "original": "King Lear",
+  "parody": "King Lemur",
+  "phase": "R1",
+  "words": 1608,
+  "minutes": 8
+ },
+ {
+  "slug": "ookthello",
+  "original": "Othello",
+  "parody": "Ookthello",
+  "phase": "R1",
+  "words": 1598,
+  "minutes": 8
+ },
+ {
+  "slug": "groomio-and-juliet",
+  "original": "Romeo and Juliet",
+  "parody": "Groomio and Juliet",
+  "phase": "R1",
+  "words": 1466,
+  "minutes": 7
+ },
+ {
+  "slug": "julius-treesar",
+  "original": "Julius Caesar",
+  "parody": "Julius Treesar",
+  "phase": "R1",
+  "words": 1625,
+  "minutes": 8
+ },
+ {
+  "slug": "a-midsummer-nights-screech",
+  "original": "A Midsummer Night's Dream",
+  "parody": "A Midsummer Night's Screech",
+  "phase": "R1",
+  "words": 1586,
+  "minutes": 8
+ },
+ {
+  "slug": "much-ado-about-nanas",
+  "original": "Much Ado About Nothing",
+  "parody": "Much Ado About 'Nanas",
+  "phase": "R1",
+  "words": 1493,
+  "minutes": 7
+ },
+ {
+  "slug": "as-you-lice-it",
+  "original": "As You Like It",
+  "parody": "As You Lice It",
+  "phase": "R1",
+  "words": 1376,
+  "minutes": 7
+ },
+ {
+  "slug": "the-chimpest",
+  "original": "The Tempest",
+  "parody": "The Chimpest",
+  "phase": "R1",
+  "words": 1401,
+  "minutes": 7
+ },
+ {
+  "slug": "the-grooming-of-the-troop",
+  "original": "The Taming of the Shrew",
+  "parody": "The Grooming of the Troop",
+  "phase": "R1",
+  "words": 1326,
+  "minutes": 7
+ },
+ {
+  "slug": "the-hairy-wives-of-windsor",
+  "original": "The Merry Wives of Windsor",
+  "parody": "The Hairy Wives of Windsor",
+  "phase": "R1",
+  "words": 1333,
+  "minutes": 7
+ },
+ {
+  "slug": "antony-and-chimpopatra",
+  "original": "Antony and Cleopatra",
+  "parody": "Antony and Chimpopatra",
+  "phase": "R1",
+  "words": 1381,
+  "minutes": 7
+ },
+ {
+  "slug": "the-ookyssey",
+  "original": "The Odyssey",
+  "parody": "The Ookyssey",
+  "phase": "R1",
+  "words": 1559,
+  "minutes": 8
+ },
+ {
+  "slug": "the-simiad",
+  "original": "The Iliad",
+  "parody": "The Simiad",
+  "phase": "R1",
+  "words": 1377,
+  "minutes": 7
+ },
+ {
+  "slug": "bonobowulf",
+  "original": "Beowulf",
+  "parody": "Bonobowulf",
+  "phase": "R1",
+  "words": 1337,
+  "minutes": 7
+ },
+ {
+  "slug": "the-epic-of-gibbonmesh",
+  "original": "The Epic of Gilgamesh",
+  "parody": "The Epic of Gibbonmesh",
+  "phase": "R1",
+  "words": 1361,
+  "minutes": 7
+ },
+ {
+  "slug": "bananadise-lost",
+  "original": "Paradise Lost",
+  "parody": "Bananadise Lost",
+  "phase": "R1",
+  "words": 1346,
+  "minutes": 7
+ },
+ {
+  "slug": "the-canopy-tails",
+  "original": "The Canterbury Tales",
+  "parody": "The Canopy Tails",
+  "phase": "R1",
+  "words": 1375,
+  "minutes": 7
+ },
+ {
+  "slug": "one-thousand-and-one-nits",
+  "original": "One Thousand and One Nights",
+  "parody": "One Thousand and One Nits",
+  "phase": "R1",
+  "words": 1312,
+  "minutes": 7
+ },
+ {
+  "slug": "death-of-a-salesmandrill",
+  "original": "Death of a Salesman",
+  "parody": "Death of a Salesmandrill",
+  "phase": "R1",
+  "words": 1399,
+  "minutes": 7
+ },
+ {
+  "slug": "a-treecar-named-desire",
+  "original": "A Streetcar Named Desire",
+  "parody": "A Treecar Named Desire",
+  "phase": "R1",
+  "words": 1320,
+  "minutes": 7
+ },
+ {
+  "slug": "the-bonobbit",
+  "original": "The Hobbit",
+  "parody": "The Bonobbit",
+  "phase": "R1",
+  "words": 1636,
+  "minutes": 8
+ },
+ {
+  "slug": "the-lord-of-the-swings",
+  "original": "The Lord of the Rings",
+  "parody": "The Lord of the Swings",
+  "phase": "R1",
+  "words": 1304,
+  "minutes": 7
+ },
+ {
+  "slug": "the-two-howlers",
+  "original": "The Two Towers",
+  "parody": "The Two Howlers",
+  "phase": "R1",
+  "words": 1278,
+  "minutes": 6
+ },
+ {
+  "slug": "the-return-of-the-kong",
+  "original": "The Return of the King",
+  "parody": "The Return of the Kong",
+  "phase": "R1",
+  "words": 1319,
+  "minutes": 7
+ },
+ {
+  "slug": "the-simiarillion",
+  "original": "The Silmarillion",
+  "parody": "The Simiarillion",
+  "phase": "R1",
+  "words": 1263,
+  "minutes": 6
+ },
+ {
+  "slug": "hairy-potter-and-the-prisoner-of-azkabanana",
+  "original": "Harry Potter and the Prisoner of Azkaban",
+  "parody": "Hairy Potter and the Prisoner of Azkabanana",
+  "phase": "R1",
+  "words": 1270,
+  "minutes": 6
+ },
+ {
+  "slug": "hairy-potter-and-the-half-peeled-prince",
+  "original": "Harry Potter and the Half-Blood Prince",
+  "parody": "Hairy Potter and the Half-Peeled Prince",
+  "phase": "R1",
+  "words": 1346,
+  "minutes": 7
+ },
+ {
+  "slug": "hairy-potter-and-the-deathly-howlers",
+  "original": "Harry Potter and the Deathly Hallows",
+  "parody": "Hairy Potter and the Deathly Howlers",
+  "phase": "R1",
+  "words": 1277,
+  "minutes": 6
+ },
+ {
+  "slug": "a-game-of-thrown-bananas",
+  "original": "A Game of Thrones",
+  "parody": "A Game of Thrown Bananas",
+  "phase": "R1",
+  "words": 1281,
+  "minutes": 6
+ },
+ {
+  "slug": "a-clash-of-kongs",
+  "original": "A Clash of Kings",
+  "parody": "A Clash of Kongs",
+  "phase": "R1",
+  "words": 1302,
+  "minutes": 7
+ },
+ {
+  "slug": "a-dance-with-dragibbons",
+  "original": "A Dance with Dragons",
+  "parody": "A Dance with Dragibbons",
+  "phase": "R1",
+  "words": 1265,
+  "minutes": 6
+ },
+ {
+  "slug": "the-branchhikers-guide-to-the-galaxy",
+  "original": "The Hitchhiker's Guide to the Galaxy",
+  "parody": "The Branchhiker's Guide to the Galaxy",
+  "phase": "R1",
+  "words": 1254,
+  "minutes": 6
+ },
+ {
+  "slug": "lice-the-universe-and-everything",
+  "original": "Life, the Universe and Everything",
+  "parody": "Lice, the Universe and Everything",
+  "phase": "R1",
+  "words": 1265,
+  "minutes": 6
+ },
+ {
+  "slug": "so-long-and-thanks-for-all-the-figs",
+  "original": "So Long, and Thanks for All the Fish",
+  "parody": "So Long, and Thanks for All the Figs",
+  "phase": "R1",
+  "words": 1235,
+  "minutes": 6
+ },
+ {
+  "slug": "mostly-hairless",
+  "original": "Mostly Harmless",
+  "parody": "Mostly Hairless",
+  "phase": "R1",
+  "words": 1265,
+  "minutes": 6
+ },
+ {
+  "slug": "the-long-dark-flea-time-of-the-soul",
+  "original": "The Long Dark Tea-Time of the Soul",
+  "parody": "The Long Dark Flea-Time of the Soul",
+  "phase": "R1",
+  "words": 1586,
+  "minutes": 8
+ },
+ {
+  "slug": "i-bonobot",
+  "original": "I, Robot",
+  "parody": "I, Bonobot",
+  "phase": "R1",
+  "words": 1533,
+  "minutes": 8
+ },
+ {
+  "slug": "do-ape-droids-dream-of-electric-chimps",
+  "original": "Do Androids Dream of Electric Sheep?",
+  "parody": "Do Ape-droids Dream of Electric Chimps?",
+  "phase": "R1",
+  "words": 1356,
+  "minutes": 7
+ },
+ {
+  "slug": "the-climb-machine",
+  "original": "The Time Machine",
+  "parody": "The Climb Machine",
+  "phase": "R1",
+  "words": 1339,
+  "minutes": 7
+ },
+ {
+  "slug": "the-island-of-doctor-monkeau",
+  "original": "The Island of Doctor Moreau",
+  "parody": "The Island of Doctor Monkeau",
+  "phase": "R1",
+  "words": 1458,
+  "minutes": 7
+ },
+ {
+  "slug": "the-invisible-mandrill",
+  "original": "The Invisible Man",
+  "parody": "The Invisible Mandrill",
+  "phase": "R1",
+  "words": 1350,
+  "minutes": 7
+ },
+ {
+  "slug": "chimphoods-end",
+  "original": "Childhood's End",
+  "parody": "Chimphood's End",
+  "phase": "R1",
+  "words": 1399,
+  "minutes": 7
+ },
+ {
+  "slug": "the-baboon-is-a-harsh-mistress",
+  "original": "The Moon Is a Harsh Mistress",
+  "parody": "The Baboon Is a Harsh Mistress",
+  "phase": "R1",
+  "words": 1224,
+  "minutes": 6
+ },
+ {
+  "slug": "the-wise-apes-fur",
+  "original": "The Wise Man's Fear",
+  "parody": "The Wise Ape's Fur",
+  "phase": "R1",
+  "words": 1520,
+  "minutes": 8
+ },
+ {
+  "slug": "gorillaline",
+  "original": "Coraline",
+  "parody": "Gorillaline",
+  "phase": "R1",
+  "words": 1235,
+  "minutes": 6
+ },
+ {
+  "slug": "monkeyjay",
+  "original": "Mockingjay",
+  "parody": "Monkeyjay",
+  "phase": "R1",
+  "words": 1276,
+  "minutes": 6
+ },
+ {
+  "slug": "twiglight",
+  "original": "Twilight",
+  "parody": "Twiglight",
+  "phase": "R1",
+  "words": 1268,
+  "minutes": 6
+ },
+ {
+  "slug": "new-baboon",
+  "original": "New Moon",
+  "parody": "New Baboon",
+  "phase": "R1",
+  "words": 1293,
+  "minutes": 6
+ },
+ {
+  "slug": "the-sea-of-monkeys",
+  "original": "The Sea of Monsters",
+  "parody": "The Sea of Monkeys",
+  "phase": "R1",
+  "words": 1518,
+  "minutes": 8
+ },
+ {
+  "slug": "the-adventures-of-sherlock-howlmes",
+  "original": "The Adventures of Sherlock Holmes",
+  "parody": "The Adventures of Sherlock Howlmes",
+  "phase": "R1",
+  "words": 1575,
+  "minutes": 8
+ },
+ {
+  "slug": "the-howler-of-the-baskervilles",
+  "original": "The Hound of the Baskervilles",
+  "parody": "The Howler of the Baskervilles",
+  "phase": "R1",
+  "words": 1509,
+  "minutes": 8
+ },
+ {
+  "slug": "murder-on-the-orangutan-express",
+  "original": "Murder on the Orient Express",
+  "parody": "Murder on the Orangutan Express",
+  "phase": "R1",
+  "words": 1271,
+  "minutes": 6
+ },
+ {
+  "slug": "and-then-there-were-nanas",
+  "original": "And Then There Were None",
+  "parody": "And Then There Were 'Nanas",
+  "phase": "R1",
+  "words": 1452,
+  "minutes": 7
+ },
+ {
+  "slug": "the-lousetrap",
+  "original": "The Mousetrap",
+  "parody": "The Lousetrap",
+  "phase": "R1",
+  "words": 1249,
+  "minutes": 6
+ },
+ {
+  "slug": "the-ape-b-c-murders",
+  "original": "The ABC Murders",
+  "parody": "The Ape-B-C Murders",
+  "phase": "R1",
+  "words": 1280,
+  "minutes": 6
+ },
+ {
+  "slug": "gone-gorilla",
+  "original": "Gone Girl",
+  "parody": "Gone Gorilla",
+  "phase": "R1",
+  "words": 1320,
+  "minutes": 7
+ },
+ {
+  "slug": "big-little-lice",
+  "original": "Big Little Lies",
+  "parody": "Big Little Lice",
+  "phase": "R1",
+  "words": 1318,
+  "minutes": 7
+ },
+ {
+  "slug": "nit",
+  "original": "It",
+  "parody": "Nit",
+  "phase": "R1",
+  "words": 1292,
+  "minutes": 6
+ },
+ {
+  "slug": "hairy",
+  "original": "Carrie",
+  "parody": "Hairy",
+  "phase": "R1",
+  "words": 1296,
+  "minutes": 6
+ },
+ {
+  "slug": "the-swinging",
+  "original": "The Shining",
+  "parody": "The Swinging",
+  "phase": "R1",
+  "words": 1452,
+  "minutes": 7
+ },
+ {
+  "slug": "pet-simiantary",
+  "original": "Pet Sematary",
+  "parody": "Pet Simiantary",
+  "phase": "R1",
+  "words": 1322,
+  "minutes": 7
+ },
+ {
+  "slug": "the-haunting-of-hill-louse",
+  "original": "The Haunting of Hill House",
+  "parody": "The Haunting of Hill Louse",
+  "phase": "R1",
+  "words": 1272,
+  "minutes": 6
+ },
+ {
+  "slug": "interview-with-the-vamprimate",
+  "original": "Interview with the Vampire",
+  "parody": "Interview with the Vamprimate",
+  "phase": "R1",
+  "words": 1259,
+  "minutes": 6
+ },
+ {
+  "slug": "bananibal",
+  "original": "Hannibal",
+  "parody": "Bananibal",
+  "phase": "R1",
+  "words": 1270,
+  "minutes": 6
+ },
+ {
+  "slug": "world-war-chimpanzee",
+  "original": "World War Z",
+  "parody": "World War Chimpanzee",
+  "phase": "R1",
+  "words": 1225,
+  "minutes": 6
+ },
+ {
+  "slug": "the-scarlet-chimpernel",
+  "original": "The Scarlet Pimpernel",
+  "parody": "The Scarlet Chimpernel",
+  "phase": "R2A",
+  "words": 1566,
+  "minutes": 8
+ },
+ {
+  "slug": "the-sound-and-the-furry",
+  "original": "The Sound and the Fury",
+  "parody": "The Sound and the Furry",
+  "phase": "R2A",
+  "words": 1557,
+  "minutes": 8
+ },
+ {
+  "slug": "canopy-row",
+  "original": "Cannery Row",
+  "parody": "Canopy Row",
+  "phase": "R2A",
+  "words": 1402,
+  "minutes": 7
+ },
+ {
+  "slug": "gorilla-flat",
+  "original": "Tortilla Flat",
+  "parody": "Gorilla Flat",
+  "phase": "R2A",
+  "words": 1371,
+  "minutes": 7
+ },
+ {
+  "slug": "sense-and-swingability",
+  "original": "Sense and Sensibility",
+  "parody": "Sense and Swingability",
+  "phase": "R2A",
+  "words": 1347,
+  "minutes": 7
+ },
+ {
+  "slug": "mandrill-park",
+  "original": "Mansfield Park",
+  "parody": "Mandrill Park",
+  "phase": "R2A",
+  "words": 1323,
+  "minutes": 7
+ },
+ {
+  "slug": "the-scarlet-lemur",
+  "original": "The Scarlet Letter",
+  "parody": "The Scarlet Lemur",
+  "phase": "R2A",
+  "words": 1307,
+  "minutes": 7
+ },
+ {
+  "slug": "the-house-of-the-seven-gibbons",
+  "original": "The House of the Seven Gables",
+  "parody": "The House of the Seven Gibbons",
+  "phase": "R2A",
+  "words": 1330,
+  "minutes": 7
+ },
+ {
+  "slug": "the-ape-of-innocence",
+  "original": "The Age of Innocence",
+  "parody": "The Ape of Innocence",
+  "phase": "R2A",
+  "words": 1320,
+  "minutes": 7
+ },
+ {
+  "slug": "the-primate-of-miss-jean-brodie",
+  "original": "The Prime of Miss Jean Brodie",
+  "parody": "The Primate of Miss Jean Brodie",
+  "phase": "R2A",
+  "words": 1226,
+  "minutes": 6
+ },
+ {
+  "slug": "a-groom-with-a-view",
+  "original": "A Room with a View",
+  "parody": "A Groom with a View",
+  "phase": "R2A",
+  "words": 1257,
+  "minutes": 6
+ },
+ {
+  "slug": "howlers-end",
+  "original": "Howards End",
+  "parody": "Howler's End",
+  "phase": "R2A",
+  "words": 1280,
+  "minutes": 6
+ },
+ {
+  "slug": "the-red-and-the-silverback",
+  "original": "The Red and the Black",
+  "parody": "The Red and the Silverback",
+  "phase": "R2A",
+  "words": 1354,
+  "minutes": 7
+ },
+ {
+  "slug": "the-sun-also-rhesus",
+  "original": "The Sun Also Rises",
+  "parody": "The Sun Also Rhesus",
+  "phase": "R2A",
+  "words": 1302,
+  "minutes": 7
+ },
+ {
+  "slug": "the-peel-jar",
+  "original": "The Bell Jar",
+  "parody": "The Peel Jar",
+  "phase": "R2A",
+  "words": 1253,
+  "minutes": 6
+ },
+ {
+  "slug": "bananity-fair",
+  "original": "Vanity Fair",
+  "parody": "Bananity Fair",
+  "phase": "R2A",
+  "words": 1559,
+  "minutes": 8
+ },
+ {
+  "slug": "apesalom-apesalom",
+  "original": "Absalom, Absalom!",
+  "parody": "Apesalom, Apesalom!",
+  "phase": "R2A",
+  "words": 1421,
+  "minutes": 7
+ },
+ {
+  "slug": "finnegibbons-wake",
+  "original": "Finnegans Wake",
+  "parody": "Finnegibbons Wake",
+  "phase": "R2A",
+  "words": 1345,
+  "minutes": 7
+ },
+ {
+  "slug": "as-i-lay-delousing",
+  "original": "As I Lay Dying",
+  "parody": "As I Lay Delousing",
+  "phase": "R2A",
+  "words": 1522,
+  "minutes": 8
+ },
+ {
+  "slug": "atlas-scratched",
+  "original": "Atlas Shrugged",
+  "parody": "Atlas Scratched",
+  "phase": "R2A",
+  "words": 1456,
+  "minutes": 7
+ },
+ {
+  "slug": "one-swung-over-the-cuckoos-nest",
+  "original": "One Flew Over the Cuckoo's Nest",
+  "parody": "One Swung Over the Cuckoo's Nest",
+  "phase": "R2B",
+  "words": 1395,
+  "minutes": 7
+ },
+ {
+  "slug": "things-fall-ape-art",
+  "original": "Things Fall Apart",
+  "parody": "Things Fall Ape-art",
+  "phase": "R2B",
+  "words": 1510,
+  "minutes": 8
+ },
+ {
+  "slug": "apetonement",
+  "original": "Atonement",
+  "parody": "Apetonement",
+  "phase": "R2B",
+  "words": 1358,
+  "minutes": 7
+ },
+ {
+  "slug": "the-ook-thief",
+  "original": "The Book Thief",
+  "parody": "The Ook Thief",
+  "phase": "R2B",
+  "words": 1355,
+  "minutes": 7
+ },
+ {
+  "slug": "the-lovely-bonobos",
+  "original": "The Lovely Bones",
+  "parody": "The Lovely Bonobos",
+  "phase": "R2B",
+  "words": 1360,
+  "minutes": 7
+ },
+ {
+  "slug": "the-outswingers",
+  "original": "The Outsiders",
+  "parody": "The Outswingers",
+  "phase": "R2B",
+  "words": 1566,
+  "minutes": 8
+ },
+ {
+  "slug": "all-the-lice-we-cannot-see",
+  "original": "All the Light We Cannot See",
+  "parody": "All the Lice We Cannot See",
+  "phase": "R2B",
+  "words": 1460,
+  "minutes": 7
+ },
+ {
+  "slug": "a-gentlemandrill-in-moscow",
+  "original": "A Gentleman in Moscow",
+  "parody": "A Gentlemandrill in Moscow",
+  "phase": "R2B",
+  "words": 1348,
+  "minutes": 7
+ },
+ {
+  "slug": "no-country-for-old-mandrills",
+  "original": "No Country for Old Men",
+  "parody": "No Country for Old Mandrills",
+  "phase": "R2B",
+  "words": 1333,
+  "minutes": 7
+ },
+ {
+  "slug": "the-fault-in-our-tarsiers",
+  "original": "The Fault in Our Stars",
+  "parody": "The Fault in Our Tarsiers",
+  "phase": "R2B",
+  "words": 1394,
+  "minutes": 7
+ },
+ {
+  "slug": "the-goldenchimp",
+  "original": "The Goldfinch",
+  "parody": "The Goldenchimp",
+  "phase": "R2B",
+  "words": 1258,
+  "minutes": 6
+ },
+ {
+  "slug": "eleanor-orangutan-is-completely-fine",
+  "original": "Eleanor Oliphant Is Completely Fine",
+  "parody": "Eleanor Orangutan Is Completely Fine",
+  "phase": "R2B",
+  "words": 1290,
+  "minutes": 6
+ },
+ {
+  "slug": "the-bonfire-of-the-bananities",
+  "original": "The Bonfire of the Vanities",
+  "parody": "The Bonfire of the Bananities",
+  "phase": "R2B",
+  "words": 1269,
+  "minutes": 6
+ },
+ {
+  "slug": "goodnight-baboon",
+  "original": "Goodnight Moon",
+  "parody": "Goodnight Baboon",
+  "phase": "R2C",
+  "words": 1235,
+  "minutes": 6
+ },
+ {
+  "slug": "the-little-primate",
+  "original": "The Little Prince",
+  "parody": "The Little Primate",
+  "phase": "R2C",
+  "words": 1512,
+  "minutes": 8
+ },
+ {
+  "slug": "the-tale-of-benjamin-bonobo",
+  "original": "The Tale of Benjamin Bunny",
+  "parody": "The Tale of Benjamin Bonobo",
+  "phase": "R2C",
+  "words": 1443,
+  "minutes": 7
+ },
+ {
+  "slug": "the-verveteen-monkey",
+  "original": "The Velveteen Rabbit",
+  "parody": "The Verveteen Monkey",
+  "phase": "R2C",
+  "words": 1568,
+  "minutes": 8
+ },
+ {
+  "slug": "the-louse-and-the-monkeycycle",
+  "original": "The Mouse and the Motorcycle",
+  "parody": "The Louse and the Monkeycycle",
+  "phase": "R2C",
+  "words": 1424,
+  "minutes": 7
+ },
+ {
+  "slug": "tuck-ever-scratching",
+  "original": "Tuck Everlasting",
+  "parody": "Tuck Ever-scratching",
+  "phase": "R2C",
+  "words": 1501,
+  "minutes": 8
+ },
+ {
+  "slug": "where-the-red-fur-grows",
+  "original": "Where the Red Fern Grows",
+  "parody": "Where the Red Fur Grows",
+  "phase": "R2C",
+  "words": 1482,
+  "minutes": 7
+ },
+ {
+  "slug": "old-howler",
+  "original": "Old Yeller",
+  "parody": "Old Howler",
+  "phase": "R2C",
+  "words": 1316,
+  "minutes": 7
+ },
+ {
+  "slug": "scratch-it",
+  "original": "Hatchet",
+  "parody": "Scratch It",
+  "phase": "R2C",
+  "words": 1285,
+  "minutes": 6
+ },
+ {
+  "slug": "the-magic-furaway-tree",
+  "original": "The Magic Faraway Tree",
+  "parody": "The Magic Furaway Tree",
+  "phase": "R2C",
+  "words": 1356,
+  "minutes": 7
+ },
+ {
+  "slug": "georges-marmoset-medicine",
+  "original": "George's Marvellous Medicine",
+  "parody": "George's Marmoset Medicine",
+  "phase": "R2C",
+  "words": 1261,
+  "minutes": 6
+ },
+ {
+  "slug": "alices-adventures-in-wonderlangur",
+  "original": "Alice's Adventures in Wonderland",
+  "parody": "Alice's Adventures in Wonderlangur",
+  "phase": "R2C",
+  "words": 1611,
+  "minutes": 8
+ },
+ {
+  "slug": "through-the-grooming-glass",
+  "original": "Through the Looking-Glass",
+  "parody": "Through the Grooming-Glass",
+  "phase": "R2C",
+  "words": 1636,
+  "minutes": 8
+ },
+ {
+  "slug": "jabbermonkey",
+  "original": "Jabberwocky",
+  "parody": "Jabbermonkey",
+  "phase": "R2C",
+  "words": 1239,
+  "minutes": 6
+ },
+ {
+  "slug": "the-wonderful-wizard-of-ook",
+  "original": "The Wonderful Wizard of Oz",
+  "parody": "The Wonderful Wizard of Ook",
+  "phase": "R2C",
+  "words": 1538,
+  "minutes": 8
+ },
+ {
+  "slug": "the-marmoset-land-of-oz",
+  "original": "The Marvelous Land of Oz",
+  "parody": "The Marmoset Land of Oz",
+  "phase": "R2C",
+  "words": 1314,
+  "minutes": 7
+ },
+ {
+  "slug": "the-tail-of-peter-baboon",
+  "original": "The Tale of Peter Rabbit",
+  "parody": "The Tail of Peter Baboon",
+  "phase": "R2C",
+  "words": 1224,
+  "minutes": 6
+ },
+ {
+  "slug": "guess-how-much-i-groom-you",
+  "original": "Guess How Much I Love You",
+  "parody": "Guess How Much I Groom You",
+  "phase": "R2C",
+  "words": 1205,
+  "minutes": 6
+ },
+ {
+  "slug": "cloudy-with-a-chance-of-chimpfalls",
+  "original": "Cloudy with a Chance of Meatballs",
+  "parody": "Cloudy with a Chance of Chimpfalls",
+  "phase": "R2C",
+  "words": 1215,
+  "minutes": 6
+ },
+ {
+  "slug": "the-little-mermonkey",
+  "original": "The Little Mermaid",
+  "parody": "The Little Mermonkey",
+  "phase": "R2C",
+  "words": 1319,
+  "minutes": 7
+ },
+ {
+  "slug": "the-ugly-chimpling",
+  "original": "The Ugly Duckling",
+  "parody": "The Ugly Chimpling",
+  "phase": "R2C",
+  "words": 1250,
+  "minutes": 6
+ },
+ {
+  "slug": "the-merchimp-of-venice",
+  "original": "The Merchant of Venice",
+  "parody": "The Merchimp of Venice",
+  "phase": "R2D",
+  "words": 1327,
+  "minutes": 7
+ },
+ {
+  "slug": "the-rime-of-the-ancient-mandrill",
+  "original": "The Rime of the Ancient Mariner",
+  "parody": "The Rime of the Ancient Mandrill",
+  "phase": "R2D",
+  "words": 1339,
+  "minutes": 7
+ },
+ {
+  "slug": "waiting-for-bonobo",
+  "original": "Waiting for Godot",
+  "parody": "Waiting for Bonobo",
+  "phase": "R2D",
+  "words": 1353,
+  "minutes": 7
+ },
+ {
+  "slug": "bananansi-boys",
+  "original": "Anansi Boys",
+  "parody": "Bananansi Boys",
+  "phase": "R2E",
+  "words": 1479,
+  "minutes": 7
+ },
+ {
+  "slug": "neverhair",
+  "original": "Neverwhere",
+  "parody": "Neverhair",
+  "phase": "R2E",
+  "words": 1370,
+  "minutes": 7
+ },
+ {
+  "slug": "making-monkey",
+  "original": "Making Money",
+  "parody": "Making Monkey",
+  "phase": "R2E",
+  "words": 1303,
+  "minutes": 7
+ },
+ {
+  "slug": "the-lice-fantastic",
+  "original": "The Light Fantastic",
+  "parody": "The Lice Fantastic",
+  "phase": "R2E",
+  "words": 1309,
+  "minutes": 7
+ },
+ {
+  "slug": "nit-watch",
+  "original": "Night Watch",
+  "parody": "Nit Watch",
+  "phase": "R2E",
+  "words": 1292,
+  "minutes": 6
+ },
+ {
+  "slug": "loris-and-ladies",
+  "original": "Lords and Ladies",
+  "parody": "Loris and Ladies",
+  "phase": "R2E",
+  "words": 1441,
+  "minutes": 7
+ },
+ {
+  "slug": "monkeystrous-regiment",
+  "original": "Monstrous Regiment",
+  "parody": "Monkeystrous Regiment",
+  "phase": "R2E",
+  "words": 1278,
+  "minutes": 6
+ },
+ {
+  "slug": "the-wee-flea-men",
+  "original": "The Wee Free Men",
+  "parody": "The Wee Flea Men",
+  "phase": "R2E",
+  "words": 1302,
+  "minutes": 7
+ },
+ {
+  "slug": "the-chimp-herds-crown",
+  "original": "The Shepherd's Crown",
+  "parody": "The Chimp-herd's Crown",
+  "phase": "R2E",
+  "words": 1449,
+  "minutes": 7
+ },
+ {
+  "slug": "going-bananas",
+  "original": "Going Postal",
+  "parody": "Going Bananas",
+  "phase": "R2E",
+  "words": 1276,
+  "minutes": 6
+ },
+ {
+  "slug": "the-final-chimpire",
+  "original": "The Final Empire",
+  "parody": "The Final Chimpire",
+  "phase": "R2E",
+  "words": 1308,
+  "minutes": 7
+ },
+ {
+  "slug": "the-well-of-apescension",
+  "original": "The Well of Ascension",
+  "parody": "The Well of Apescension",
+  "phase": "R2E",
+  "words": 1340,
+  "minutes": 7
+ },
+ {
+  "slug": "the-hero-of-apes",
+  "original": "The Hero of Ages",
+  "parody": "The Hero of Apes",
+  "phase": "R2E",
+  "words": 1304,
+  "minutes": 7
+ },
+ {
+  "slug": "oathswinger",
+  "original": "Oathbringer",
+  "parody": "Oathswinger",
+  "phase": "R2E",
+  "words": 1291,
+  "minutes": 6
+ },
+ {
+  "slug": "vines-and-fruit",
+  "original": "Wind and Truth",
+  "parody": "Vines and Fruit",
+  "phase": "R2E",
+  "words": 1272,
+  "minutes": 6
+ },
+ {
+  "slug": "the-name-of-the-vine",
+  "original": "The Name of the Wind",
+  "parody": "The Name of the Vine",
+  "phase": "R2E",
+  "words": 1426,
+  "minutes": 7
+ },
+ {
+  "slug": "the-lice-of-locke-lemura",
+  "original": "The Lies of Locke Lamora",
+  "parody": "The Lice of Locke Lemura",
+  "phase": "R2E",
+  "words": 1259,
+  "minutes": 6
+ },
+ {
+  "slug": "best-served-peeled",
+  "original": "Best Served Cold",
+  "parody": "Best Served Peeled",
+  "phase": "R2E",
+  "words": 1247,
+  "minutes": 6
+ },
+ {
+  "slug": "howlers-moving-castle",
+  "original": "Howl's Moving Castle",
+  "parody": "Howler's Moving Castle",
+  "phase": "R2E",
+  "words": 1231,
+  "minutes": 6
+ },
+ {
+  "slug": "the-once-and-future-kong",
+  "original": "The Once and Future King",
+  "parody": "The Once and Future Kong",
+  "phase": "R2E",
+  "words": 1337,
+  "minutes": 7
+ },
+ {
+  "slug": "the-slow-regard-of-swinging-things",
+  "original": "The Slow Regard of Silent Things",
+  "parody": "The Slow Regard of Swinging Things",
+  "phase": "R2E",
+  "words": 1222,
+  "minutes": 6
+ },
+ {
+  "slug": "the-hunger-apes",
+  "original": "The Hunger Games",
+  "parody": "The Hunger Apes",
+  "phase": "R2F",
+  "words": 1441,
+  "minutes": 7
+ },
+ {
+  "slug": "catching-fleas",
+  "original": "Catching Fire",
+  "parody": "Catching Fleas",
+  "phase": "R2F",
+  "words": 1288,
+  "minutes": 6
+ },
+ {
+  "slug": "the-ballad-of-songbirds-and-apes",
+  "original": "The Ballad of Songbirds and Snakes",
+  "parody": "The Ballad of Songbirds and Apes",
+  "phase": "R2F",
+  "words": 1251,
+  "minutes": 6
+ },
+ {
+  "slug": "the-scratch-trials",
+  "original": "The Scorch Trials",
+  "parody": "The Scratch Trials",
+  "phase": "R2F",
+  "words": 1245,
+  "minutes": 6
+ },
+ {
+  "slug": "the-battle-of-the-lemurinth",
+  "original": "The Battle of the Labyrinth",
+  "parody": "The Battle of the Lemurinth",
+  "phase": "R2F",
+  "words": 1298,
+  "minutes": 6
+ },
+ {
+  "slug": "the-last-olymchimpian",
+  "original": "The Last Olympian",
+  "parody": "The Last Olymchimpian",
+  "phase": "R2F",
+  "words": 1285,
+  "minutes": 6
+ },
+ {
+  "slug": "the-mark-of-apethena",
+  "original": "The Mark of Athena",
+  "parody": "The Mark of Apethena",
+  "phase": "R2F",
+  "words": 1209,
+  "minutes": 6
+ },
+ {
+  "slug": "outlangur",
+  "original": "Outlander",
+  "parody": "Outlangur",
+  "phase": "R2F",
+  "words": 1246,
+  "minutes": 6
+ },
+ {
+  "slug": "baboon",
+  "original": "Dune",
+  "parody": "Baboon",
+  "phase": "R2G",
+  "words": 1232,
+  "minutes": 6
+ },
+ {
+  "slug": "project-hail-hairy",
+  "original": "Project Hail Mary",
+  "parody": "Project Hail Hairy",
+  "phase": "R2G",
+  "words": 1278,
+  "minutes": 6
+ },
+ {
+  "slug": "the-marmoset-chronicles",
+  "original": "The Martian Chronicles",
+  "parody": "The Marmoset Chronicles",
+  "phase": "R2G",
+  "words": 1571,
+  "minutes": 8
+ },
+ {
+  "slug": "rendezvous-with-banana",
+  "original": "Rendezvous with Rama",
+  "parody": "Rendezvous with Banana",
+  "phase": "R2G",
+  "words": 1238,
+  "minutes": 6
+ },
+ {
+  "slug": "neuromandrill",
+  "original": "Neuromancer",
+  "parody": "Neuromandrill",
+  "phase": "R2G",
+  "words": 1257,
+  "minutes": 6
+ },
+ {
+  "slug": "snow-scratch",
+  "original": "Snow Crash",
+  "parody": "Snow Scratch",
+  "phase": "R2G",
+  "words": 1282,
+  "minutes": 6
+ },
+ {
+  "slug": "altered-capuchin",
+  "original": "Altered Carbon",
+  "parody": "Altered Capuchin",
+  "phase": "R2G",
+  "words": 1218,
+  "minutes": 6
+ },
+ {
+  "slug": "leviathan-apes",
+  "original": "Leviathan Wakes",
+  "parody": "Leviathan Apes",
+  "phase": "R2G",
+  "words": 1218,
+  "minutes": 6
+ },
+ {
+  "slug": "calibananas-war",
+  "original": "Caliban's War",
+  "parody": "Calibanana's War",
+  "phase": "R2G",
+  "words": 1216,
+  "minutes": 6
+ },
+ {
+  "slug": "ababoons-gate",
+  "original": "Abaddon's Gate",
+  "parody": "Ababoon's Gate",
+  "phase": "R2G",
+  "words": 1256,
+  "minutes": 6
+ },
+ {
+  "slug": "the-tree-body-problem",
+  "original": "The Three-Body Problem",
+  "parody": "The Tree-Body Problem",
+  "phase": "R2G",
+  "words": 1246,
+  "minutes": 6
+ },
+ {
+  "slug": "the-fur-ever-war",
+  "original": "The Forever War",
+  "parody": "The Fur-ever War",
+  "phase": "R2G",
+  "words": 1264,
+  "minutes": 6
+ },
+ {
+  "slug": "the-long-way-to-a-small-angry-primate",
+  "original": "The Long Way to a Small, Angry Planet",
+  "parody": "The Long Way to a Small, Angry Primate",
+  "phase": "R2G",
+  "words": 1361,
+  "minutes": 7
+ },
+ {
+  "slug": "2001-an-ape-odyssey",
+  "original": "2001: A Space Odyssey",
+  "parody": "2001: An Ape Odyssey",
+  "phase": "R2G",
+  "words": 1270,
+  "minutes": 6
+ },
+ {
+  "slug": "twenty-thousand-leaves-under-the-trees",
+  "original": "Twenty Thousand Leagues Under the Seas",
+  "parody": "Twenty Thousand Leaves Under the Trees",
+  "phase": "R2G",
+  "words": 1286,
+  "minutes": 6
+ },
+ {
+  "slug": "around-the-world-in-apey-days",
+  "original": "Around the World in Eighty Days",
+  "parody": "Around the World in Apey Days",
+  "phase": "R2G",
+  "words": 1363,
+  "minutes": 7
+ },
+ {
+  "slug": "the-vine-travelers-wife",
+  "original": "The Time Traveler's Wife",
+  "parody": "The Vine Traveler's Wife",
+  "phase": "R2G",
+  "words": 1241,
+  "minutes": 6
+ },
+ {
+  "slug": "screecher-for-the-dead",
+  "original": "Speaker for the Dead",
+  "parody": "Screecher for the Dead",
+  "phase": "R2G",
+  "words": 1259,
+  "minutes": 6
+ },
+ {
+  "slug": "the-gorilla-on-the-train",
+  "original": "The Girl on the Train",
+  "parody": "The Gorilla on the Train",
+  "phase": "R2H",
+  "words": 1306,
+  "minutes": 7
+ },
+ {
+  "slug": "the-lousemaid",
+  "original": "The Housemaid",
+  "parody": "The Lousemaid",
+  "phase": "R2H",
+  "words": 1220,
+  "minutes": 6
+ },
+ {
+  "slug": "the-big-screech",
+  "original": "The Big Sleep",
+  "parody": "The Big Screech",
+  "phase": "R2H",
+  "words": 1252,
+  "minutes": 6
+ },
+ {
+  "slug": "the-postman-always-swings-twice",
+  "original": "The Postman Always Rings Twice",
+  "parody": "The Postman Always Swings Twice",
+  "phase": "R2H",
+  "words": 1234,
+  "minutes": 6
+ },
+ {
+  "slug": "the-da-vine-ci-code",
+  "original": "The Da Vinci Code",
+  "parody": "The Da Vine-ci Code",
+  "phase": "R2H",
+  "words": 1403,
+  "minutes": 7
+ },
+ {
+  "slug": "the-lost-simian",
+  "original": "The Lost Symbol",
+  "parody": "The Lost Simian",
+  "phase": "R2H",
+  "words": 1272,
+  "minutes": 6
+ },
+ {
+  "slug": "digital-fur-tress",
+  "original": "Digital Fortress",
+  "parody": "Digital Fur-tress",
+  "phase": "R2H",
+  "words": 1248,
+  "minutes": 6
+ },
+ {
+  "slug": "a-climb-to-kill",
+  "original": "A Time to Kill",
+  "parody": "A Climb to Kill",
+  "phase": "R2H",
+  "words": 1262,
+  "minutes": 6
+ },
+ {
+  "slug": "the-hunt-for-red-ooktober",
+  "original": "The Hunt for Red October",
+  "parody": "The Hunt for Red Ooktober",
+  "phase": "R2H",
+  "words": 1210,
+  "minutes": 6
+ },
+ {
+  "slug": "the-baboon-identity",
+  "original": "The Bourne Identity",
+  "parody": "The Baboon Identity",
+  "phase": "R2H",
+  "words": 1254,
+  "minutes": 6
+ },
+ {
+  "slug": "goldswinger",
+  "original": "Goldfinger",
+  "parody": "Goldswinger",
+  "phase": "R2H",
+  "words": 1253,
+  "minutes": 6
+ },
+ {
+  "slug": "from-rhesus-with-love",
+  "original": "From Russia, with Love",
+  "parody": "From Rhesus, with Love",
+  "phase": "R2H",
+  "words": 1232,
+  "minutes": 6
+ },
+ {
+  "slug": "you-only-pick-lice",
+  "original": "You Only Live Twice",
+  "parody": "You Only Pick Lice",
+  "phase": "R2H",
+  "words": 1256,
+  "minutes": 6
+ },
+ {
+  "slug": "the-spy-who-groomed-me",
+  "original": "The Spy Who Loved Me",
+  "parody": "The Spy Who Groomed Me",
+  "phase": "R2H",
+  "words": 1221,
+  "minutes": 6
+ },
+ {
+  "slug": "farewell-my-lemur",
+  "original": "Farewell, My Lovely",
+  "parody": "Farewell, My Lemur",
+  "phase": "R2H",
+  "words": 1250,
+  "minutes": 6
+ },
+ {
+  "slug": "the-silence-of-the-langurs",
+  "original": "The Silence of the Lambs",
+  "parody": "The Silence of the Langurs",
+  "phase": "R2I",
+  "words": 1482,
+  "minutes": 7
+ },
+ {
+  "slug": "rosemarys-baboon",
+  "original": "Rosemary's Baby",
+  "parody": "Rosemary's Baboon",
+  "phase": "R2I",
+  "words": 1227,
+  "minutes": 6
+ },
+ {
+  "slug": "the-legend-of-sleepy-howler",
+  "original": "The Legend of Sleepy Hollow",
+  "parody": "The Legend of Sleepy Howler",
+  "phase": "R2I",
+  "words": 1341,
+  "minutes": 7
+ },
+ {
+  "slug": "frankensimian",
+  "original": "Frankenstein",
+  "parody": "Frankensimian",
+  "phase": "R2I",
+  "words": 1250,
+  "minutes": 6
+ },
+ {
+  "slug": "mitesery",
+  "original": "Misery",
+  "parody": "Mitesery",
+  "phase": "R2I",
+  "words": 1292,
+  "minutes": 6
+ },
+ {
+  "slug": "chimpstine",
+  "original": "Christine",
+  "parody": "Chimpstine",
+  "phase": "R2I",
+  "words": 1256,
+  "minutes": 6
+ },
+ {
+  "slug": "firescratcher",
+  "original": "Firestarter",
+  "parody": "Firescratcher",
+  "phase": "R2I",
+  "words": 1245,
+  "minutes": 6
+ },
+ {
+  "slug": "needful-swings",
+  "original": "Needful Things",
+  "parody": "Needful Swings",
+  "phase": "R2I",
+  "words": 1229,
+  "minutes": 6
+ },
+ {
+  "slug": "different-simians",
+  "original": "Different Seasons",
+  "parody": "Different Simians",
+  "phase": "R2I",
+  "words": 1486,
+  "minutes": 7
+ },
+ {
+  "slug": "fur-past-midnight",
+  "original": "Four Past Midnight",
+  "parody": "Fur Past Midnight",
+  "phase": "R2I",
+  "words": 1323,
+  "minutes": 7
+ },
+ {
+  "slug": "the-green-vine",
+  "original": "The Green Mile",
+  "parody": "The Green Vine",
+  "phase": "R2I",
+  "words": 1269,
+  "minutes": 6
+ },
+ {
+  "slug": "dreamscratcher",
+  "original": "Dreamcatcher",
+  "parody": "Dreamscratcher",
+  "phase": "R2I",
+  "words": 1452,
+  "minutes": 7
+ },
+ {
+  "slug": "the-tommyknucklers",
+  "original": "The Tommyknockers",
+  "parody": "The Tommyknucklers",
+  "phase": "R2I",
+  "words": 1321,
+  "minutes": 7
+ },
+ {
+  "slug": "the-tell-tail-heart",
+  "original": "The Tell-Tale Heart",
+  "parody": "The Tell-Tail Heart",
+  "phase": "R2I",
+  "words": 1213,
+  "minutes": 6
+ },
+ {
+  "slug": "the-macaque-of-the-red-death",
+  "original": "The Masque of the Red Death",
+  "parody": "The Macaque of the Red Death",
+  "phase": "R2I",
+  "words": 1286,
+  "minutes": 6
+ },
+ {
+  "slug": "bananabel-lee",
+  "original": "Annabel Lee",
+  "parody": "Bananabel Lee",
+  "phase": "R2I",
+  "words": 1423,
+  "minutes": 7
+ },
+ {
+  "slug": "the-black-macaque",
+  "original": "The Black Cat",
+  "parody": "The Black Macaque",
+  "phase": "R2I",
+  "words": 1427,
+  "minutes": 7
+ },
+ {
+  "slug": "the-call-of-chimpthulhu",
+  "original": "The Call of Cthulhu",
+  "parody": "The Call of Chimpthulhu",
+  "phase": "R2I",
+  "words": 1248,
+  "minutes": 6
+ },
+ {
+  "slug": "the-dunwich-howler",
+  "original": "The Dunwich Horror",
+  "parody": "The Dunwich Howler",
+  "phase": "R2I",
+  "words": 1227,
+  "minutes": 6
+ },
+ {
+  "slug": "something-wicked-this-way-climbs",
+  "original": "Something Wicked This Way Comes",
+  "parody": "Something Wicked This Way Climbs",
+  "phase": "R2I",
+  "words": 1247,
+  "minutes": 6
+ },
+ {
+  "slug": "house-of-fleas",
+  "original": "House of Leaves",
+  "parody": "House of Fleas",
+  "phase": "R2I",
+  "words": 1275,
+  "minutes": 6
+ },
+ {
+  "slug": "we-have-always-lived-in-the-canopy",
+  "original": "We Have Always Lived in the Castle",
+  "parody": "We Have Always Lived in the Canopy",
+  "phase": "R2I",
+  "words": 1256,
+  "minutes": 6
+ },
+ {
+  "slug": "breakfast-of-chimpions",
+  "original": "Breakfast of Champions",
+  "parody": "Breakfast of Chimpions",
+  "phase": "R3A",
+  "words": 1432,
+  "minutes": 7
+ },
+ {
+  "slug": "hairy-tail",
+  "original": "Fairy Tale",
+  "parody": "Hairy Tail",
+  "phase": "R3A",
+  "words": 1446,
+  "minutes": 7
+ },
+ {
+  "slug": "the-ape-peel",
+  "original": "The Appeal",
+  "parody": "The Ape Peel",
+  "phase": "R3A",
+  "words": 1363,
+  "minutes": 7
+ },
+ {
+  "slug": "the-bluest-aye-aye",
+  "original": "The Bluest Eye",
+  "parody": "The Bluest Aye-Aye",
+  "phase": "R3A",
+  "words": 1386,
+  "minutes": 7
+ },
+ {
+  "slug": "the-baboonstone",
+  "original": "The Moonstone",
+  "parody": "The Baboonstone",
+  "phase": "R3A",
+  "words": 1371,
+  "minutes": 7
+ },
+ {
+  "slug": "the-silverback-of-notre-dame",
+  "original": "The Hunchback of Notre-Dame",
+  "parody": "The Silverback of Notre-Dame",
+  "phase": "R3A",
+  "words": 1376,
+  "minutes": 7
+ },
+ {
+  "slug": "the-alchimpist",
+  "original": "The Alchemist",
+  "parody": "The Alchimpist",
+  "phase": "R3A",
+  "words": 1363,
+  "minutes": 7
+ },
+ {
+  "slug": "wuthering-mites",
+  "original": "Wuthering Heights",
+  "parody": "Wuthering Mites",
+  "phase": "R3A",
+  "words": 1557,
+  "minutes": 8
+ },
+ {
+  "slug": "les-miserapes",
+  "original": "Les Misérables",
+  "parody": "Les Misérapes",
+  "phase": "R3A",
+  "words": 1494,
+  "minutes": 7
+ },
+ {
+  "slug": "capuchins-courageous",
+  "original": "Captains Courageous",
+  "parody": "Capuchins Courageous",
+  "phase": "R3A",
+  "words": 1351,
+  "minutes": 7
+ },
+ {
+  "slug": "a-connecticut-monkey-in-king-kongs-court",
+  "original": "A Connecticut Yankee in King Arthur's Court",
+  "parody": "A Connecticut Monkey in King Kong's Court",
+  "phase": "R3A",
+  "words": 1277,
+  "minutes": 6
+ },
+ {
+  "slug": "adventures-of-knuckleberry-finn",
+  "original": "Adventures of Huckleberry Finn",
+  "parody": "Adventures of Knuckleberry Finn",
+  "phase": "R3A",
+  "words": 1348,
+  "minutes": 7
+ },
+ {
+  "slug": "fur-from-the-madding-crowd",
+  "original": "Far from the Madding Crowd",
+  "parody": "Fur from the Madding Crowd",
+  "phase": "R3A",
+  "words": 1362,
+  "minutes": 7
+ },
+ {
+  "slug": "tess-of-the-durbervines",
+  "original": "Tess of the d'Urbervilles",
+  "parody": "Tess of the d'Urbervines",
+  "phase": "R3A",
+  "words": 1322,
+  "minutes": 7
+ },
+ {
+  "slug": "middlebranch",
+  "original": "Middlemarch",
+  "parody": "Middlebranch",
+  "phase": "R3A",
+  "words": 1243,
+  "minutes": 6
+ },
+ {
+  "slug": "robinson-groomsoe",
+  "original": "Robinson Crusoe",
+  "parody": "Robinson Groomsoe",
+  "phase": "R3A",
+  "words": 1620,
+  "minutes": 8
+ },
+ {
+  "slug": "moby-tick",
+  "original": "Moby-Dick",
+  "parody": "Moby-Tick",
+  "phase": "R3A",
+  "words": 1393,
+  "minutes": 7
+ },
+ {
+  "slug": "the-mandrill-on-the-floss",
+  "original": "The Mill on the Floss",
+  "parody": "The Mandrill on the Floss",
+  "phase": "R3A",
+  "words": 1305,
+  "minutes": 7
+ },
+ {
+  "slug": "the-mandrill-in-the-iron-mask",
+  "original": "The Man in the Iron Mask",
+  "parody": "The Mandrill in the Iron Mask",
+  "phase": "R3A",
+  "words": 1300,
+  "minutes": 6
+ },
+ {
+  "slug": "lady-chatterleys-lemur",
+  "original": "Lady Chatterley's Lover",
+  "parody": "Lady Chatterley's Lemur",
+  "phase": "R3A",
+  "words": 1312,
+  "minutes": 7
+ },
+ {
+  "slug": "doctor-chimpvago",
+  "original": "Doctor Zhivago",
+  "parody": "Doctor Chimpvago",
+  "phase": "R3A",
+  "words": 1260,
+  "minutes": 6
+ },
+ {
+  "slug": "the-marmoset-and-margarita",
+  "original": "The Master and Margarita",
+  "parody": "The Marmoset and Margarita",
+  "phase": "R3A",
+  "words": 1306,
+  "minutes": 7
+ },
+ {
+  "slug": "to-the-lousehouse",
+  "original": "To the Lighthouse",
+  "parody": "To the Lousehouse",
+  "phase": "R3A",
+  "words": 1301,
+  "minutes": 7
+ },
+ {
+  "slug": "mrs-delousaway",
+  "original": "Mrs Dalloway",
+  "parody": "Mrs Delousaway",
+  "phase": "R3A",
+  "words": 1314,
+  "minutes": 7
+ },
+ {
+  "slug": "the-grass-is-swinging",
+  "original": "The Grass Is Singing",
+  "parody": "The Grass Is Swinging",
+  "phase": "R3A",
+  "words": 1245,
+  "minutes": 6
+ },
+ {
+  "slug": "the-bonobostonians",
+  "original": "The Bostonians",
+  "parody": "The Bonobostonians",
+  "phase": "R3A",
+  "words": 1255,
+  "minutes": 6
+ },
+ {
+  "slug": "notes-from-undergroomed",
+  "original": "Notes from Underground",
+  "parody": "Notes from Undergroomed",
+  "phase": "R3A",
+  "words": 1266,
+  "minutes": 6
+ },
+ {
+  "slug": "the-french-lemurtenants-woman",
+  "original": "The French Lieutenant's Woman",
+  "parody": "The French Lemurtenant's Woman",
+  "phase": "R3A",
+  "words": 1272,
+  "minutes": 6
+ },
+ {
+  "slug": "the-knuckle-boys",
+  "original": "The Nickel Boys",
+  "parody": "The Knuckle Boys",
+  "phase": "R3B",
+  "words": 1468,
+  "minutes": 7
+ },
+ {
+  "slug": "a-visit-from-the-groom-squad",
+  "original": "A Visit from the Goon Squad",
+  "parody": "A Visit from the Groom Squad",
+  "phase": "R3B",
+  "words": 1373,
+  "minutes": 7
+ },
+ {
+  "slug": "the-mite-runner",
+  "original": "The Kite Runner",
+  "parody": "The Mite Runner",
+  "phase": "R3B",
+  "words": 1517,
+  "minutes": 8
+ },
+ {
+  "slug": "the-color-furple",
+  "original": "The Color Purple",
+  "parody": "The Color Furple",
+  "phase": "R3B",
+  "words": 1267,
+  "minutes": 6
+ },
+ {
+  "slug": "the-god-of-small-swings",
+  "original": "The God of Small Things",
+  "parody": "The God of Small Swings",
+  "phase": "R3B",
+  "words": 1263,
+  "minutes": 6
+ },
+ {
+  "slug": "baboon-and-the-sea-of-stories",
+  "original": "Haroun and the Sea of Stories",
+  "parody": "Baboon and the Sea of Stories",
+  "phase": "R3B",
+  "words": 1305,
+  "minutes": 7
+ },
+ {
+  "slug": "the-lemurs-last-sigh",
+  "original": "The Moor's Last Sigh",
+  "parody": "The Lemur's Last Sigh",
+  "phase": "R3B",
+  "words": 1256,
+  "minutes": 6
+ },
+ {
+  "slug": "pachimpko",
+  "original": "Pachinko",
+  "parody": "Pachimpko",
+  "phase": "R3B",
+  "words": 1254,
+  "minutes": 6
+ },
+ {
+  "slug": "lessons-in-chimpistry",
+  "original": "Lessons in Chemistry",
+  "parody": "Lessons in Chimpistry",
+  "phase": "R3B",
+  "words": 1266,
+  "minutes": 6
+ },
+ {
+  "slug": "tamarin-and-tamarin-and-tamarin",
+  "original": "Tomorrow, and Tomorrow, and Tomorrow",
+  "parody": "Tamarin, and Tamarin, and Tamarin",
+  "phase": "R3B",
+  "words": 1279,
+  "minutes": 6
+ },
+ {
+  "slug": "the-spider-monkey-house-rules",
+  "original": "The Cider House Rules",
+  "parody": "The Spider Monkey House Rules",
+  "phase": "R3B",
+  "words": 1467,
+  "minutes": 7
+ },
+ {
+  "slug": "the-chimping-news",
+  "original": "The Shipping News",
+  "parody": "The Chimping News",
+  "phase": "R3B",
+  "words": 1338,
+  "minutes": 7
+ },
+ {
+  "slug": "a-prayer-for-ooh-ooh-meany",
+  "original": "A Prayer for Owen Meany",
+  "parody": "A Prayer for Ooh-Ooh Meany",
+  "phase": "R3B",
+  "words": 1242,
+  "minutes": 6
+ },
+ {
+  "slug": "chimpire-falls",
+  "original": "Empire Falls",
+  "parody": "Chimpire Falls",
+  "phase": "R3B",
+  "words": 1291,
+  "minutes": 6
+ },
+ {
+  "slug": "anxious-treeple",
+  "original": "Anxious People",
+  "parody": "Anxious Treeple",
+  "phase": "R3B",
+  "words": 1306,
+  "minutes": 7
+ },
+ {
+  "slug": "conversations-with-fronds",
+  "original": "Conversations with Friends",
+  "parody": "Conversations with Fronds",
+  "phase": "R3B",
+  "words": 1317,
+  "minutes": 7
+ },
+ {
+  "slug": "the-name-of-the-rhesus",
+  "original": "The Name of the Rose",
+  "parody": "The Name of the Rhesus",
+  "phase": "R3B",
+  "words": 1282,
+  "minutes": 6
+ },
+ {
+  "slug": "click-clack-macaque",
+  "original": "Click, Clack, Moo: Cows That Type",
+  "parody": "Click, Clack, Macaque: Monkeys That Type",
+  "phase": "R3C",
+  "words": 1169,
+  "minutes": 6
+ },
+ {
+  "slug": "macaque-in-slacks",
+  "original": "Fox in Socks",
+  "parody": "Macaque in Slacks",
+  "phase": "R3C",
+  "words": 1274,
+  "minutes": 6
+ },
+ {
+  "slug": "the-loris",
+  "original": "The Lorax",
+  "parody": "The Loris",
+  "phase": "R3C",
+  "words": 1276,
+  "minutes": 6
+ },
+ {
+  "slug": "how-the-chimp-stole-christmas",
+  "original": "How the Grinch Stole Christmas!",
+  "parody": "How the Chimp Stole Christmas!",
+  "phase": "R3C",
+  "words": 1408,
+  "minutes": 7
+ },
+ {
+  "slug": "the-screeches",
+  "original": "The Sneetches",
+  "parody": "The Screeches",
+  "phase": "R3C",
+  "words": 1389,
+  "minutes": 7
+ },
+ {
+  "slug": "marvin-k-monkey-will-you-please-go-now",
+  "original": "Marvin K. Mooney Will You Please Go Now!",
+  "parody": "Marvin K. Monkey Will You Please Go Now!",
+  "phase": "R3C",
+  "words": 1390,
+  "minutes": 7
+ },
+ {
+  "slug": "theres-a-marmoset-in-my-closet",
+  "original": "There's a Wocket in My Pocket!",
+  "parody": "There's a Marmoset in My Closet!",
+  "phase": "R3C",
+  "words": 1332,
+  "minutes": 7
+ },
+ {
+  "slug": "the-bonoborrowers",
+  "original": "The Borrowers",
+  "parody": "The Bonoborrowers",
+  "phase": "R3C",
+  "words": 1356,
+  "minutes": 7
+ },
+ {
+  "slug": "because-of-swing-dixie",
+  "original": "Because of Winn-Dixie",
+  "parody": "Because of Swing-Dixie",
+  "phase": "R3C",
+  "words": 1513,
+  "minutes": 8
+ },
+ {
+  "slug": "five-chimps-and-a-nit",
+  "original": "Five Children and It",
+  "parody": "Five Chimps and a Nit",
+  "phase": "R3C",
+  "words": 1438,
+  "minutes": 7
+ },
+ {
+  "slug": "a-swiftly-tilting-primate",
+  "original": "A Swiftly Tilting Planet",
+  "parody": "A Swiftly Tilting Primate",
+  "phase": "R3C",
+  "words": 1394,
+  "minutes": 7
+ },
+ {
+  "slug": "the-phantom-howlbooth",
+  "original": "The Phantom Tollbooth",
+  "parody": "The Phantom Howlbooth",
+  "phase": "R3C",
+  "words": 1345,
+  "minutes": 7
+ },
+ {
+  "slug": "the-miserable-mandrill",
+  "original": "The Miserable Mill",
+  "parody": "The Miserable Mandrill",
+  "phase": "R3C",
+  "words": 1357,
+  "minutes": 7
+ },
+ {
+  "slug": "monkeyskin",
+  "original": "Donkeyskin",
+  "parody": "Monkeyskin",
+  "phase": "R3C",
+  "words": 1495,
+  "minutes": 7
+ },
+ {
+  "slug": "baboonzel",
+  "original": "Rapunzel",
+  "parody": "Baboonzel",
+  "phase": "R3C",
+  "words": 1603,
+  "minutes": 8
+ },
+ {
+  "slug": "the-lion-and-the-louse",
+  "original": "The Lion and the Mouse",
+  "parody": "The Lion and the Louse",
+  "phase": "R3C",
+  "words": 1321,
+  "minutes": 7
+ },
+ {
+  "slug": "the-town-louse-and-the-country-louse",
+  "original": "The Town Mouse and the Country Mouse",
+  "parody": "The Town Louse and the Country Louse",
+  "phase": "R3C",
+  "words": 1376,
+  "minutes": 7
+ },
+ {
+  "slug": "the-nutscratcher",
+  "original": "The Nutcracker",
+  "parody": "The Nutscratcher",
+  "phase": "R3C",
+  "words": 1468,
+  "minutes": 7
+ },
+ {
+  "slug": "the-tortoise-and-the-hair",
+  "original": "The Tortoise and the Hare",
+  "parody": "The Tortoise and the Hair",
+  "phase": "R3C",
+  "words": 1295,
+  "minutes": 6
+ },
+ {
+  "slug": "the-wolf-in-chimps-clothing",
+  "original": "The Wolf in Sheep's Clothing",
+  "parody": "The Wolf in Chimp's Clothing",
+  "phase": "R3C",
+  "words": 1256,
+  "minutes": 6
+ },
+ {
+  "slug": "the-jungle-ook",
+  "original": "The Jungle Book",
+  "parody": "The Jungle Ook",
+  "phase": "R3C",
+  "words": 1585,
+  "minutes": 8
+ },
+ {
+  "slug": "snow-white-and-the-seven-dwarf-lemurs",
+  "original": "Snow White and the Seven Dwarfs",
+  "parody": "Snow White and the Seven Dwarf Lemurs",
+  "phase": "R3C",
+  "words": 1621,
+  "minutes": 8
+ },
+ {
+  "slug": "the-book-of-lost-tails",
+  "original": "The Book of Lost Tales",
+  "parody": "The Book of Lost Tails",
+  "phase": "R3D",
+  "words": 1441,
+  "minutes": 7
+ },
+ {
+  "slug": "the-fellowchimp-of-the-swing",
+  "original": "The Fellowship of the Ring",
+  "parody": "The Fellowchimp of the Swing",
+  "phase": "R3D",
+  "words": 1628,
+  "minutes": 8
+ },
+ {
+  "slug": "hairy-potter-and-the-chamber-of-screeches",
+  "original": "Harry Potter and the Chamber of Secrets",
+  "parody": "Hairy Potter and the Chamber of Screeches",
+  "phase": "R3D",
+  "words": 1441,
+  "minutes": 7
+ },
+ {
+  "slug": "hairy-potter-and-the-goblet-of-fur",
+  "original": "Harry Potter and the Goblet of Fire",
+  "parody": "Hairy Potter and the Goblet of Fur",
+  "phase": "R3D",
+  "words": 1288,
+  "minutes": 6
+ },
+ {
+  "slug": "prince-capuchin",
+  "original": "Prince Caspian",
+  "parody": "Prince Capuchin",
+  "phase": "R3D",
+  "words": 1281,
+  "minutes": 6
+ },
+ {
+  "slug": "the-silver-hair",
+  "original": "The Silver Chair",
+  "parody": "The Silver Hair",
+  "phase": "R3D",
+  "words": 1247,
+  "minutes": 6
+ },
+ {
+  "slug": "a-wizard-of-earthtree",
+  "original": "A Wizard of Earthsea",
+  "parody": "A Wizard of Earthtree",
+  "phase": "R3D",
+  "words": 1245,
+  "minutes": 6
+ },
+ {
+  "slug": "the-book-of-trees",
+  "original": "The Book of Three",
+  "parody": "The Book of Trees",
+  "phase": "R3D",
+  "words": 1243,
+  "minutes": 6
+ },
+ {
+  "slug": "fourth-swing",
+  "original": "Fourth Wing",
+  "parody": "Fourth Swing",
+  "phase": "R3D",
+  "words": 1228,
+  "minutes": 6
+ },
+ {
+  "slug": "hair-of-fire",
+  "original": "Heir of Fire",
+  "parody": "Hair of Fire",
+  "phase": "R3D",
+  "words": 1250,
+  "minutes": 6
+ },
+ {
+  "slug": "a-court-of-thorns-and-rhesus",
+  "original": "A Court of Thorns and Roses",
+  "parody": "A Court of Thorns and Rhesus",
+  "phase": "R3D",
+  "words": 1234,
+  "minutes": 6
+ },
+ {
+  "slug": "crooked-kongdom",
+  "original": "Crooked Kingdom",
+  "parody": "Crooked Kongdom",
+  "phase": "R3D",
+  "words": 1604,
+  "minutes": 8
+ },
+ {
+  "slug": "shadow-and-bonobo",
+  "original": "Shadow and Bone",
+  "parody": "Shadow and Bonobo",
+  "phase": "R3D",
+  "words": 1271,
+  "minutes": 6
+ },
+ {
+  "slug": "the-priory-of-the-orangutan-tree",
+  "original": "The Priory of the Orange Tree",
+  "parody": "The Priory of the Orangutan Tree",
+  "phase": "R3D",
+  "words": 1288,
+  "minutes": 6
+ },
+ {
+  "slug": "the-gibbon-emperor",
+  "original": "The Goblin Emperor",
+  "parody": "The Gibbon Emperor",
+  "phase": "R3D",
+  "words": 1261,
+  "minutes": 6
+ },
+ {
+  "slug": "redhowl",
+  "original": "Redwall",
+  "parody": "Redhowl",
+  "phase": "R3D",
+  "words": 1370,
+  "minutes": 7
+ },
+ {
+  "slug": "mosshowler",
+  "original": "Mossflower",
+  "parody": "Mosshowler",
+  "phase": "R3D",
+  "words": 1293,
+  "minutes": 6
+ },
+ {
+  "slug": "mandrill-the-warrior",
+  "original": "Martin the Warrior",
+  "parody": "Mandrill the Warrior",
+  "phase": "R3D",
+  "words": 1239,
+  "minutes": 6
+ },
+ {
+  "slug": "rakkety-tamarin",
+  "original": "Rakkety Tam",
+  "parody": "Rakkety Tamarin",
+  "phase": "R3D",
+  "words": 1347,
+  "minutes": 7
+ },
+ {
+  "slug": "macaquerade",
+  "original": "Maskerade",
+  "parody": "Macaquerade",
+  "phase": "R3D",
+  "words": 1331,
+  "minutes": 7
+ },
+ {
+  "slug": "equal-mites",
+  "original": "Equal Rites",
+  "parody": "Equal Mites",
+  "phase": "R3D",
+  "words": 1246,
+  "minutes": 6
+ },
+ {
+  "slug": "carpe-jungulum",
+  "original": "Carpe Jugulum",
+  "parody": "Carpe Jungulum",
+  "phase": "R3D",
+  "words": 1254,
+  "minutes": 6
+ },
+ {
+  "slug": "interesting-climbs",
+  "original": "Interesting Times",
+  "parody": "Interesting Climbs",
+  "phase": "R3D",
+  "words": 1274,
+  "minutes": 6
+ },
+ {
+  "slug": "the-amazing-loris-and-his-educated-rodents",
+  "original": "The Amazing Maurice and His Educated Rodents",
+  "parody": "The Amazing Loris and His Educated Rodents",
+  "phase": "R3D",
+  "words": 1341,
+  "minutes": 7
+ },
+ {
+  "slug": "the-trouble-with-fleas",
+  "original": "The Trouble with Peace",
+  "parody": "The Trouble with Fleas",
+  "phase": "R3D",
+  "words": 1294,
+  "minutes": 6
+ },
+ {
+  "slug": "the-braid-itself",
+  "original": "The Blade Itself",
+  "parody": "The Braid Itself",
+  "phase": "R3D",
+  "words": 1227,
+  "minutes": 6
+ },
+ {
+  "slug": "the-titi-and-the-titi",
+  "original": "The City & the City",
+  "parody": "The Titi & the Titi",
+  "phase": "R3E",
+  "words": 1472,
+  "minutes": 7
+ },
+ {
+  "slug": "perdido-tree-station",
+  "original": "Perdido Street Station",
+  "parody": "Perdido Tree Station",
+  "phase": "R3E",
+  "words": 1396,
+  "minutes": 7
+ },
+ {
+  "slug": "the-caves-of-peel",
+  "original": "The Caves of Steel",
+  "parody": "The Caves of Peel",
+  "phase": "R3E",
+  "words": 1382,
+  "minutes": 7
+ },
+ {
+  "slug": "the-naked-bum",
+  "original": "The Naked Sun",
+  "parody": "The Naked Bum",
+  "phase": "R3E",
+  "words": 1389,
+  "minutes": 7
+ },
+ {
+  "slug": "the-bonobots-of-dawn",
+  "original": "The Robots of Dawn",
+  "parody": "The Bonobots of Dawn",
+  "phase": "R3E",
+  "words": 1499,
+  "minutes": 7
+ },
+ {
+  "slug": "the-proboscitronic-man",
+  "original": "The Positronic Man",
+  "parody": "The Proboscitronic Man",
+  "phase": "R3E",
+  "words": 1341,
+  "minutes": 7
+ },
+ {
+  "slug": "consider-fleabas",
+  "original": "Consider Phlebas",
+  "parody": "Consider Fleabas",
+  "phase": "R3E",
+  "words": 1339,
+  "minutes": 7
+ },
+ {
+  "slug": "pushing-lice",
+  "original": "Pushing Ice",
+  "parody": "Pushing Lice",
+  "phase": "R3E",
+  "words": 1281,
+  "minutes": 6
+ },
+ {
+  "slug": "the-simians-of-titan",
+  "original": "The Sirens of Titan",
+  "parody": "The Simians of Titan",
+  "phase": "R3E",
+  "words": 1401,
+  "minutes": 7
+ },
+ {
+  "slug": "a-scratcher-darkly",
+  "original": "A Scanner Darkly",
+  "parody": "A Scratcher Darkly",
+  "phase": "R3E",
+  "words": 1325,
+  "minutes": 7
+ },
+ {
+  "slug": "gorillapagos",
+  "original": "Galápagos",
+  "parody": "Gorillápagos",
+  "phase": "R3E",
+  "words": 1353,
+  "minutes": 7
+ },
+ {
+  "slug": "the-day-of-the-tree-fids",
+  "original": "The Day of the Triffids",
+  "parody": "The Day of the Tree-fids",
+  "phase": "R3E",
+  "words": 1281,
+  "minutes": 6
+ },
+ {
+  "slug": "the-midwich-ook-ooks",
+  "original": "The Midwich Cuckoos",
+  "parody": "The Midwich Ook-Ooks",
+  "phase": "R3E",
+  "words": 1274,
+  "minutes": 6
+ },
+ {
+  "slug": "macaques-cradle",
+  "original": "Cat's Cradle",
+  "parody": "Macaque's Cradle",
+  "phase": "R3E",
+  "words": 1239,
+  "minutes": 6
+ },
+ {
+  "slug": "a-capuchin-for-leibowitz",
+  "original": "A Canticle for Leibowitz",
+  "parody": "A Capuchin for Leibowitz",
+  "phase": "R3E",
+  "words": 1354,
+  "minutes": 7
+ },
+ {
+  "slug": "have-ape-suit-will-travel",
+  "original": "Have Space Suit—Will Travel",
+  "parody": "Have Ape Suit—Will Travel",
+  "phase": "R3E",
+  "words": 1252,
+  "minutes": 6
+ },
+ {
+  "slug": "the-end-of-ape-ternity",
+  "original": "The End of Eternity",
+  "parody": "The End of Ape-ternity",
+  "phase": "R3E",
+  "words": 1250,
+  "minutes": 6
+ },
+ {
+  "slug": "the-talented-mr-gripley",
+  "original": "The Talented Mr. Ripley",
+  "parody": "The Talented Mr. Gripley",
+  "phase": "R3F",
+  "words": 1236,
+  "minutes": 6
+ },
+ {
+  "slug": "the-peelican-brief",
+  "original": "The Pelican Brief",
+  "parody": "The Peelican Brief",
+  "phase": "R3F",
+  "words": 1226,
+  "minutes": 6
+ },
+ {
+  "slug": "the-rainmacaque",
+  "original": "The Rainmaker",
+  "parody": "The Rainmacaque",
+  "phase": "R3F",
+  "words": 1275,
+  "minutes": 6
+ },
+ {
+  "slug": "the-body-in-the-lice-brary",
+  "original": "The Body in the Library",
+  "parody": "The Body in the Lice-brary",
+  "phase": "R3F",
+  "words": 1548,
+  "minutes": 8
+ },
+ {
+  "slug": "by-the-picking-of-my-thumbs",
+  "original": "By the Pricking of My Thumbs",
+  "parody": "By the Picking of My Thumbs",
+  "phase": "R3F",
+  "words": 1315,
+  "minutes": 7
+ },
+ {
+  "slug": "ape-pointment-with-death",
+  "original": "Appointment with Death",
+  "parody": "Ape-pointment with Death",
+  "phase": "R3F",
+  "words": 1343,
+  "minutes": 7
+ },
+ {
+  "slug": "the-labours-of-haircules",
+  "original": "The Labours of Hercules",
+  "parody": "The Labours of Haircules",
+  "phase": "R3F",
+  "words": 1347,
+  "minutes": 7
+ },
+ {
+  "slug": "red-hairvest",
+  "original": "Red Harvest",
+  "parody": "Red Hairvest",
+  "phase": "R3F",
+  "words": 1320,
+  "minutes": 7
+ },
+ {
+  "slug": "trouble-is-my-monkey-business",
+  "original": "Trouble Is My Business",
+  "parody": "Trouble Is My Monkey Business",
+  "phase": "R3F",
+  "words": 1284,
+  "minutes": 6
+ },
+ {
+  "slug": "the-night-mangabey",
+  "original": "The Night Manager",
+  "parody": "The Night Mangabey",
+  "phase": "R3F",
+  "words": 1320,
+  "minutes": 7
+ },
+ {
+  "slug": "the-constant-groomer",
+  "original": "The Constant Gardener",
+  "parody": "The Constant Groomer",
+  "phase": "R3F",
+  "words": 1263,
+  "minutes": 6
+ },
+ {
+  "slug": "a-scandal-in-bonobemia",
+  "original": "A Scandal in Bohemia",
+  "parody": "A Scandal in Bonobemia",
+  "phase": "R3F",
+  "words": 1264,
+  "minutes": 6
+ },
+ {
+  "slug": "the-adventure-of-the-six-bananapoleons",
+  "original": "The Adventure of the Six Napoleons",
+  "parody": "The Adventure of the Six Bananapoleons",
+  "phase": "R3F",
+  "words": 1308,
+  "minutes": 7
+ },
+ {
+  "slug": "the-final-proboscis",
+  "original": "The Final Problem",
+  "parody": "The Final Proboscis",
+  "phase": "R3F",
+  "words": 1348,
+  "minutes": 7
+ },
+ {
+  "slug": "the-sign-of-the-fur",
+  "original": "The Sign of the Four",
+  "parody": "The Sign of the Fur",
+  "phase": "R3F",
+  "words": 1349,
+  "minutes": 7
+ },
+ {
+  "slug": "death-on-the-vine",
+  "original": "Death on the Nile",
+  "parody": "Death on the Vine",
+  "phase": "R3F",
+  "words": 1381,
+  "minutes": 7
+ },
+ {
+  "slug": "the-lice-tigators",
+  "original": "The Litigators",
+  "parody": "The Lice-tigators",
+  "phase": "R3F",
+  "words": 1306,
+  "minutes": 7
+ },
+ {
+  "slug": "capuchino-island",
+  "original": "Camino Island",
+  "parody": "Capuchino Island",
+  "phase": "R3F",
+  "words": 1323,
+  "minutes": 7
+ },
+ {
+  "slug": "the-runaway-furry",
+  "original": "The Runaway Jury",
+  "parody": "The Runaway Furry",
+  "phase": "R3F",
+  "words": 1334,
+  "minutes": 7
+ },
+ {
+  "slug": "timevine",
+  "original": "Timeline",
+  "parody": "Timevine",
+  "phase": "R3F",
+  "words": 1292,
+  "minutes": 6
+ },
+ {
+  "slug": "the-andromandrill-strain",
+  "original": "The Andromeda Strain",
+  "parody": "The Andromandrill Strain",
+  "phase": "R3F",
+  "words": 1267,
+  "minutes": 6
+ },
+ {
+  "slug": "the-furloined-letter",
+  "original": "The Purloined Letter",
+  "parody": "The Furloined Letter",
+  "phase": "R3F",
+  "words": 1268,
+  "minutes": 6
+ },
+ {
+  "slug": "the-gunswinger",
+  "original": "The Gunslinger",
+  "parody": "The Gunswinger",
+  "phase": "R3G",
+  "words": 1423,
+  "minutes": 7
+ },
+ {
+  "slug": "the-dark-howler",
+  "original": "The Dark Tower",
+  "parody": "The Dark Howler",
+  "phase": "R3G",
+  "words": 1536,
+  "minutes": 8
+ },
+ {
+  "slug": "song-of-susabanana",
+  "original": "Song of Susannah",
+  "parody": "Song of Susabanana",
+  "phase": "R3G",
+  "words": 1399,
+  "minutes": 7
+ },
+ {
+  "slug": "doctor-screech",
+  "original": "Doctor Sleep",
+  "parody": "Doctor Screech",
+  "phase": "R3G",
+  "words": 1353,
+  "minutes": 7
+ },
+ {
+  "slug": "ape-pupil",
+  "original": "Apt Pupil",
+  "parody": "Ape Pupil",
+  "phase": "R3G",
+  "words": 1218,
+  "minutes": 6
+ },
+ {
+  "slug": "ape-levation",
+  "original": "Elevation",
+  "parody": "Ape-levation",
+  "phase": "R3G",
+  "words": 1313,
+  "minutes": 7
+ },
+ {
+  "slug": "the-langurliers",
+  "original": "The Langoliers",
+  "parody": "The Langurliers",
+  "phase": "R3G",
+  "words": 1305,
+  "minutes": 7
+ },
+ {
+  "slug": "the-bonoboogeyman",
+  "original": "The Boogeyman",
+  "parody": "The Bonoboogeyman",
+  "phase": "R3G",
+  "words": 1217,
+  "minutes": 6
+ },
+ {
+  "slug": "the-regorillators",
+  "original": "The Regulators",
+  "parody": "The Regorillators",
+  "phase": "R3G",
+  "words": 1298,
+  "minutes": 6
+ },
+ {
+  "slug": "delouser-claiborne",
+  "original": "Dolores Claiborne",
+  "parody": "Delouser Claiborne",
+  "phase": "R3G",
+  "words": 1290,
+  "minutes": 6
+ },
+ {
+  "slug": "the-mite",
+  "original": "The Mist",
+  "parody": "The Mite",
+  "phase": "R3G",
+  "words": 1416,
+  "minutes": 7
+ },
+ {
+  "slug": "the-bonobody",
+  "original": "The Body",
+  "parody": "The Bonobody",
+  "phase": "R3G",
+  "words": 1283,
+  "minutes": 6
+ },
+ {
+  "slug": "howlerstor",
+  "original": "Horrorstör",
+  "parody": "Howlerstör",
+  "phase": "R3G",
+  "words": 1209,
+  "minutes": 6
+ },
+ {
+  "slug": "the-twigsted-ones",
+  "original": "The Twisted Ones",
+  "parody": "The Twigsted Ones",
+  "phase": "R3G",
+  "words": 1410,
+  "minutes": 7
+ },
+ {
+  "slug": "the-howler-places",
+  "original": "The Hollow Places",
+  "parody": "The Howler Places",
+  "phase": "R3G",
+  "words": 1249,
+  "minutes": 6
+ },
+ {
+  "slug": "the-capuchin-at-the-end-of-the-world",
+  "original": "The Cabin at the End of the World",
+  "parody": "The Capuchin at the End of the World",
+  "phase": "R3G",
+  "words": 1234,
+  "minutes": 6
+ },
+ {
+  "slug": "the-book-of-ape-cidents",
+  "original": "The Book of Accidents",
+  "parody": "The Book of Ape-cidents",
+  "phase": "R3G",
+  "words": 1337,
+  "minutes": 7
+ },
+ {
+  "slug": "the-exorsimian",
+  "original": "The Exorcist",
+  "parody": "The Exorsimian",
+  "phase": "R3G",
+  "words": 1268,
+  "minutes": 6
+ },
+ {
+  "slug": "breakfast-at-chimpanys",
+  "original": "Breakfast at Tiffany's",
+  "parody": "Breakfast at Chimpany's",
+  "phase": "R4A",
+  "words": 1469,
+  "minutes": 7
+ },
+ {
+  "slug": "the-groomfather",
+  "original": "The Godfather",
+  "parody": "The Groomfather",
+  "phase": "R4A",
+  "words": 1572,
+  "minutes": 8
+ },
+ {
+  "slug": "northlangur-abbey",
+  "original": "Northanger Abbey",
+  "parody": "Northlangur Abbey",
+  "phase": "R4A",
+  "words": 1591,
+  "minutes": 8
+ },
+ {
+  "slug": "vervette",
+  "original": "Villette",
+  "parody": "Vervette",
+  "phase": "R4A",
+  "words": 1437,
+  "minutes": 7
+ },
+ {
+  "slug": "little-loris",
+  "original": "Little Dorrit",
+  "parody": "Little Loris",
+  "phase": "R4A",
+  "words": 1547,
+  "minutes": 8
+ },
+ {
+  "slug": "monkey-and-son",
+  "original": "Dombey and Son",
+  "parody": "Monkey and Son",
+  "phase": "R4A",
+  "words": 1364,
+  "minutes": 7
+ },
+ {
+  "slug": "bananaby-rudge",
+  "original": "Barnaby Rudge",
+  "parody": "Bananaby Rudge",
+  "phase": "R4A",
+  "words": 1470,
+  "minutes": 7
+ },
+ {
+  "slug": "the-nitpick-papers",
+  "original": "The Pickwick Papers",
+  "parody": "The Nitpick Papers",
+  "phase": "R4A",
+  "words": 1586,
+  "minutes": 8
+ },
+ {
+  "slug": "our-mutual-frond",
+  "original": "Our Mutual Friend",
+  "parody": "Our Mutual Frond",
+  "phase": "R4A",
+  "words": 1584,
+  "minutes": 8
+ },
+ {
+  "slug": "nicholas-knuckleby",
+  "original": "Nicholas Nickleby",
+  "parody": "Nicholas Knuckleby",
+  "phase": "R4A",
+  "words": 1471,
+  "minutes": 7
+ },
+ {
+  "slug": "the-climbs",
+  "original": "The Chimes",
+  "parody": "The Climbs",
+  "phase": "R4A",
+  "words": 1606,
+  "minutes": 8
+ },
+ {
+  "slug": "the-battle-of-lice",
+  "original": "The Battle of Life",
+  "parody": "The Battle of Lice",
+  "phase": "R4A",
+  "words": 1609,
+  "minutes": 8
+ },
+ {
+  "slug": "the-tenant-of-wildfur-hall",
+  "original": "The Tenant of Wildfell Hall",
+  "parody": "The Tenant of Wildfur Hall",
+  "phase": "R4A",
+  "words": 1593,
+  "minutes": 8
+ },
+ {
+  "slug": "a-furwell-to-arms",
+  "original": "A Farewell to Arms",
+  "parody": "A Furwell to Arms",
+  "phase": "R4B",
+  "words": 1574,
+  "minutes": 8
+ },
+ {
+  "slug": "the-picture-of-dorian-grapes",
+  "original": "The Picture of Dorian Gray",
+  "parody": "The Picture of Dorian Grapes",
+  "phase": "R4B",
+  "words": 1595,
+  "minutes": 8
+ },
+ {
+  "slug": "a-handful-of-nuts",
+  "original": "A Handful of Dust",
+  "parody": "A Handful of Nuts",
+  "phase": "R4B",
+  "words": 1598,
+  "minutes": 8
+ },
+ {
+  "slug": "troop",
+  "original": "Scoop",
+  "parody": "Troop",
+  "phase": "R4B",
+  "words": 1372,
+  "minutes": 7
+ },
+ {
+  "slug": "the-howler-and-the-glory",
+  "original": "The Power and the Glory",
+  "parody": "The Howler and the Glory",
+  "phase": "R4B",
+  "words": 1420,
+  "minutes": 7
+ },
+ {
+  "slug": "the-underground-tailroad",
+  "original": "The Underground Railroad",
+  "parody": "The Underground Tailroad",
+  "phase": "R4B",
+  "words": 1426,
+  "minutes": 7
+ },
+ {
+  "slug": "the-vine-assassin",
+  "original": "The Blind Assassin",
+  "parody": "The Vine Assassin",
+  "phase": "R4B",
+  "words": 1425,
+  "minutes": 7
+ },
+ {
+  "slug": "the-white-tarsier",
+  "original": "The White Tiger",
+  "parody": "The White Tarsier",
+  "phase": "R4B",
+  "words": 1531,
+  "minutes": 8
+ },
+ {
+  "slug": "midnights-chimpdren",
+  "original": "Midnight's Children",
+  "parody": "Midnight's Chimpdren",
+  "phase": "R4B",
+  "words": 1508,
+  "minutes": 8
+ },
+ {
+  "slug": "evolutionary-road",
+  "original": "Revolutionary Road",
+  "parody": "Evolutionary Road",
+  "phase": "R4B",
+  "words": 1589,
+  "minutes": 8
+ },
+ {
+  "slug": "treedom",
+  "original": "Freedom",
+  "parody": "Treedom",
+  "phase": "R4B",
+  "words": 1466,
+  "minutes": 7
+ },
+ {
+  "slug": "furity",
+  "original": "Purity",
+  "parody": "Furity",
+  "phase": "R4B",
+  "words": 1581,
+  "minutes": 8
+ },
+ {
+  "slug": "glamorangutan",
+  "original": "Glamorama",
+  "parody": "Glamorangutan",
+  "phase": "R4B",
+  "words": 1379,
+  "minutes": 7
+ },
+ {
+  "slug": "cosmopoloris",
+  "original": "Cosmopolis",
+  "parody": "Cosmopoloris",
+  "phase": "R4B",
+  "words": 1595,
+  "minutes": 8
+ },
+ {
+  "slug": "baboonglow",
+  "original": "Moonglow",
+  "parody": "Baboonglow",
+  "phase": "R4B",
+  "words": 1593,
+  "minutes": 8
+ },
+ {
+  "slug": "telegrape-avenue",
+  "original": "Telegraph Avenue",
+  "parody": "Telegrape Avenue",
+  "phase": "R4B",
+  "words": 1625,
+  "minutes": 8
+ },
+ {
+  "slug": "fates-and-furries",
+  "original": "Fates and Furies",
+  "parody": "Fates and Furries",
+  "phase": "R4B",
+  "words": 1407,
+  "minutes": 7
+ },
+ {
+  "slug": "small-things-like-fleas",
+  "original": "Small Things Like These",
+  "parody": "Small Things Like Fleas",
+  "phase": "R4B",
+  "words": 1605,
+  "minutes": 8
+ },
+ {
+  "slug": "the-lemurinaries",
+  "original": "The Luminaries",
+  "parody": "The Lemurinaries",
+  "phase": "R4B",
+  "words": 1561,
+  "minutes": 8
+ },
+ {
+  "slug": "malibaboon-rising",
+  "original": "Malibu Rising",
+  "parody": "Malibaboon Rising",
+  "phase": "R4B",
+  "words": 1611,
+  "minutes": 8
+ },
+ {
+  "slug": "the-unhoneymonkeys",
+  "original": "The Unhoneymooners",
+  "parody": "The Unhoneymonkeys",
+  "phase": "R4B",
+  "words": 1606,
+  "minutes": 8
+ },
+ {
+  "slug": "love-treeoretically",
+  "original": "Love, Theoretically",
+  "parody": "Love, Treeoretically",
+  "phase": "R4B",
+  "words": 1440,
+  "minutes": 7
+ },
+ {
+  "slug": "romantic-chimpedy",
+  "original": "Romantic Comedy",
+  "parody": "Romantic Chimpedy",
+  "phase": "R4B",
+  "words": 1383,
+  "minutes": 7
+ },
+ {
+  "slug": "the-rhesus-project",
+  "original": "The Rosie Project",
+  "parody": "The Rhesus Project",
+  "phase": "R4B",
+  "words": 1356,
+  "minutes": 7
+ },
+ {
+  "slug": "beech-read",
+  "original": "Beach Read",
+  "parody": "Beech Read",
+  "phase": "R4B",
+  "words": 1483,
+  "minutes": 7
+ },
+ {
+  "slug": "before-the-capuchino-gets-cold",
+  "original": "Before the Coffee Gets Cold",
+  "parody": "Before the Capuchino Gets Cold",
+  "phase": "R4B",
+  "words": 1599,
+  "minutes": 8
+ },
+ {
+  "slug": "days-at-the-lorisaki-bookshop",
+  "original": "Days at the Morisaki Bookshop",
+  "parody": "Days at the Lorisaki Bookshop",
+  "phase": "R4B",
+  "words": 1373,
+  "minutes": 7
+ },
+ {
+  "slug": "the-guernsey-literary-and-banana-peel-pie-society",
+  "original": "The Guernsey Literary and Potato Peel Pie Society",
+  "parody": "The Guernsey Literary and Banana Peel Pie Society",
+  "phase": "R4B",
+  "words": 1598,
+  "minutes": 8
+ },
+ {
+  "slug": "the-house-on-mango-tree",
+  "original": "The House on Mango Street",
+  "parody": "The House on Mango Tree",
+  "phase": "R4B",
+  "words": 1610,
+  "minutes": 8
+ },
+ {
+  "slug": "monkey",
+  "original": "Junky",
+  "parody": "Monkey",
+  "phase": "R4C",
+  "words": 1534,
+  "minutes": 8
+ },
+ {
+  "slug": "the-dharma-baboons",
+  "original": "The Dharma Bums",
+  "parody": "The Dharma Baboons",
+  "phase": "R4C",
+  "words": 1472,
+  "minutes": 7
+ },
+ {
+  "slug": "naked-langur",
+  "original": "Naked Lunch",
+  "parody": "Naked Langur",
+  "phase": "R4C",
+  "words": 1345,
+  "minutes": 7
+ },
+ {
+  "slug": "the-monkey-branch-gang",
+  "original": "The Monkey Wrench Gang",
+  "parody": "The Monkey Branch Gang",
+  "phase": "R4C",
+  "words": 1283,
+  "minutes": 6
+ },
+ {
+  "slug": "monkey-screech",
+  "original": "Monkey Beach",
+  "parody": "Monkey Screech",
+  "phase": "R4C",
+  "words": 1422,
+  "minutes": 7
+ },
+ {
+  "slug": "the-monkeys-faux-paw",
+  "original": "The Monkey's Paw",
+  "parody": "The Monkey's Faux Paw",
+  "phase": "R4C",
+  "words": 1603,
+  "minutes": 8
+ },
+ {
+  "slug": "romance-of-the-tree-kongdoms",
+  "original": "Romance of the Three Kingdoms",
+  "parody": "Romance of the Tree Kongdoms",
+  "phase": "R4C",
+  "words": 1514,
+  "minutes": 8
+ },
+ {
+  "slug": "macaque-on-the-shore",
+  "original": "Kafka on the Shore",
+  "parody": "Macaque on the Shore",
+  "phase": "R4C",
+  "words": 1612,
+  "minutes": 8
+ },
+ {
+  "slug": "norwegibbon-wood",
+  "original": "Norwegian Wood",
+  "parody": "Norwegibbon Wood",
+  "phase": "R4C",
+  "words": 1583,
+  "minutes": 8
+ },
+ {
+  "slug": "hard-peeled-wonderland-and-the-end-of-the-world",
+  "original": "Hard-Boiled Wonderland and the End of the World",
+  "parody": "Hard-Peeled Wonderland and the End of the World",
+  "phase": "R4C",
+  "words": 1483,
+  "minutes": 7
+ },
+ {
+  "slug": "branch-branch-branch",
+  "original": "Dance Dance Dance",
+  "parody": "Branch Branch Branch",
+  "phase": "R4C",
+  "words": 1399,
+  "minutes": 7
+ },
+ {
+  "slug": "a-wild-chimp-chase",
+  "original": "A Wild Sheep Chase",
+  "parody": "A Wild Chimp Chase",
+  "phase": "R4C",
+  "words": 1422,
+  "minutes": 7
+ },
+ {
+  "slug": "first-person-swingular",
+  "original": "First Person Singular",
+  "parody": "First Person Swingular",
+  "phase": "R4C",
+  "words": 1274,
+  "minutes": 6
+ },
+ {
+  "slug": "a-peel-view-of-hills",
+  "original": "A Pale View of Hills",
+  "parody": "A Peel View of Hills",
+  "phase": "R4C",
+  "words": 1607,
+  "minutes": 8
+ },
+ {
+  "slug": "the-macaquelous-journey-of-edward-tulane",
+  "original": "The Miraculous Journey of Edward Tulane",
+  "parody": "The Macaquelous Journey of Edward Tulane",
+  "phase": "R4D",
+  "words": 1491,
+  "minutes": 7
+ },
+ {
+  "slug": "the-adventures-of-capuchin-underpants",
+  "original": "The Adventures of Captain Underpants",
+  "parody": "The Adventures of Capuchin Underpants",
+  "phase": "R4D",
+  "words": 1453,
+  "minutes": 7
+ },
+ {
+  "slug": "rhesus-and-ramona",
+  "original": "Beezus and Ramona",
+  "parody": "Rhesus and Ramona",
+  "phase": "R4D",
+  "words": 1418,
+  "minutes": 7
+ },
+ {
+  "slug": "ramona-chimpy-age-8",
+  "original": "Ramona Quimby, Age 8",
+  "parody": "Ramona Chimpy, Age 8",
+  "phase": "R4D",
+  "words": 1560,
+  "minutes": 8
+ },
+ {
+  "slug": "are-you-there-god-its-me-marmoset",
+  "original": "Are You There God? It's Me, Margaret.",
+  "parody": "Are You There God? It's Me, Marmoset.",
+  "phase": "R4D",
+  "words": 1569,
+  "minutes": 8
+ },
+ {
+  "slug": "pippi-longswinging",
+  "original": "Pippi Longstocking",
+  "parody": "Pippi Longswinging",
+  "phase": "R4D",
+  "words": 1551,
+  "minutes": 8
+ },
+ {
+  "slug": "furtastic-mr-macaque",
+  "original": "Fantastic Mr. Fox",
+  "parody": "Furtastic Mr. Macaque",
+  "phase": "R4D",
+  "words": 1416,
+  "minutes": 7
+ },
+ {
+  "slug": "funnybonobos",
+  "original": "Funnybones",
+  "parody": "Funnybonobos",
+  "phase": "R4D",
+  "words": 1278,
+  "minutes": 6
+ },
+ {
+  "slug": "fleas-at-last",
+  "original": "Peace at Last",
+  "parody": "Fleas at Last",
+  "phase": "R4D",
+  "words": 1261,
+  "minutes": 6
+ },
+ {
+  "slug": "each-peach-bare-bum",
+  "original": "Each Peach Pear Plum",
+  "parody": "Each Peach Bare Bum",
+  "phase": "R4D",
+  "words": 1286,
+  "minutes": 6
+ },
+ {
+  "slug": "howl-babies",
+  "original": "Owl Babies",
+  "parody": "Howl Babies",
+  "phase": "R4D",
+  "words": 1345,
+  "minutes": 7
+ },
+ {
+  "slug": "the-very-busy-spider-monkey",
+  "original": "The Very Busy Spider",
+  "parody": "The Very Busy Spider Monkey",
+  "phase": "R4D",
+  "words": 1447,
+  "minutes": 7
+ },
+ {
+  "slug": "this-is-not-my-habitat",
+  "original": "This Is Not My Hat",
+  "parody": "This Is Not My Habitat",
+  "phase": "R4D",
+  "words": 1235,
+  "minutes": 6
+ },
+ {
+  "slug": "i-want-my-macaque-back",
+  "original": "I Want My Hat Back",
+  "parody": "I Want My Macaque Back",
+  "phase": "R4D",
+  "words": 1271,
+  "minutes": 6
+ },
+ {
+  "slug": "were-going-on-a-pear-hunt",
+  "original": "We're Going on a Bear Hunt",
+  "parody": "We're Going on a Pear Hunt",
+  "phase": "R4D",
+  "words": 1276,
+  "minutes": 6
+ },
+ {
+  "slug": "the-cricket-in-climb-square",
+  "original": "The Cricket in Times Square",
+  "parody": "The Cricket in Climb Square",
+  "phase": "R4D",
+  "words": 1297,
+  "minutes": 6
+ },
+ {
+  "slug": "a-swing-in-the-door",
+  "original": "A Wind in the Door",
+  "parody": "A Swing in the Door",
+  "phase": "R4D",
+  "words": 1529,
+  "minutes": 8
+ },
+ {
+  "slug": "the-mysterious-bananadict-society",
+  "original": "The Mysterious Benedict Society",
+  "parody": "The Mysterious Bananadict Society",
+  "phase": "R4D",
+  "words": 1582,
+  "minutes": 8
+ },
+ {
+  "slug": "the-screecher-and-the-spindle",
+  "original": "The Sleeper and the Spindle",
+  "parody": "The Screecher and the Spindle",
+  "phase": "R4E",
+  "words": 1615,
+  "minutes": 8
+ },
+ {
+  "slug": "the-grapeyard-book",
+  "original": "The Graveyard Book",
+  "parody": "The Grapeyard Book",
+  "phase": "R4E",
+  "words": 1648,
+  "minutes": 8
+ },
+ {
+  "slug": "the-nit-circus",
+  "original": "The Night Circus",
+  "parody": "The Nit Circus",
+  "phase": "R4E",
+  "words": 1624,
+  "minutes": 8
+ },
+ {
+  "slug": "the-house-in-the-cerulean-tree",
+  "original": "The House in the Cerulean Sea",
+  "parody": "The House in the Cerulean Tree",
+  "phase": "R4E",
+  "words": 1627,
+  "minutes": 8
+ },
+ {
+  "slug": "the-invisible-lice-of-addie-larue",
+  "original": "The Invisible Life of Addie LaRue",
+  "parody": "The Invisible Lice of Addie LaRue",
+  "phase": "R4E",
+  "words": 1543,
+  "minutes": 8
+ },
+ {
+  "slug": "primatical-magic",
+  "original": "Practical Magic",
+  "parody": "Primatical Magic",
+  "phase": "R4E",
+  "words": 1481,
+  "minutes": 7
+ },
+ {
+  "slug": "unseen-apedemicals",
+  "original": "Unseen Academicals",
+  "parody": "Unseen Apedemicals",
+  "phase": "R4E",
+  "words": 1618,
+  "minutes": 8
+ },
+ {
+  "slug": "the-last-kongtinent",
+  "original": "The Last Continent",
+  "parody": "The Last Kongtinent",
+  "phase": "R4E",
+  "words": 1572,
+  "minutes": 8
+ },
+ {
+  "slug": "raising-screams",
+  "original": "Raising Steam",
+  "parody": "Raising Screams",
+  "phase": "R4E",
+  "words": 1395,
+  "minutes": 7
+ },
+ {
+  "slug": "scruff",
+  "original": "Snuff",
+  "parody": "Scruff",
+  "phase": "R4E",
+  "words": 1510,
+  "minutes": 8
+ },
+ {
+  "slug": "the-colour-of-macaque",
+  "original": "The Colour of Magic",
+  "parody": "The Colour of Macaque",
+  "phase": "R4E",
+  "words": 1453,
+  "minutes": 7
+ },
+ {
+  "slug": "primate-latitudes",
+  "original": "Pirate Latitudes",
+  "parody": "Primate Latitudes",
+  "phase": "R4F",
+  "words": 1598,
+  "minutes": 8
+ },
+ {
+  "slug": "hairframe",
+  "original": "Airframe",
+  "parody": "Hairframe",
+  "phase": "R4F",
+  "words": 1413,
+  "minutes": 7
+ },
+ {
+  "slug": "state-of-fur",
+  "original": "State of Fear",
+  "parody": "State of Fur",
+  "phase": "R4F",
+  "words": 1312,
+  "minutes": 7
+ },
+ {
+  "slug": "the-tamarin-man",
+  "original": "The Terminal Man",
+  "parody": "The Tamarin Man",
+  "phase": "R4F",
+  "words": 1349,
+  "minutes": 7
+ },
+ {
+  "slug": "the-great-tree-robbery",
+  "original": "The Great Train Robbery",
+  "parody": "The Great Tree Robbery",
+  "phase": "R4F",
+  "words": 1314,
+  "minutes": 7
+ },
+ {
+  "slug": "sevenleaves",
+  "original": "Seveneves",
+  "parody": "Sevenleaves",
+  "phase": "R4F",
+  "words": 1347,
+  "minutes": 7
+ },
+ {
+  "slug": "the-diamond-ape",
+  "original": "The Diamond Age",
+  "parody": "The Diamond Ape",
+  "phase": "R4F",
+  "words": 1429,
+  "minutes": 7
+ },
+ {
+  "slug": "swingworld",
+  "original": "Ringworld",
+  "parody": "Swingworld",
+  "phase": "R4F",
+  "words": 1633,
+  "minutes": 8
+ },
+ {
+  "slug": "swinger-in-a-strange-land",
+  "original": "Stranger in a Strange Land",
+  "parody": "Swinger in a Strange Land",
+  "phase": "R4F",
+  "words": 1501,
+  "minutes": 8
+ },
+ {
+  "slug": "climb-enough-for-love",
+  "original": "Time Enough for Love",
+  "parody": "Climb Enough for Love",
+  "phase": "R4F",
+  "words": 1349,
+  "minutes": 7
+ },
+ {
+  "slug": "the-number-of-the-fleas",
+  "original": "The Number of the Beast",
+  "parody": "The Number of the Fleas",
+  "phase": "R4F",
+  "words": 1505,
+  "minutes": 8
+ },
+ {
+  "slug": "gorilla-road",
+  "original": "Glory Road",
+  "parody": "Gorilla Road",
+  "phase": "R4F",
+  "words": 1612,
+  "minutes": 8
+ },
+ {
+  "slug": "quicksilverback",
+  "original": "Quicksilver",
+  "parody": "Quicksilverback",
+  "phase": "R4F",
+  "words": 1591,
+  "minutes": 8
+ },
+ {
+  "slug": "the-kongfusion",
+  "original": "The Confusion",
+  "parody": "The Kongfusion",
+  "phase": "R4F",
+  "words": 1528,
+  "minutes": 8
+ },
+ {
+  "slug": "fall-or-dodge-the-peel",
+  "original": "Fall; or, Dodge in Hell",
+  "parody": "Fall; or, Dodge the Peel",
+  "phase": "R4F",
+  "words": 1552,
+  "minutes": 8
+ },
+ {
+  "slug": "cryptomonkeycon",
+  "original": "Cryptonomicon",
+  "parody": "Cryptomonkeycon",
+  "phase": "R4F",
+  "words": 1378,
+  "minutes": 7
+ },
+ {
+  "slug": "bananathem",
+  "original": "Anathem",
+  "parody": "Bananathem",
+  "phase": "R4F",
+  "words": 1473,
+  "minutes": 7
+ },
+ {
+  "slug": "bananihilation",
+  "original": "Annihilation",
+  "parody": "Bananihilation",
+  "phase": "R4F",
+  "words": 1391,
+  "minutes": 7
+ },
+ {
+  "slug": "ape-thority",
+  "original": "Authority",
+  "parody": "Ape-thority",
+  "phase": "R4F",
+  "words": 1455,
+  "minutes": 7
+ },
+ {
+  "slug": "the-mite-in-gods-eye",
+  "original": "The Mote in God's Eye",
+  "parody": "The Mite in God's Eye",
+  "phase": "R4F",
+  "words": 1521,
+  "minutes": 8
+ },
+ {
+  "slug": "starship-groomers",
+  "original": "Starship Troopers",
+  "parody": "Starship Groomers",
+  "phase": "R4F",
+  "words": 1571,
+  "minutes": 8
+ },
+ {
+  "slug": "chimpizen-of-the-galaxy",
+  "original": "Citizen of the Galaxy",
+  "parody": "Chimpizen of the Galaxy",
+  "phase": "R4F",
+  "words": 1607,
+  "minutes": 8
+ },
+ {
+  "slug": "gorillacula",
+  "original": "Dracula",
+  "parody": "Gorillacula",
+  "phase": "R4G",
+  "words": 1573,
+  "minutes": 8
+ },
+ {
+  "slug": "ooh-goes-there",
+  "original": "Who Goes There?",
+  "parody": "Ooh Goes There?",
+  "phase": "R4G",
+  "words": 1278,
+  "minutes": 6
+ },
+ {
+  "slug": "dark-chatter",
+  "original": "Dark Matter",
+  "parody": "Dark Chatter",
+  "phase": "R4G",
+  "words": 1345,
+  "minutes": 7
+ },
+ {
+  "slug": "the-little-langur",
+  "original": "The Little Stranger",
+  "parody": "The Little Langur",
+  "phase": "R4G",
+  "words": 1473,
+  "minutes": 7
+ },
+ {
+  "slug": "the-turn-of-the-troop",
+  "original": "The Turn of the Screw",
+  "parody": "The Turn of the Troop",
+  "phase": "R4G",
+  "words": 1419,
+  "minutes": 7
+ },
+ {
+  "slug": "dont-ook-now",
+  "original": "Don't Look Now",
+  "parody": "Don't Ook Now",
+  "phase": "R4G",
+  "words": 1417,
+  "minutes": 7
+ },
+ {
+  "slug": "the-louse-on-the-strand",
+  "original": "The House on the Strand",
+  "parody": "The Louse on the Strand",
+  "phase": "R4G",
+  "words": 1490,
+  "minutes": 7
+ },
+ {
+  "slug": "leafworld",
+  "original": "Weaveworld",
+  "parody": "Leafworld",
+  "phase": "R4G",
+  "words": 1547,
+  "minutes": 8
+ },
+ {
+  "slug": "howl-house",
+  "original": "Hell House",
+  "parody": "Howl House",
+  "phase": "R4G",
+  "words": 1565,
+  "minutes": 8
+ },
+ {
+  "slug": "the-thief-of-all-apes",
+  "original": "The Thief of Always",
+  "parody": "The Thief of All Apes",
+  "phase": "R4G",
+  "words": 1619,
+  "minutes": 8
+ },
+ {
+  "slug": "the-bananation-game",
+  "original": "The Damnation Game",
+  "parody": "The Bananation Game",
+  "phase": "R4G",
+  "words": 1614,
+  "minutes": 8
+ },
+ {
+  "slug": "coldheart-canopy",
+  "original": "Coldheart Canyon",
+  "parody": "Coldheart Canopy",
+  "phase": "R4G",
+  "words": 1613,
+  "minutes": 8
+ },
+ {
+  "slug": "the-peelbound-heart",
+  "original": "The Hellbound Heart",
+  "parody": "The Peelbound Heart",
+  "phase": "R4G",
+  "words": 1631,
+  "minutes": 8
+ },
+ {
+  "slug": "five-little-figs",
+  "original": "Five Little Pigs",
+  "parody": "Five Little Figs",
+  "phase": "R4H",
+  "words": 1477,
+  "minutes": 7
+ },
+ {
+  "slug": "hickory-dickory-macaque",
+  "original": "Hickory Dickory Dock",
+  "parody": "Hickory Dickory Macaque",
+  "phase": "R4H",
+  "words": 1478,
+  "minutes": 7
+ },
+ {
+  "slug": "the-grooming-finger",
+  "original": "The Moving Finger",
+  "parody": "The Grooming Finger",
+  "phase": "R4H",
+  "words": 1414,
+  "minutes": 7
+ },
+ {
+  "slug": "why-didnt-they-ask-gibbons",
+  "original": "Why Didn't They Ask Evans?",
+  "parody": "Why Didn't They Ask Gibbons?",
+  "phase": "R4H",
+  "words": 1519,
+  "minutes": 8
+ },
+ {
+  "slug": "a-pocket-full-of-aye-ayes",
+  "original": "A Pocket Full of Rye",
+  "parody": "A Pocket Full of Aye-Ayes",
+  "phase": "R4H",
+  "words": 1345,
+  "minutes": 7
+ },
+ {
+  "slug": "the-seven-tails-mystery",
+  "original": "The Seven Dials Mystery",
+  "parody": "The Seven Tails Mystery",
+  "phase": "R4H",
+  "words": 1451,
+  "minutes": 7
+ },
+ {
+  "slug": "swinging-murder",
+  "original": "Sleeping Murder",
+  "parody": "Swinging Murder",
+  "phase": "R4H",
+  "words": 1460,
+  "minutes": 7
+ },
+ {
+  "slug": "destination-ungroomed",
+  "original": "Destination Unknown",
+  "parody": "Destination Ungroomed",
+  "phase": "R4H",
+  "words": 1381,
+  "minutes": 7
+ },
+ {
+  "slug": "dead-mans-foliage",
+  "original": "Dead Man's Folly",
+  "parody": "Dead Man's Foliage",
+  "phase": "R4H",
+  "words": 1432,
+  "minutes": 7
+ },
+ {
+  "slug": "one-two-knuckle-my-shoe",
+  "original": "One, Two, Buckle My Shoe",
+  "parody": "One, Two, Knuckle My Shoe",
+  "phase": "R4H",
+  "words": 1529,
+  "minutes": 8
+ },
+ {
+  "slug": "poirots-hairy-cases",
+  "original": "Poirot's Early Cases",
+  "parody": "Poirot's Hairy Cases",
+  "phase": "R4H",
+  "words": 1552,
+  "minutes": 8
+ },
+ {
+  "slug": "the-mirror-scratched-from-side-to-side",
+  "original": "The Mirror Crack'd from Side to Side",
+  "parody": "The Mirror Scratched from Side to Side",
+  "phase": "R4H",
+  "words": 1401,
+  "minutes": 7
+ }
+]

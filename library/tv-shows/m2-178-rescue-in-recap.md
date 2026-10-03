@@ -1,0 +1,130 @@
+# The Rescue Is in the Recap
+
+*Format: TV show parody*
+*Parody target: competition reality shows that spend more time on recap packages than the live event*
+*By: IMI Television Monkey Desk*
+*Batch: IMI-M2-TV-006*
+
+Premise: Two teams are scheduled to build bird shelters for a local park. Host Vela and producer Tuck keep replaying the week's highlights to build anticipation, while contestant Miko tries to finish the shelter before the sun sets and the actual birds leave the site.
+
+Cast: Vela, a macaque host; Tuck, a capuchin producer; Miko, a gorilla carpenter; and Yali, a langur park steward.
+
+## Episode: "Previously, on the Nest Build"
+
+### Cold Open
+
+[PARK WORKSITE. MIKO HOLDS A DRILL. A NESTING BOX IS HALF BUILT. VELA STANDS IN FRONT OF IT.] 
+
+VELA: Tonight, the teams face their greatest challenge yet.
+
+YALI: The box needs its roof before dusk.
+
+[TUCK CUES A RECAP: MIKO DRILLING A PILOT HOLE. THE CLIP REPEATS THREE TIMES.] 
+
+MIKO: That was this morning.
+
+TUCK: The audience needs context.
+
+YALI: The birds need a roof.
+
+### Act One
+
+[THE CLOCK SHOWS 45 MINUTES UNTIL SUNSET. VELA INTRODUCES TEAM ONE, THEN TUCK PLAYS A RECAP OF THEIR ARRIVAL.]
+
+VELA: The team has returned.
+
+MIKO: They never left.
+
+[TUCK PLAYS A SLOW-MOTION SHOT OF A HAMMER BEING PICKED UP. A MUSIC CRESCENDO SWELLS.]
+
+YALI: That hammer is needed now.
+
+[MIKO REACHES FOR IT. THE CREW REWINDS THE FOOTAGE TO GET A CLOSE-UP OF THE PICKUP. MIKO TAKES A DIFFERENT HAMMER FROM THE TOOLBOX AND KEEPS WORKING.] 
+
+### Act Two
+
+[THE FIRST BOX IS READY FOR ITS ROOF. TUCK CALLS FOR A RECAP OF THE PLANNING SESSION. THE CAMERA SHOWS THE TEAM POINTING AT A BLANK PAGE.] 
+
+VELA: What did the team decide?
+
+MIKO: The roof should keep rain out.
+
+[TUCK PLAYS THE SCENE AGAIN WITH A DRAMATIC FILTER. YALI CARRIES THE ROOF PANEL TO THE BOX, BUT THE CAMERA TRACKS THE RECAP SCREEN INSTEAD OF THE WORK.]
+
+[THE RECAP SCREEN SHOWS THE SAME SHOT OF MIKO SETTING THE PANEL DOWN, THEN A SECOND REPLAY OF THE FIRST REPLAY.]
+
+MIKO: The panel has been set down three times.
+
+TUCK: The stakes are rising.
+
+YALI: The sun is setting.
+
+[MIKO PLUGS IN THE SPARE BATTERY. TUCK TRIES TO CUT BACK TO THE RECAP; VELA TAKES THE REMOTE AND SWITCHES TO THE LIVE CAMERA.]
+
+VELA: We will watch the work.
+
+YALI: We have lost five minutes.
+
+[TUCK FINALLY CUTS TO LIVE. MIKO FASTENS THE PANEL. THE SCREWDRIVER BATTERY DIES.]
+
+MIKO: I need the charged one.
+
+[TUCK PLAYS A RECAP OF MIKO TESTING THE BATTERY AT BREAKFAST.] 
+
+MIKO: That does not charge it.
+
+[YALI HANDS OVER A SPARE. THE CREW'S RECAP TIMER CONTINUES TO RUN, COUNTING DOWN INTO NEGATIVE NUMBERS.]
+
+[THE COMPETING TEAM FINISHES THEIR ROOF. TUCK STARTS A RECAP OF THEIR FINISH BEFORE THEY CAN SET THE BOX ON THE POST.]
+
+MIKO: The box needs the post.
+
+YALI: Both teams can finish the actual task.
+
+[THE TWO TEAMS CARRY THEIR SHELTERS TO THE MARKED SPOTS. THE CAMERA CREW HAS TO FOLLOW THEM IN REAL TIME.]
+
+[TUCK STARTS A RECAP OF THE WALK TO THE POSTS. VELA KEEPS THE LIVE SHOT ON THE TEAMS. ONE TEAM'S POST IS A LITTLE CROOKED; MIKO HELPS THEM LINE IT UP.] 
+
+TUCK: We need a winner.
+
+YALI: The park needs both shelters in place.
+
+[THE TEAMS SECURE THE BOXES. YALI CHECKS THAT EACH ONE IS STABLE. TUCK REACHES FOR THE SCORECARDS, BUT THE PARK STEWARD HAS NO COMPETITION SCORE, ONLY A MAINTENANCE LOG.] 
+
+VELA: There is no elimination?
+
+YALI: Both boxes are ready before dusk.
+
+[TUCK TRIES TO ANNOUNCE A WINNER ANYWAY. THE TWO TEAM CAPTAINS SWAP THE SAME TOOLBOX BACK AND FORTH, LOOKING FOR A SCORECARD.] 
+
+MIKO: We share the tools.
+
+YALI: I will log both boxes in the park inventory.
+
+[THE RECAP SCREEN RUNS A FINAL LOOP OF THE EMPTY WORKSITE. TUCK ROLLS IT AWAY SO THE CAMERA CAN SHOW THE TWO COMPLETED SHELTERS.] 
+
+### Act Three
+
+[THE ROOF IS ON. YALI CHECKS THE BOX AGAINST THE PARK PLAN. MIKO PLACES THE FINISHED SHELTER ON THE MARKED POST.] 
+
+VELA: The challenge is complete.
+
+[TUCK STARTS A FINAL RECAP PACKAGE. THE EDIT SHOWS THE BOX WITHOUT ITS ROOF, THEN WITH THE ROOF, THEN WITHOUT IT AGAIN.] 
+
+YALI: The current box is finished.
+
+[THE BIRDS RETURN TO THE TREES ABOVE THE WORKSITE. MIKO AND YALI STEP BACK. VELA WAITS FOR THE SCORE REVEAL.] 
+
+VELA: The judges have decided.
+
+MIKO: The park steward has checked it.
+
+[YALI NODS. TUCK ROLLS THE RECAP MONITOR AWAY. THE FINISHED BOX IS VISIBLE FOR THE FIRST TIME WITHOUT A FRAME AROUND IT.] 
+
+### Tag
+
+[TUCK ANNOUNCES NEXT WEEK'S EPISODE. THE TELEPROMPTER PLAYS A RECAP OF HIM ANNOUNCING NEXT WEEK.]
+
+TUCK: I have already seen this.
+
+[THE CREW CARRIES THE TOOLS OFF WHILE THE PROMPTER KEEPS REPLAYING.] 

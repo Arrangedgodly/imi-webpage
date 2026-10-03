@@ -1,0 +1,37 @@
+# A Gentlemandrill in Moscow
+
+*A parody of "A Gentleman in Moscow"*
+
+On the ninth of June, 1922, the Count Alexander Ilyich Rostov — a gentlemandrill of the old order, possessor of the most magnificent blue-and-gold muzzle in Moscow — climbed the steps of the Grand Banyan Hotel, where he had kept a suite for thirty years, and was promptly arrested.
+
+His own poem had done it. *Where is it now?* the poem asked, and the Emergency Committee of the People's Congress did not care for the question.
+
+"Comrade Rostov," said the prosecutor, a mangy young baboon with a briefcase, "in recognition of your service and your undoubted manners, we commute the usual penalty. You are sentenced to house arrest. If ever you leave this hotel, we will dart you where you stand."
+
+So the Count moved that afternoon from the suite on the third floor, with its damask chairs and view of the Bolshoi, to room six: an attic with a slanted ceiling, a single window, and just enough branch to swing a cat. Many a monkey would have gone mad in such a garret. The Count rearranged the furniture twice, hung his father's dressing gown on the nail with ceremony, and declared the view of the courtyard "not without poetry." For if a mandrill does not master his circumstances, he believed, his circumstances are bound to master him.
+
+The Grand Banyan, at least, was its own country: the Piazza, the grand dining room under the glass dome, where the Count took his coffee each morning at the same table; Andrei at the grill, Emile the maitre d', mandrills of genius both. And there was Nina, a nine-year-old wild macaque with a ringing laugh, who owned, by virtue of a captain father and a clever theft, a passkey to every room.
+
+"Wouldn't you like to see the ballroom?" said Nina. "The wine cellar?"
+
+Madam, he would. By candlelight one night, behind a cellar wall, Nina's key opened a small stone room lined floor to ceiling with vintage sap, aging like emperors. Andrei caught him at first taste with a lantern, and instead of calling the authorities, said only: "The '22? You start with the *'22*?" They were brothers from that hour.
+
+The old world kept falling around him politely. One winter afternoon the Count came down to find work crews unhooking the great glass chandelier from the dome — a ton of Imperial crystal, judged counterrevolutionary, presumably for being too far above the masses. It fell the last six feet on purpose, or so it looked, and lay across the Piazza like a burst icicle. The Count pocketed one intact crystal, an act of vandalism he never regretted, and set it on his attic sill, where it threw a small rainbow across the bedslats at the same hour each evening — the entire old order, reduced to a paperweight and still shining.
+
+Visitors scaled the stairs to room six. His oldest friend, Mishka the poet, arrived in 1926 with proofs of a state anthology of subversive verse, the Count's *Where is it now?* printed in it entire. "They've made you immortal, Sasha." "Splendid," said the Count. "Do immortals receive royalties?" Mishka laughed, and did not laugh again in the Count's hearing for thirty years, and was eventually sent east for insisting that a poem by a mandrill was by that mandrill. His letters came for a while. Then they didn't.
+
+There were consolations. The Count took work as head waiter and found that a gentlemandrill may carry a tray with more dignity than most monkeys carry a title. He exercised each morning in the attic, swinging through the rafters in four sets of ten. He had his father's dressing gown taken in, twice, by Marina the tailor, who pretended not to notice that the great silver coins sewn into the desk legs had a way of turning into sausages and theater tickets. He befriended the actress Anna Urbanova, a langur of considerable consequence, by returning the wallet she had planted to test his honesty — and pocketing, as a fine, one dinner with her. When he pressed his grandmother's ring on her years later, she wore it to premieres for a season and then set it back in his palm. "Heirlooms are for heiresses, Count. Friendship, however, I am keeping." He gave the crystal from the chandelier to her doorman's daughter, who was, he admitted, a prettier argument for the old world than he was.
+
+Once, in the worst of it, he went to the rail of the rooftop and considered the drop — whether a monkey who has lost his country, his name, and his room with a view might not simply let go. Then he saw, on the ledge below, a single bee working a crack in the mortar with total conviction, and he climbed back inside and ordered breakfast.
+
+In 1946, Nina came back — gray about the muzzle, dressed in a collective farm jacket, with a small mandrill child asleep in a blanket. "Sofia," said Nina. "She is yours for a while, Count." She was going east to look for her father's orchard, she said, and kissed the child's head and was gone, and never came back. By fall the Count — bachelor, prisoner, waiter — was sole guardian of a willful little mandrill with her mother's laugh, and discovered that fatherhood is the one sentence from which there is no house arrest.
+
+He taught Sofia chess, letters, and how to bow to a lady baboon; she taught him to eat breakfast standing up and to lose at chess with composure, since she beat him from age six. When the Party installed a resident watchdog at the hotel — a sleek official everyone called the Bishop, on account of his diagonal way of appearing — the Count's lessons proved useful. The Bishop questioned the Count's mail, counted his visitors, and lost to Sofia at chess every Thursday with mounting resentment. "Your daughter plays very aggressively, Comrade." "She gets it from her grandmother," said the Count.
+
+Then Sofia, now fluent in four languages and the piano, was invited to tour the Americas as a soloist, and the Count, who had mastered his circumstances for thirty years, mastered the authorities instead. Departure was inspected; disappearance would be investigated. So on the last night, the Count invited the Bishop to supper. The man refused all alcohol on duty — a serious obstacle — but he could not leave anything unexamined, and when Emile set down the last pot of Crimean honey, warm, with the silver spoon standing in it, the Bishop plunged both paws in to check the bottom of the jar for contraband. The honey was at exactly the temperature that grips. By the time he understood that he was attached to the jar, the jar to the bowl, and the bowl to the table, the Count had set out the chessboard, placed his resignation letter beside it, and was halfway through the window with Sofia and one small suitcase.
+
+He had not swung freely in thirty-two years. His arms remembered anyway. Down the great banyan that grew through the hotel's heart, branch to branch, past the third-floor windows where the lights were coming on, over the wall, and gone. Anna's car was waiting where Anna's cars always were. Behind them, on the fourth floor of the Grand Banyan, a Party official sat glued to a honey pot, in a silence that could be heard from the street.
+
+Where is he now, you ask? In an orchard in the east — Nina's father's orchard, as it happened, where a small mandrill beats him at chess under the apple trees and calls him *Papa* when she thinks no one is listening. And if the old Count's muzzle is not quite so blue as it was — never mind. By the smallest of one's actions, he always said, a monkey may restore a little order to the world.
+
+And where should a mandrill end his days, if not in a tree?

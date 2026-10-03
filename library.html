@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" data-style="classic">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>THE LIBRARY · INFINITE MONKEY INDUSTRIES</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Lilita+One&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <script>document.documentElement.dataset.style = localStorage.getItem('imi-style') === 'pixel' ? 'pixel' : 'classic';</script>
+  <link rel="stylesheet" href="library.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Back to Infinite Monkey Industries home">IMI</a>
+    <nav>
+      <a class="leaf-link" href="index.html">Home</a>
+      <button class="leaf-link" id="styleSwap" type="button" title="Switch art style"></button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro">
+      <h1>THE LIBRARY</h1>
+      <p class="tagline">Every written medium known to monkeykind, typed out by the Infinite Monkey Industries typing pool. Explore the titles referenced in the game.</p>
+      <p class="count" id="count" aria-live="polite">Unlocking the stacks…</p>
+    </section>
+
+    <section class="controls" aria-label="Browse the library">
+      <div class="shelves" id="shelves" role="tablist" aria-label="Shelves"></div>
+      <div class="row">
+        <input type="search" id="q" placeholder="Search titles or parody targets…" aria-label="Search the library" autocomplete="off">
+        <select id="sort" aria-label="Sort order">
+          <option value="title">A–Z</option>
+          <option value="short">Shortest first</option>
+          <option value="long">Longest first</option>
+          <option value="random">Shuffle</option>
+        </select>
+      </div>
+    </section>
+
+    <section class="grid" id="grid" aria-live="polite"></section>
+    <nav class="pager" id="pager" aria-label="Pages"></nav>
+  </main>
+
+  <div class="reader" id="reader" role="dialog" aria-modal="true" aria-labelledby="readerTitle" hidden>
+    <div class="reader-bar">
+      <button type="button" id="readerClose" class="leaf-link">← Back to the stacks</button>
+      <button type="button" id="readerRandom" class="leaf-link">Another!</button>
+    </div>
+    <article class="reader-body" id="readerBody" tabindex="-1"></article>
+  </div>
+
+  <footer class="footer"><p>© Infinite Monkey Industries. All typewriters reserved.</p></footer>
+  <script src="library.js"></script>
+</body>
+</html>

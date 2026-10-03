@@ -1,0 +1,33 @@
+# The Goldenchimp
+
+*A parody of "The Goldfinch"*
+
+When I was still small enough to ride in the crook of my mother's elbow, she took me to the Grand Gallery of Great Ape Art to look at the monkeys we loved best.
+
+I was thirteen. I remember the rain, the smell of her fur, and the little painting in the last room: a young chimp chained by the ankle to a wooden perch, by one Carel Branchitius, three centuries dead — a painter who had himself gone up in an instant of gunpowder, almost every canvas lost, so this one panel was nearly the whole of him. The chimp was soft-eyed and patient, head cocked, one clever hand lifted as if pausing mid-thought. It was called *The Goldenchimp*. There was a girl my age in that room too, dark-furred, serious, arguing gently with the old monkey beside her — I noticed her the way you notice weather through glass, and then the whole world went white.
+
+The bomb was quick; the ceiling came down in slabs; and when I came to, ears ringing in gray dust, my mother was not beside me anymore, and never would be again. In the smoke the old monkey from the last room lay dying — Welty, a famous dealer — and he pressed his ring into my hand and gasped, "Hobie. Take it to Hobie. Go, boy."
+
+And in the ringing dark, doing the worst and best thing I have ever done, I slid the painting into my satchel and walked out of the ruin with it against my ribs.
+
+For a season the Barbours took me in — Barbary macaques of the Upper East Branch, all good furniture and no hugs: Mrs. Barbour feeding me efficiently, Platt explaining my grief to me incorrectly, little Kitsey lending me her crayons at arm's length. I still couldn't have told you why I didn't give the painting back. It was hers, my mother's, the last room we stood in together; and it was stolen; and those two facts lived in the same banana and I refused to split it.
+
+Then my father, a gambler chimp with hard luck and harder friends, turned up alive and carried me off to Las Vines, a city of neon vines bolted to the desert, and left me in a rented burrow with his drinking. That was where I met Boris — a whirlwind vervet off the grassland colonies, fur sticking up like a hayfield, who talked like a professor and stole like a magpie and became, without discussion, my brother. He had a little shivering dog named Popchik that he loved with his whole criminal heart, which I should have understood sooner about people.
+
+"Potter," he would say — he never once called me Theo — "in my country is proverb: if monkey is chained, is not the chain's fault, but the monkey who painted it, no? Is something to think about." We drank stolen sap-beer under the desert stars, two motherless boys, and told each other everything except the one thing each of us had. Then my father wrapped a jeep around a ditch, and I was an orphan twice over, and they shipped me back east with a duffel bag and a stolen masterpiece and nowhere at all to take either.
+
+Hobart — Hobie — was an old orangutan with forearms like dock rope and the patience of a growing tree. His shop smelled of beeswax and old sap; he took broken chairs and wounded highboys the way a sanctuary takes strays, and coaxed them back to themselves with planes and shellac, no hurry whatsoever. He had been Welty's partner. I gave him the ring; he looked at it a long time, then at me, and said, "Well. You'd better stay, then" — the only adoption paperwork I ever needed.
+
+The painting lived wrapped in a storage bin, and I lived beside it, one stolen thing nesting another. The girl from the last room had survived, I learned — Pippa, Welty's niece, the serious dark-furred one, carried out with a head wound that left her, like me, marooned in the wrong after. She came to the shop once, and we compared scars and sleeplessness until the lamps came on. She went back to her school in Switzerland, and then to a life with a steady red-haired macaque in it, and I understood, slowly and politely, that surviving the same explosion does not make you each other's; mostly it makes you mirrors, and who can live in a house of mirrors. We wrote. It was enough. It was never enough. It was what there was.
+
+I grew up in that shop and betrayed it, is the truth. I learned to age new wood with tea and shellac, and when the debts came — because I had kept the books the way my father kept dice — I sold fakes to collectors who wanted provenance more than furniture, and dressed the paperwork to match. Hobie never suspected; that was the unforgivable part, how easy it was. I got engaged to Kitsey Barbour somewhere in there, in the way you fall into a hammock you don't remember stringing. I told myself a lot.
+
+What broke it open was Lucius Reeve, a silk-furred bonobo with a Q-branch voice, who knew what had walked out of the museum in a boy's satchel and wanted it, and had done his arithmetic: I was a forger, a debtor, and engaged to a family with a name. Then a battered old vervet turned up at the shop in a beautiful coat, grinning like the hayfield of my boyhood.
+
+"Potter!" said Boris. And then, laughing until he had to hold the wall: "You know I took it. Years ago, in Vegas, I look in your bag for money and — ha! — I take the wrong treasure. It has been in Amsterdam this whole time, in a flat of very bad monkeys. So. Are you coming or aren't you?"
+
+What happened in that room above a canal happened fast: a trap, a struggle, a gun going off the way guns do, a dead gangster, the two of us feverish in a hotel while Boris dosed me with terrible tea — "is cousin of chamomile, Potter, drink" — and Popchik the dog sitting sentinel on the bed. But the painting came out alive. It went home — couriered anonymously, with my confession attached, to the museum that had lost it.
+
+I am not sorry. It belonged where every eye could reach it, and not wrapped in the dark, guarding my sin. Hobie read the confession twice, and I braced for the plane and the shellac to be taken from me, and he put the letter in the stove instead. "The first rule of restoration," he said, "is to do as little harm as possible. You did harm, Theo. So — come here. This chair needs four hands and I have two."
+
+People say life is short, but Hobie told me better: *life is catastrophe.* Whatever happens to you, it's the catastrophe the whole thing is organized around; the trick is to find the broken things that need you, and stay at the bench, and keep working. I used to think the little golden chimp was a picture of grief — chained, patient, pausing mid-thought. Now I think he's the survivor: handed a chain, handed a perch, and still turning it — stroke by stroke — into art.
