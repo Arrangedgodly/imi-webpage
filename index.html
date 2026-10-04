@@ -1,162 +1,48 @@
 <!doctype html>
-<html lang="en" data-style="pixel">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>INFINITE MONKEY INDUSTRIES</title>
+  <title>The Writing Room · Infinite Monkey Industries</title>
+  <meta name="description" content="An incremental writing-room game: monkeys type letters, you turn them into words, write parody books, and sell the rights.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-  <script src="style-swap.js"></script>
-  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Pixelify+Sans:wght@400;700&family=Silkscreen&family=Tiny5&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="game.css">
 </head>
 <body>
-  <!-- Pixel jungle backdrop (all art generated in pixel.js) -->
-  <div class="backdrop" aria-hidden="true">
-    <div class="sky" id="sky"></div>
-    <div class="layer layer-far"></div>
-    <div class="layer layer-mid"></div>
-    <div class="layer layer-near"></div>
-    <div class="drifters" id="drifters"></div>
-    <div class="night-sky" id="nightSky">
-      <div class="stars" id="starsA"></div><div class="stars alt" id="starsB"></div>
-      <div class="moon spr" data-spr="moon" data-mult="2"></div>
-      <div class="fireflies" id="fireflies"></div>
-    </div>
-  </div>
+  <div class="app">
+    <header class="hud">
+      <div class="money" title="Shared money from written titles"><span class="coin"></span><b id="money">$0</b></div>
+      <div class="hud-mid" id="hudMid"></div>
+      <div class="hud-links">
+        <button type="button" id="soundBtn" class="mini" aria-pressed="true" title="Mechanical sound">SND</button>
+        <a class="mini" href="library.html" title="The full manuscript library">ARCHIVE</a>
+        <a class="mini" href="jungle.html" title="The old jungle control panel">JUNGLE</a>
+      </div>
+    </header>
 
-  <header class="topbar">
-    <a class="brand" href="#top" aria-label="Infinite Monkey Industries home">
-      <span class="spr" data-spr="banana"></span><span class="brand-text">IMI</span>
-    </a>
-    <div class="hud" id="hud" title="Bananas collected">
-      <span class="spr" data-spr="banana"></span><b id="score">0</b>
-    </div>
-    <nav>
-      <a class="leaf-link" href="#controls">Controls</a>
-      <a class="leaf-link" href="#departments">Depts</a>
-      <a class="leaf-link" href="#log">Log</a>
-      <a class="leaf-link" href="library.html">Library</a>
-      <button class="leaf-link style-swap" id="styleSwap" type="button" title="Switch to the classic smooth style">CLASSIC</button>
-      <button class="drum-btn" id="soundBtn" aria-pressed="true" aria-label="Toggle sound effects" title="Sound on/off"><span class="spr" id="drumSpr"></span></button>
+    <nav class="room" id="room" aria-label="Writing room machines"></nav>
+
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Writing room screens">
+      <button role="tab" data-tab="type">Type</button>
+      <button role="tab" data-tab="upgrades">Upgrades</button>
+      <button role="tab" data-tab="bank">Bank</button>
+      <button role="tab" data-tab="library">Library</button>
+      <button role="tab" data-tab="shop">Shop</button>
     </nav>
-  </header>
 
-  <main id="top">
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-monkey" id="heroMonkey" aria-hidden="true">
-        <div class="hm-vine"></div>
-        <canvas class="hm-cv" id="heroCv"></canvas>
-        <i class="hm-pupil" id="hmPL"></i><i class="hm-pupil" id="hmPR"></i>
-        <div class="hm-hit" id="hmHit"></div>
-        <div class="hm-bubble" id="hmBubble">OOH OOH!</div>
-      </div>
-      <h1 class="title" id="title" aria-label="Infinite Monkey Industries">
-        <span class="word" data-text="INFINITE"></span>
-        <span class="word" data-text="MONKEY"></span>
-        <span class="word" data-text="INDUSTRIES"></span>
-      </h1>
-      <p class="tagline">Typing Shakespeare since before it was cool.</p>
-      <div class="hero-actions">
-        <a class="banana-btn" href="#controls"><span>ENTER CANOPY</span></a>
-      </div>
-      <div class="scroll-hint" aria-hidden="true">- SWING DOWN -</div>
-    </section>
-
-    <!-- CONTROLS -->
-    <section class="section" id="controls">
-      <h2 class="section-title">CONTROL PANEL</h2>
-      <p class="section-sub">Every control is an object from the jungle. Poke them.</p>
-
-      <div class="panel-grid">
-        <article class="crate">
-          <h3>Banana Switch</h3>
-          <button class="banana-toggle" id="bananaToggle" role="switch" aria-checked="false" aria-label="Banana switch">
-            <span class="spr-sheet" id="bananaSpr"></span>
-            <span class="toggle-state" id="bananaState">UNPEELED</span>
-          </button>
-          <p class="hint">Tap to peel.</p>
-        </article>
-
-        <article class="crate">
-          <h3>Coconut Crack</h3>
-          <button class="coconut-btn" id="coconutBtn" aria-label="Crack the coconut">
-            <span class="spr-sheet" id="cocoSpr"></span>
-          </button>
-          <p class="hint">Click to crack. It heals.</p>
-        </article>
-
-        <article class="crate">
-          <h3>Sun &amp; Moon</h3>
-          <button class="sunmoon" id="nightToggle" role="switch" aria-checked="false" aria-label="Night mode">
-            <span class="sm-day"></span><span class="sm-night"></span>
-            <span class="sm-cloud spr" data-spr="cloud"></span>
-            <span class="sm-star s1 spr" data-spr="star"></span><span class="sm-star s2 spr" data-spr="star"></span><span class="sm-star s3 spr" data-spr="star"></span>
-            <span class="sm-knob"><span class="spr k-sun" data-spr="sun"></span><span class="spr k-moon" data-spr="moon"></span></span>
-          </button>
-          <p class="hint" id="nightHint">Daytime. Monkeys are loud.</p>
-        </article>
-
-        <article class="crate crate-wide">
-          <h3>Banana Buttons &amp; Gauges</h3>
-          <div class="row">
-            <button class="banana-btn" id="honkBtn"><span>OOH OOH!</span></button>
-            <button class="banana-btn banana-btn-green" id="greenBtn"><span>UNRIPE</span></button>
-          </div>
-          <label class="slider-label" for="ripeness">RIPENESS: <b id="ripeVal">50</b>%</label>
-          <input class="vine-slider" id="ripeness" type="range" min="0" max="100" value="50">
-          <div class="toast" id="toast" role="status" aria-live="polite"></div>
-        </article>
-
-        <article class="crate">
-          <h3>Weather</h3>
-          <button class="weather-btn" id="weatherBtn" aria-label="Change the weather" data-state="0">
-            <span class="spr-sheet" id="wxSpr"></span>
-            <span class="toggle-state" id="wxState">CLEAR</span>
-          </button>
-          <p class="hint" id="wxHint">Click to make it rain.</p>
-        </article>
-      </div>
-    </section>
-
-    <!-- DEPARTMENTS -->
-    <section class="section" id="departments">
-      <h2 class="section-title">DEPARTMENTS</h2>
-      <p class="section-sub">Placeholder crates. Content goes here later.</p>
-      <div class="crate-grid">
-        <a class="crate tilt" href="#departments"><span class="crate-icon spr" data-spr="i-banana" data-mult="2"></span><h3>Banana Logistics</h3><p>Content coming soon.</p></a>
-        <a class="crate tilt" href="#departments"><span class="crate-icon spr" data-spr="i-coconut" data-mult="2"></span><h3>Coconut R&amp;D</h3><p>Content coming soon.</p></a>
-        <a class="crate tilt" href="#departments"><span class="crate-icon spr" data-spr="i-monkey" data-mult="2"></span><h3>Primate Resources</h3><p>Content coming soon.</p></a>
-        <a class="crate tilt" href="library.html"><span class="crate-icon spr" data-spr="i-type" data-mult="2"></span><h3>Typewriter Ops</h3><p>Browse the library.</p></a>
-        <a class="crate tilt" href="#departments"><span class="crate-icon spr" data-spr="i-palm" data-mult="2"></span><h3>Canopy Security</h3><p>Content coming soon.</p></a>
-        <a class="crate tilt" href="#departments"><span class="crate-icon spr" data-spr="i-log" data-mult="2"></span><h3>Vine Infrastructure</h3><p>Content coming soon.</p></a>
-      </div>
-    </section>
-
-    <!-- LOG: nested scroller demo -->
-    <section class="section" id="log">
-      <h2 class="section-title">FIELD LOG</h2>
-      <p class="section-sub">Even inner scroll areas get vines and a log.</p>
-      <div class="log-scroll" tabindex="0" aria-label="Field log">
-        <ol id="logList"></ol>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <p>© Infinite Monkey Industries. All typewriters reserved.</p>
-    <p class="secret">psst... try typing "banana".</p>
-  </footer>
-
-  <!-- Vine scrollbar with swinging monkey -->
-  <div class="vine" id="vine" aria-hidden="true">
-    <div class="monkey" id="monkey"><canvas id="monkeyCv"></canvas></div>
+    <main>
+      <section class="pane" id="pane-type" role="tabpanel"></section>
+      <section class="pane" id="pane-upgrades" role="tabpanel" hidden></section>
+      <section class="pane" id="pane-bank" role="tabpanel" hidden></section>
+      <section class="pane" id="pane-library" role="tabpanel" hidden></section>
+      <section class="pane" id="pane-shop" role="tabpanel" hidden></section>
+    </main>
   </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="pixel.js"></script>
-  <script src="weather.js"></script>
-  <script src="mood.js"></script>
-  <script src="app.js"></script>
+  <script src="readers.js"></script>
+  <script src="game.js"></script>
 </body>
 </html>
