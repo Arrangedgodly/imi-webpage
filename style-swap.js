@@ -1,9 +1,9 @@
-/* Shared art-style swapper. Loaded in <head> of both pages (jungle.html = pixel, classic.html = classic).
+/* Shared art-style swapper. Loaded in <head> of both pages (index.html = pixel, classic.html = classic).
    Remembers the choice, keeps scroll position, and plays a bar-wipe between styles.
    Score / sound / night mode already live in localStorage, so they carry over untouched. */
 (() => {
   const cur = document.documentElement.dataset.style;                 // 'pixel' | 'classic'
-  const pages = { pixel: 'jungle.html', classic: 'classic.html' };
+  const pages = { pixel: 'index.html', classic: 'classic.html' };
   const forced = new URLSearchParams(location.search).get('s');
   const pref = localStorage.getItem('imi-style');
 

@@ -6,9 +6,10 @@
   <title>INFINITE MONKEY INDUSTRIES</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka:wght@400;600&family=Barlow+Condensed:wght@500;700&family=Rokkitt:wght@500;800&display=swap" rel="stylesheet">
   <script src="style-swap.js"></script>
   <link rel="stylesheet" href="classic.css">
+  <link rel="stylesheet" href="ops.css">
 </head>
 <body>
   <!-- Parallax jungle backdrop -->
@@ -32,8 +33,8 @@
       <b id="score">0</b>
     </div>
     <nav>
+      <a class="leaf-link" href="#ops">Ops</a>
       <a class="leaf-link" href="#controls">Controls</a>
-      <a class="leaf-link" href="#departments">Departments</a>
       <a class="leaf-link" href="#log">Field Log</a>
       <a class="leaf-link" href="library.html">Library</a>
       <button class="leaf-link style-swap" id="styleSwap" type="button" title="Switch to the pixel-art style">Pixel Mode</button>
@@ -57,9 +58,16 @@
       </h1>
       <p class="tagline">Typing Shakespeare since before it was cool.</p>
       <div class="hero-actions">
-        <a class="banana-btn" href="#controls"><span>Enter the Canopy</span></a>
+        <a class="banana-btn" href="#ops"><span>Enter the Canopy</span></a>
       </div>
       <div class="scroll-hint" aria-hidden="true">swing down ↓</div>
+    </section>
+
+    <!-- TYPEWRITER OPS: the game. Everything inside #opsRoot is built by ops.js -->
+    <section class="section ops" id="ops">
+      <h2 class="section-title">Typewriter Ops</h2>
+      <p class="section-sub">Infinite monkeys, finite desks. Collect letters, spell words, write the Jungle Press a parody, sell the rights once. Bananas buy more typewriters.</p>
+      <div id="opsRoot"></div>
     </section>
 
     <!-- CONTROLS -->
@@ -171,24 +179,10 @@
       </div>
     </section>
 
-    <!-- DEPARTMENTS -->
-    <section class="section" id="departments">
-      <h2 class="section-title">Departments</h2>
-      <p class="section-sub">Placeholder crates. Content goes here later.</p>
-      <div class="crate-grid">
-        <a class="crate tilt" href="#departments"><span class="crate-icon">🍌</span><h3>Banana Logistics</h3><p>Content coming soon.</p></a>
-        <a class="crate tilt" href="#departments"><span class="crate-icon">🥥</span><h3>Coconut R&amp;D</h3><p>Content coming soon.</p></a>
-        <a class="crate tilt" href="#departments"><span class="crate-icon">🐒</span><h3>Primate Resources</h3><p>Content coming soon.</p></a>
-        <a class="crate tilt" href="library.html"><span class="crate-icon">⌨️</span><h3>Typewriter Ops</h3><p>Browse the library.</p></a>
-        <a class="crate tilt" href="#departments"><span class="crate-icon">🌴</span><h3>Canopy Security</h3><p>Content coming soon.</p></a>
-        <a class="crate tilt" href="#departments"><span class="crate-icon">🪵</span><h3>Vine Infrastructure</h3><p>Content coming soon.</p></a>
-      </div>
-    </section>
-
     <!-- LOG: nested scroller demo -->
     <section class="section" id="log">
       <h2 class="section-title">Field Log</h2>
-      <p class="section-sub">Even inner scroll areas get vines and a coconut.</p>
+      <p class="section-sub">What the Typewriter Ops floor has been up to. Scroll the vine.</p>
       <div class="log-scroll" tabindex="0" aria-label="Field log"><ol id="logList"></ol></div>
     </section>
   </main>
@@ -243,5 +237,7 @@
   <script src="weather.js"></script>
   <script src="mood.js"></script>
   <script src="classic.js"></script>
+  <script src="readers.js"></script>
+  <script src="ops.js"></script>
 </body>
 </html>

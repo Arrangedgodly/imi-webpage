@@ -47,6 +47,8 @@
     day()     { tone(523, .14, { type: 'square', vol: .06 }); tone(659, .14, { type: 'square', delay: .1, vol: .06 }); tone(784, .26, { type: 'square', delay: .2, vol: .06 }); },
     night()   { tone(784, .16, { type: 'square', vol: .06 }); tone(587, .16, { type: 'square', delay: .12, vol: .06 }); tone(392, .36, { type: 'square', delay: .24, vol: .06 }); },
     tick()    { tone(1200, .03, { type: 'square', vol: .03 }); },
+    key()     { noise(.03, { freq: 2600, vol: .1 }); tone(170 + Math.random() * 60, .04, { type: 'square', f1: 70, vol: .04 }); },
+    ding()    { tone(1568, .32, { type: 'triangle', vol: .07 }); },
     fanfare() { [523, 659, 784, 1047].forEach((f, i) => tone(f, .2, { type: 'square', delay: i * .1, vol: .07 })); },
   };
   const soundBtn = $('#soundBtn'), drumSpr = $('#drumSpr');
@@ -140,7 +142,9 @@
   /* =====================  BANANA SCORE  ===================== */
   const hud = $('#hud'), scoreEl = $('#score');
   let score = +localStorage.getItem('imi-score') || 0;
-  scoreEl.textContent = score;
+  const fmt = n => Math.round(n).toLocaleString('en-US');
+  scoreEl.textContent = fmt(score);
+  const bananaWatchers = [];
   const milestones = { 10: 'BANANA HOARDER!', 25: 'CERTIFIED PRIMATE!', 50: 'CHIEF BANANA OFFICER', 100: 'INFINITE MONKEY!' };
   function banner(text) {
     sfx.fanfare();
@@ -151,14 +155,18 @@
     ], { duration: 2600, easing: 'steps(10)' }).onfinish = () => b.remove();
     const [x, y] = centerOf(hud); burst(x, y + 60, ['banana', 'spark', 'star'], 16);
   }
-  function addScore(n, from) {
+  function paintScore(bump) {
+    scoreEl.textContent = fmt(score); localStorage.setItem('imi-score', score);
+    if (bump) { hud.classList.remove('bump'); void hud.offsetWidth; hud.classList.add('bump'); }
+    bananaWatchers.forEach(f => f(score));
+  }
+  function addScore(n, from, quiet) {
     const [fx, fy] = from || [innerWidth / 2, innerHeight / 2], [hx, hy] = centerOf(hud);
-    const f = document.createElement('div'); f.className = 'fly-plus'; f.textContent = `+${n}`; f.style.left = fx + 'px'; f.style.top = fy + 'px';
+    const f = document.createElement('div'); f.className = 'fly-plus'; f.textContent = `+${fmt(n)}`; f.style.left = fx + 'px'; f.style.top = fy + 'px';
     const b = PXA.el('banana'); b.style.marginLeft = '6px'; b.style.verticalAlign = 'middle'; f.appendChild(b); document.body.appendChild(f);
     const done = () => {
-      f.remove(); score += n; scoreEl.textContent = score; localStorage.setItem('imi-score', score);
-      hud.classList.remove('bump'); void hud.offsetWidth; hud.classList.add('bump'); sfx.coin();
-      Object.keys(milestones).forEach(m => { if (score - n < +m && score >= +m) banner(milestones[m]); });
+      f.remove(); score += n; paintScore(true); sfx.coin();
+      if (!quiet) Object.keys(milestones).forEach(m => { if (score - n < +m && score >= +m) banner(milestones[m]); });
     };
     if (reduceMotion) return done();
     f.animate([
@@ -371,4 +379,21 @@
       b.animate([{ transform: 'translateY(0)' }, { transform: `translateY(${innerHeight + 160}px)` }], { duration: rand(1800, 3200), easing: 'steps(24)' }).onfinish = () => b.remove();
     }, i * 70);
   });
+
+  /* =====================  TYPEWRITER OPS BRIDGE  =====================
+     ops.js (the game) lives inside this page. It spends and earns the same bananas shown in the HUD,
+     borrows the synth sounds, particles, banners and the hero monkey's speech bubble, and writes to the field log. */
+  function spend(n) { if (n > score) return false; score -= n; paintScore(true); sfx.tick(); return true; }
+  function logEntry(text) {
+    const li = document.createElement('li'); li.className = 'real'; li.textContent = text;
+    list.prepend(li); while (list.querySelectorAll('li.real').length > 40) list.querySelector('li.real:last-of-type')?.remove();
+    return li;
+  }
+  const FX = { leaf: 'leaf', banana: 'banana', spark: 'spark', star: 'star', drop: 'drop', coco: 'coco-s', paw: 'paw' };
+  window.IMI = {
+    edition: 'pixel', S, reduceMotion, sfx, centerOf, say, banner, heroSay, log: logEntry,
+    burst: (x, y, names, n) => burst(x, y, names.map(k => FX[k] || k), n),
+    fall: (x, y, name, life) => fall(x, y, FX[name] || name, life),
+    bananas: { get: () => score, spend, earn: (n, from) => addScore(n, from, true), watch: f => bananaWatchers.push(f) },
+  };
 })();

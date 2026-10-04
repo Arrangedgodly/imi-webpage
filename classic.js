@@ -40,6 +40,8 @@
     day()     { tone(523, .18, { type: 'triangle' }); tone(659, .18, { type: 'triangle', delay: .1 }); tone(784, .3, { type: 'triangle', delay: .2 }); },
     night()   { tone(784, .2, { type: 'triangle' }); tone(587, .2, { type: 'triangle', delay: .12 }); tone(392, .4, { type: 'triangle', delay: .24 }); },
     tick()    { tone(1200, .03, { type: 'square', vol: .03 }); },
+    key()     { noise(.03, { freq: 2600, vol: .1 }); tone(170 + Math.random() * 60, .04, { type: 'square', f1: 70, vol: .04 }); },
+    ding()    { tone(1568, .32, { type: 'triangle', vol: .07 }); },
     fanfare() { [523, 659, 784, 1047].forEach((f, i) => tone(f, .2, { type: 'square', delay: i * .1, vol: .08 })); },
   };
   const soundBtn = $('#soundBtn'), soundLabel = $('.drum-label', soundBtn);
@@ -116,7 +118,9 @@
   /* =====================  BANANA SCORE  ===================== */
   const hud = $('#hud'), scoreEl = $('#score');
   let score = +localStorage.getItem('imi-score') || 0;
-  scoreEl.textContent = score;
+  const fmt = n => Math.round(n).toLocaleString('en-US');
+  scoreEl.textContent = fmt(score);
+  const bananaWatchers = [];
   const milestones = { 10: 'Banana Hoarder!', 25: 'Certified Primate!', 50: 'Chief Banana Officer', 100: 'Infinite Monkey!' };
   function banner(text) {
     sfx.fanfare();
@@ -127,13 +131,17 @@
     ], { duration: 2600, easing: 'ease-out' }).onfinish = () => b.remove();
     const [x, y] = centerOf(hud); burst(x, y + 60, ['🍌', '✨', '🎉'], 16);
   }
-  function addScore(n, from) {
+  function paintScore(bump) {
+    scoreEl.textContent = fmt(score); localStorage.setItem('imi-score', score);
+    if (bump) { hud.classList.remove('bump'); void hud.offsetWidth; hud.classList.add('bump'); }
+    bananaWatchers.forEach(f => f(score));
+  }
+  function addScore(n, from, quiet) {
     const [fx, fy] = from || [innerWidth / 2, innerHeight / 2], [hx, hy] = centerOf(hud);
-    const f = document.createElement('div'); f.className = 'fly-plus'; f.textContent = `+${n} 🍌`; f.style.left = fx + 'px'; f.style.top = fy + 'px'; document.body.appendChild(f);
+    const f = document.createElement('div'); f.className = 'fly-plus'; f.textContent = `+${fmt(n)} 🍌`; f.style.left = fx + 'px'; f.style.top = fy + 'px'; document.body.appendChild(f);
     const done = () => {
-      f.remove(); score += n; scoreEl.textContent = score; localStorage.setItem('imi-score', score);
-      hud.classList.remove('bump'); void hud.offsetWidth; hud.classList.add('bump'); sfx.coin();
-      Object.keys(milestones).forEach(m => { if (score - n < +m && score >= +m) banner(milestones[m]); });
+      f.remove(); score += n; paintScore(true); sfx.coin();
+      if (!quiet) Object.keys(milestones).forEach(m => { if (score - n < +m && score >= +m) banner(milestones[m]); });
     };
     if (reduceMotion) return done();
     f.animate([
@@ -304,4 +312,21 @@
       b.animate([{ transform: 'translateY(0) rotate(0)' }, { transform: `translateY(${innerHeight + 140}px) rotate(${rand(-540, 540)}deg)` }], { duration: rand(1800, 3200), easing: 'cubic-bezier(.4,0,.9,.6)' }).onfinish = () => b.remove();
     }, i * 60);
   });
+
+  /* =====================  TYPEWRITER OPS BRIDGE  =====================
+     ops.js (the game) lives inside this page. It spends and earns the same bananas shown in the HUD,
+     borrows the synth sounds, particles, banners and the hero monkey's speech bubble, and writes to the field log. */
+  function spend(n) { if (n > score) return false; score -= n; paintScore(true); sfx.tick(); return true; }
+  function logEntry(text) {
+    const li = document.createElement('li'); li.className = 'real'; li.textContent = text;
+    list.prepend(li); while (list.querySelectorAll('li.real').length > 40) list.querySelector('li.real:last-of-type')?.remove();
+    return li;
+  }
+  const GLYPH = { leaf: '🍃', banana: '🍌', spark: '✨', star: '⭐', drop: '💧', coco: '🥥', paw: '🐾' };
+  window.IMI = {
+    edition: 'classic', reduceMotion, sfx, centerOf, say, banner, heroSay, log: logEntry,
+    burst: (x, y, names, n) => burst(x, y, names.map(k => GLYPH[k] || k), n),
+    fall: (x, y, name, life) => fall(x, y, GLYPH[name] || name, 20, life),
+    bananas: { get: () => score, spend, earn: (n, from) => addScore(n, from, true), watch: f => bananaWatchers.push(f) },
+  };
 })();

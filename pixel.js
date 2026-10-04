@@ -140,6 +140,7 @@
   const monkeySets = {
     vine: { k: 0.8, max: 50, step: 10 },
     hero: { k: 2, max: 35, step: 7 },
+    desk: { k: 0.6, max: 42, step: 6 },
   };
   Object.values(monkeySets).forEach(s => { s.angles = []; for (let a = -s.max; a <= s.max; a += s.step) s.angles.push(a); s.cache = {}; });
   function monkeyFrame(set, expr, angleRad, noPupils, ph = 0, hat = 0) {
