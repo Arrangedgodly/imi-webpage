@@ -1,5 +1,5 @@
 /* Shared art-style swapper. Loaded in <head> of both pages (index.html = pixel, classic.html = classic).
-   Remembers the choice, keeps scroll position, and plays a bar-wipe between styles.
+   Remembers the choice, keeps you on the same screen (the #play hash), and plays a bar-wipe between styles.
    Score / sound / night mode already live in localStorage, so they carry over untouched. */
 (() => {
   const cur = document.documentElement.dataset.style;                 // 'pixel' | 'classic'
@@ -48,20 +48,10 @@
     if (btn) btn.addEventListener('click', swap);
   });
 
-  addEventListener('load', () => {
-    const f = parseFloat(sessionStorage.getItem('imi-scroll'));
-    if (!isNaN(f)) {
-      sessionStorage.removeItem('imi-scroll');
-      requestAnimationFrame(() => scrollTo({ top: f * Math.max(1, document.documentElement.scrollHeight - innerHeight), behavior: 'instant' }));
-    }
-  });
-
   let swapping = false;
   function swap() {
     if (swapping) return; swapping = true;
     const target = cur === 'pixel' ? 'classic' : 'pixel';
-    const sh = Math.max(1, document.documentElement.scrollHeight - innerHeight);
-    sessionStorage.setItem('imi-scroll', String(scrollY / sh));
     sessionStorage.setItem('imi-wipe', target);
     localStorage.setItem('imi-style', target);
     bars(target, 'in');

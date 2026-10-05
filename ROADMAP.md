@@ -1,6 +1,6 @@
 # Typewriter Ops roadmap
 
-The writing-room game lives inside the jungle page (`index.html` / `classic.html`, built by `ops.js` + `ops.css`).
+The writing-room game is the whole site: a title menu and a full-screen game (`index.html` / `classic.html`; shell in `core.js`, game in `ops.js` + `ops.css`).
 Titles sell once for a lump sum; this roadmap turns that into a long-term idle loop. Phases are meant to be built in order.
 
 - [x] **1. Royalties + golden bananas**: every sold title pays bananas per second (Publishing deals multiply it); the header shows the rate; golden and rotten bananas drift across the page; a global buff bar.

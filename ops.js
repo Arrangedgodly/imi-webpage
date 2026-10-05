@@ -1,6 +1,6 @@
-/* TYPEWRITER OPS — the writing-room game that lives inside the jungle page.
+/* TYPEWRITER OPS: the writing-room game, a full-screen app inside the jungle page.
    Letters (typed by hanging monkeys) → words (Coconut R&D) → written titles (Vine Infrastructure) → bananas → more typewriters.
-   Shares the page's banana counter, sounds, particles, weather/mood, hero monkey and field log through window.IMI. */
+   Shares the page's banana counter, sounds, particles, weather/mood and header toys through window.IMI (see core.js). */
 (() => {
   'use strict';
   const IMI = window.IMI, root = document.getElementById('opsRoot');
@@ -9,12 +9,7 @@
   const $ = (s, r = root) => r.querySelector(s);
   const $$ = (s, r = root) => [...r.querySelectorAll(s)];
   const fmt = n => Math.round(n).toLocaleString('en-US');
-  const ABBR = [[1e15, 'Qa'], [1e12, 'T'], [1e9, 'B'], [1e6, 'M']];
-  const fmtBig = n => {
-    n = Math.round(n); if (n < 1e6) return fmt(n);
-    for (const [v, sfx] of ABBR) if (n >= v) { const x = n / v; return (x >= 100 ? x.toFixed(0) : x >= 10 ? x.toFixed(1) : x.toFixed(2)).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') + sfx; }
-    return fmt(n);
-  };
+  const fmtBig = IMI.fmt;                                       // commas below a million, then 1.23M / 4.5B / ...
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const rand = Math.random;
   const VOWELS = 'AEIOU';
@@ -29,11 +24,13 @@
     { id: 'orchid', name: 'Orchid Imperial', lo: 10, hi: 11, price: 3906250, color: '#b58cf0', fs: PX ? '17px' : '', font: PX ? "'Jersey 10', monospace" : "'Bree Serif', serif", style: PX ? 'Tall pixel' : 'Serif' },
     { id: 'moon', name: 'Moonflower Grand', lo: 12, hi: 13, price: 48828125, color: '#dfe3f2', fs: PX ? '20px' : '', font: PX ? "'Micro 5', monospace" : "'Pacifico', cursive", style: 'Grand' }
   ];
+  /* [id, icon, department, what it does, short label, tucked behind "More" on phones] */
   const TABS = [
     ['floor', 'type', 'Typewriter Ops', 'The floor', 'Floor'], ['training', 'monkey', 'Primate Resources', 'Hire & train', 'Train'],
-    ['lab', 'coconut', 'Coconut R&D', 'Word lab', 'Words'], ['security', 'palm', 'Canopy Security', 'Word keepers', 'Keepers'],
-    ['press', 'log', 'Vine Infrastructure', 'Titles & rights', 'Titles'], ['studios', 'reel', 'IMI Studios', 'Media divisions', 'Media'], ['muses', 'quill', 'Muse Salon', 'Literary patrons', 'Muses'], ['shop', 'banana', 'Banana Logistics', 'Spend bananas', 'Shop'],
-    ['records', 'trophy2', 'Hall of Records', 'Stats & awards', 'Awards']
+    ['lab', 'coconut', 'Coconut R&D', 'Word lab', 'Words'], ['press', 'log', 'Vine Infrastructure', 'Titles & rights', 'Titles'],
+    ['shop', 'banana', 'Banana Logistics', 'Spend bananas', 'Shop'],
+    ['security', 'palm', 'Canopy Security', 'Word keepers', 'Keepers', 1], ['studios', 'reel', 'IMI Studios', 'Media divisions', 'Media', 1],
+    ['muses', 'quill', 'Muse Salon', 'Literary patrons', 'Muses', 1], ['records', 'trophy2', 'Hall of Records', 'Stats & awards', 'Awards', 1]
   ];
   const bandOf = n => (n <= 3 ? 0 : n <= 5 ? 1 : n <= 7 ? 2 : n <= 9 ? 3 : n <= 11 ? 4 : 5);
   /* ---- economy knobs (see tools/balance.mjs) ---- */
@@ -148,7 +145,7 @@
   if (!S.garden || !Array.isArray(S.garden.beds)) S.garden = { beds: [null, null] };
   const save = () => { S.lastSeen = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { /* storage blocked */ } };
   const rt = DESKS.map(() => ({ timers: [], sheet: '', col: 0, n: 0 }));    // runtime only
-  const ui = { nextCh: '', seed: 'E', hot: [false, false, false, false, false, false], buyN: 1, unseen: 0, pulled: null, dropped: {}, mcd: {}, readySet: null, fresh: null, lastBanked: null, bankedAt: 0, trayN: 0, tab: 'floor', libq: '', libf: 'all', archq: '', archf: 'all', read: null, bankq: '', ovr: '', ovrn: 3 };
+  const ui = { nextCh: '', seed: 'E', hot: [false, false, false, false, false, false], buyN: 1, unseen: 0, pulled: null, dropped: {}, mcd: {}, readySet: null, fresh: null, lastBanked: null, bankedAt: 0, trayN: 0, tab: 'floor', libq: '', libf: 'open', archq: '', archf: 'all', read: null, bankq: '', ovr: '', ovrn: 3 };
   let dirty = true, holding = false, holdAcc = 0, popSlot = 0, lastBananas = bananas.get();
 
   /* ================= the crew: every typist is a named monkey with a trait, a level and maybe a hat ================= */
@@ -217,8 +214,8 @@
   const totalLetters = d => Object.values(d.letters).reduce((a, b) => a + b, 0);
   const target = (d, w) => (w in d.keeper.targets ? d.keeper.targets[w] : d.keeper.def);
   const stormy = () => typeof Weather !== 'undefined' && Weather.state === 3;
-  const buffs = { frenzy: 0, golden: 0, rush: 0, sluggish: 0, critic: 0 };
-  const BUFF_INFO = { frenzy: ['FRENZY', ''], golden: ['GOLDEN KEYS', ''], rush: ['ROYALTY RUSH x7', ''], sluggish: ['SPOILED: SLOW', 'bad'], critic: ['BAD REVIEW: ROYALTIES HALF', 'bad'] };
+  const buffs = { frenzy: 0, golden: 0, snack: 0, rush: 0, sluggish: 0, critic: 0 };
+  const BUFF_INFO = { frenzy: ['FRENZY', ''], golden: ['GOLDEN KEYS', ''], snack: ['SNACK BREAK x1.5', ''], rush: ['ROYALTY RUSH x7', ''], sluggish: ['SPOILED: SLOW', 'bad'], critic: ['BAD REVIEW: ROYALTIES HALF', 'bad'] };
   const anyBuff = () => Object.keys(buffs).some(k => performance.now() < buffs[k]);
 
   /* ---- royalties: every title on the shelf keeps paying, a little, forever ---- */
@@ -240,7 +237,7 @@
   const royRate = () => royBase() * passive();
   const fmtRate = n => (n < 10 ? n.toFixed(1) : fmtBig(n));
   const buffOn = k => performance.now() < buffs[k];
-  const pawSecs = d => PAW_BASE[S.desks.indexOf(d)] * Math.pow(0.85, d.up.fing) * (S.metro ? 0.5 : 1) * (stormy() ? 2 : 1) * (buffOn('frenzy') ? 0.5 : 1) * (buffOn('sluggish') ? 1.7 : 1);
+  const pawSecs = d => PAW_BASE[S.desks.indexOf(d)] * Math.pow(0.85, d.up.fing) * (S.metro ? 0.5 : 1) * (stormy() ? 2 : 1) * (buffOn('frenzy') ? 0.5 : 1) * (buffOn('snack') ? 1 / 1.5 : 1) * (buffOn('sluggish') ? 1.7 : 1);
   const holdRate = d => ((TUNE.HOLD_BASE || 4) + (TUNE.RAPID_STEP || 2) * d.up.rapid) * (S.dbl ? (TUNE.DBL || 2) : 1);
   const autoRate = d => (d.paws ? d.crew.reduce((a, t) => a + typistSpeed(t), 0) * deskMk(d) / pawSecs(d) : 0);
   const canMake = (d, w) => { const c = lcount(w); for (const k in c) if ((d.letters[k] || 0) < c[k]) return false; return true; };
@@ -287,7 +284,7 @@
     el.style.cssText = `left:${x}px;top:${y}px;--pc:${color || DESKS[S.sel].color};font-family:${DESKS[S.sel].font}`;
     el.addEventListener('animationend', () => el.remove()); document.body.appendChild(el);
   }
-  const logIt = text => { S.log.unshift(text); S.log.length = Math.min(S.log.length, 40); IMI.log(text); };
+  const logIt = text => { S.log.unshift(text); S.log.length = Math.min(S.log.length, 40); };
 
   function focusNeeds(d, i) {
     const r = focusRecipe(d), required = {}, oneCopy = {};
@@ -367,7 +364,7 @@
     if (m.n === 100) bananas.earn(50 * (1 + Object.keys(S.written).length), [cx, cy]);
     if (m.n === 200) { buffs.frenzy = now + 30000; buffs.golden = now + 30000; for (let k = 0; k < 10; k++) addLetter(d, roll(d, S.sel, true)); }
     floatText(m.name + '!', cx, cy, '#ffd23a', true); floatText(m.desc, cx, cy + 46, '#fff6d6');
-    IMI.burst(cx, cy, ['spark', 'banana', 'star', 'leaf'], 12 + Math.min(14, m.n / 8)); shock(cx, cy, m.n >= 100 ? '#ff5d73' : '#ffd23a', m.n >= 50); if (m.n >= 50) flash('#fff08c'); if (m.n >= 100) vignette(m.n >= 200 ? '#ff5d73' : '#ffd23a'); shake(m.n >= 100 ? 2 : 1); IMI.sfx.ding(); IMI.heroSay(m.name + '!', 1600); vib([12, 30, 12]);
+    IMI.burst(cx, cy, ['spark', 'banana', 'star', 'leaf'], 12 + Math.min(14, m.n / 8)); shock(cx, cy, m.n >= 100 ? '#ff5d73' : '#ffd23a', m.n >= 50); if (m.n >= 50) flash('#fff08c'); if (m.n >= 100) vignette(m.n >= 200 ? '#ff5d73' : '#ffd23a'); shake(m.n >= 100 ? 2 : 1); IMI.sfx.ding(); vib([12, 30, 12]);
     cheer(m.n >= 100 ? 2600 : 1400, m.n >= 100 ? 'WOW!' : 'YAY!');
     mark();
   }
@@ -411,18 +408,18 @@
     const f = document.createElement('i'); f.className = 'o-flash'; f.style.setProperty('--fc', color || '#fff6d6');
     f.addEventListener('animationend', () => f.remove()); document.body.appendChild(f);
   }
-  /* royalties as visible income: little bananas hop off the shelf (or the hero's live board) into the counter */
+  /* royalties as visible income: little bananas hop off the shelf (or the typewriter room) into the counter */
   let coinBank = 0;
   function royCoins() {
     const amt = coinBank; coinBank = 0;
-    const hud = document.getElementById('hud'); if (!amt || !hud || document.hidden || IMI.reduceMotion) return;
-    const srcs = [...document.querySelectorAll('.o-spine:not(.old)'), document.getElementById('heroLive')].filter(e => {
-      if (!e || e.hidden) return false; const r = e.getBoundingClientRect(); return r.width > 0 && r.bottom > 70 && r.top < innerHeight;
+    const hud = document.getElementById('hud'); if (!amt || !hud || document.hidden || IMI.reduceMotion || IMI.screen() !== 'game') return;
+    const srcs = [...document.querySelectorAll('.o-spine:not(.old)'), document.getElementById('oStage')].filter(e => {
+      if (!e) return false; const r = e.getBoundingClientRect(); return r.width > 0 && r.bottom > 70 && r.top < innerHeight;
     });
     if (!srcs.length) return;
     const h = hud.getBoundingClientRect(), hx = h.left + h.width * .3, hy = h.top + h.height / 2, n = Math.min(3, 1 + Math.floor(Math.log10(amt + 1) / 2));
     for (let k = 0; k < n; k++) setTimeout(() => {
-      const src = srcs[Math.floor(rand() * srcs.length)], r = src.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + 8;
+      const src = srcs[Math.floor(rand() * srcs.length)], r = src.getBoundingClientRect(), x = r.left + r.width * (src.id === 'oStage' ? .2 + rand() * .6 : .5), y = r.top + 8;
       if (src.classList.contains('o-spine')) src.animate([{ translate: '0 0' }, { translate: '0 -7px' }, { translate: '0 0' }], { duration: 260, easing: PX ? 'steps(3)' : 'ease-out' });
       let c; if (PX) c = PXA.el('banana', 1); else { c = document.createElement('div'); c.textContent = '🍌'; }
       c.classList.add('o-coin'); c.style.left = x + 'px'; c.style.top = y + 'px'; document.body.appendChild(c);
@@ -765,7 +762,7 @@
     S.sel = 0; typists = [];
     logIt(`Printing ${S.printing + 1} begins. Legacy stars: ${S.legacy.stars}.${S.challenge ? ' Challenge: ' + chDef(S.challenge.id).name + '.' : ''}`);
     newsPush(`SECOND PRINTING: the room is reborn with ${S.legacy.total} Legacy stars. Titles can be sold again.`);
-    IMI.heroSay('NEW PRINTING!', 2200); shownN['cel-st'] = 0;
+    shownN['cel-st'] = 0;
     celebrate(PX ? `PRINTING ${S.printing + 1}` : `Printing ${S.printing + 1}`, PX ? 'THE PRESSES ROLL AGAIN' : 'The presses roll again',
       `<p class="o-cel-stars">+${cnt('cel-st', gain)} Legacy star${gain > 1 ? 's' : ''}</p><p class="o-cel-sub">Every title can be sold again. Income x${(legacyMult() * editionMult()).toFixed(2)}.</p>`);
     buildStage(); render(); save();
@@ -865,7 +862,7 @@
       return `<div class="o-mrow${left ? '' : ' done'}" style="--bc:${D.color}"><span class="o-mname"><b>${D.name.split(' ')[0]}</b><small>${D.lo}–${D.hi} letters${any ? (left ? '' : ' · all sold') : ' · pitch to unlock'}</small></span><span class="o-spark" aria-hidden="true">${bars}</span><span class="o-mval"><i class="o-arr ${dir}"></i>x${v.toFixed(2)}</span><span class="o-mextra">${tag}${fc}</span></div>`;
     }).join('');
     return `<div class="o-card o-market"><div class="o-row"><h3>Rights market</h3><span class="o-dim">sales pay base x demand</span></div>${rows}
-      <p class="o-dim">Demand drivers: night lifts Bamboo, rain lifts Hibiscus, storms lift Lagoon, a clear day lifts Honeycomb, a clear night lifts Orchid, and a stormy night lifts Moonflower. Try the weather and sun/moon toys in the Control Panel.</p></div>`;
+      <p class="o-dim">Demand drivers: night lifts Bamboo, rain lifts Hibiscus, storms lift Lagoon, a clear day lifts Honeycomb, a clear night lifts Orchid, and a stormy night lifts Moonflower. Flip the weather and day/night buttons in the header to steer it.</p></div>`;
   }
 
   /* ================= awards ================= */
@@ -935,7 +932,6 @@
     AW('roy100', 1, 'Passive Income', 'Earn 100 bananas per second in royalties', () => royBase() >= 100),
     AW('roy1m', 1, 'Mailbox Money', 'Earn 1 million bananas in royalties', () => S.royTotal >= 1e6)
   ];
-  const TIER_NAME = ['Bronze', 'Silver', 'Gold'];
   /* app-style achievement cards slide in under the top bar and stack */
   function achieve(a) {
     if (document.querySelector('.o-celebrate, .o-modal')) return void setTimeout(() => achieve(a), 700);   // wait for the big moment to finish
@@ -946,7 +942,7 @@
     el.innerHTML = `${ico('trophy' + a.tier, 40)}<span><small>${a.tier === 2 ? 'GOLD AWARD' : 'AWARD UNLOCKED'}</small><b>${esc(a.name)}</b><em>${esc(a.desc)} · +1% income</em></span>`;
     hydrate(el); box.appendChild(el);
     while (box.children.length > 3) box.firstElementChild.remove();
-    el.addEventListener('click', () => { el.remove(); document.getElementById('ops')?.scrollIntoView({ behavior: 'smooth' }); setTab('records'); });
+    el.addEventListener('click', () => { el.remove(); setTab('records'); });
     const r = el.getBoundingClientRect(); setTimeout(() => { if (!el.isConnected) return; IMI.burst(r.left + 30, r.top + r.height / 2, ['star', 'spark'], 8); }, 380);
     setTimeout(() => { if (IMI.reduceMotion) return el.remove(); el.classList.add('out'); el.addEventListener('animationend', () => el.remove(), { once: true }); }, 4200);
   }
@@ -979,6 +975,8 @@
         <div class="o-card"><h3>Publishing</h3>${row('Titles sold', `${authoredSold()}/${BOOKS}${S.stats.pitchSold ? ' + ' + S.stats.pitchSold + ' pitched' : ''}`)}${row('Rights sales', cnt('r-lump', st.lump, true))}${row('Royalties earned', cnt('r-roy', S.royTotal, true))}${row('Royalties now', fmtRate(royRate()) + '/s')}${row('Deals signed', `${DEALS.filter(x => S.deals[x.id]).length}/${DEALS.length}`)}${row('Division income', fmtRate(divRate()) + '/s')}${row('Manuscripts released', cnt('r-man2', totalReleased()))}${row('Printings completed', S.printing)}${row('Legacy stars', `${S.legacy.stars} (${S.legacy.total} earned)`)}${row('Best sale price', 'x' + (st.bestMult || 1).toFixed(2))}</div>
         <div class="o-card"><h3>Luck &amp; time</h3>${row('Golden bananas caught', cnt('r-gold', S.gold))}${row('Rotten bananas touched', cnt('r-rot', st.rotten))}${row('Typed in storms', cnt('r-storm', st.storm))}${row('Typed at night', cnt('r-night', st.night))}${row('Time on the floor', played)}</div>
       </div>
+      <h3 class="o-h">Field log</h3>
+      <ol class="o-log">${S.log.map(t => `<li>${esc(t)}</li>`).join('') || '<li class="o-dim">Nothing yet. Go type something.</li>'}</ol>
       <h3 class="o-h">Awards</h3>
       <div class="o-awards">${sorted.map((a, n) => { const on = !!S.awards[a.id]; return `<div class="o-award t${a.tier}${on ? '' : ' locked'}" style="--n:${n}">${ico(on ? 'trophy' + a.tier : 'trophy0', 36)}<span><b>${esc(a.name)}</b><small>${esc(a.desc)}</small></span></div>`; }).join('')}</div>`);
     hydrate($('#o-records'));
@@ -1202,13 +1200,15 @@
     el.addEventListener('keydown', e => { if (e.key === 'Escape' && opened && btn.textContent === 'Collect') collect(); });
     btn.focus();
   }
+  let dailyQ = false;
+  const dailyLater = () => { if (dailyQ) return; dailyQ = true; IMI.whenPlaying(() => { dailyQ = false; dailyCrate(); }); };
   function welcomeBack(minSec) {
     const away = (Date.now() - (S.lastSeen || Date.now())) / 1000;
     if (away < minSec) return;
     const rep = simulateAway(away); S.lastSeen = Date.now(); save();
     logIt(`Back after ${dur(away)}: typists typed ${fmt(rep.letters)} letters, keepers banked ${fmt(rep.words)} words, royalties paid ${fmtBig(rep.roy)} and divisions ${fmtBig(rep.div || 0)} bananas.`);
     newsPush('Welcome back. The typists pretended to work the whole time.');
-    if (rep.letters || rep.roy || rep.words) showWelcome(rep);
+    if (rep.letters || rep.roy || rep.words) IMI.whenPlaying(() => showWelcome(rep));
     mark();
   }
 
@@ -1239,8 +1239,8 @@
     floatText(msg, x, y - 20, good ? '#ffd23a' : '#ff8a70', true);
     logIt(good ? `Caught a golden banana: ${msg.toLowerCase()}.` : `Touched a rotten banana: ${msg.toLowerCase()}.`);
     shock(x, y, good ? '#ffd23a' : '#9bd16a', good);
-    if (good) { S.gold++; flash('#ffe98a'); IMI.sfx.ding(); IMI.burst(x, y, ['banana', 'spark', 'star'], 16); IMI.heroSay('GOLDEN!', 1400); vib([15, 30, 15]); cheer(1200, 'OOH!'); }
-    else { S.stats.rotten++; IMI.sfx.shake(); IMI.burst(x, y, ['drop', 'leaf'], 10); IMI.heroSay('EEW!', 1200); vib(60); }
+    if (good) { S.gold++; flash('#ffe98a'); IMI.sfx.ding(); IMI.burst(x, y, ['banana', 'spark', 'star'], 16); vib([15, 30, 15]); cheer(1200, 'OOH!'); }
+    else { S.stats.rotten++; IMI.sfx.shake(); IMI.burst(x, y, ['drop', 'leaf'], 10); vib(60); }
     newsPush(good ? 'GOLDEN BANANA caught. Witnesses say it was “extremely shiny”.' : 'Rotten banana touched. Witnesses recoil; one files a complaint.');
     mark(); save();
   }
@@ -1269,7 +1269,15 @@
     IMI.sfx.tick();
     if (!rotten && ui.tab === 'floor' && typists.length) { const t = typists[Math.floor(rand() * typists.length)]; say(t, 'GOLD!'); t.hop = 12; }
   }
-  IMI.ops = { spawnGold, royRate, simulateAway, genPitch, newOffers };
+  /* the header toys: core.js owns the buttons and their recharge, these are what they do */
+  function perk(id, at) {
+    if (id === 'snack') { buffs.snack = performance.now() + 20000; cheer(1600, 'YUM!'); shock(at[0], at[1], '#ffd23a'); mark(); return 'SNACK BREAK! Typists work 50% faster for 20s.'; }
+    const d = cur(), n = 8 + Math.min(32, totalPaws());                        // coconut: a pile of letters for the machine you are on
+    for (let k = 0; k < n; k++) addLetter(d, roll(d, S.sel, true));
+    floatText(`+${n} letters`, at[0], at[1] + 50, '#7be05a', true); shock(at[0], at[1], '#7be05a'); mark();
+    return `COCONUT CRACKED! +${n} letters for ${DESKS[S.sel].name}.`;
+  }
+  IMI.ops = { spawnGold, royRate, simulateAway, genPitch, newOffers, perk };
   /* Balance harness hook (tools/balance.html): lets a bot drive the real game logic. Not used by the site itself. */
   Object.defineProperty(IMI.ops, 'dev', { configurable: true, get: () => ({
     S: () => S, holdRate, ui, tick, press, genPitch, newOffers, buyUp, buy, writeTitle, bankWord, keeperStep, canWrite, RECIPES, RBY, DESKS, UPS, upPlan, upLock, DIVS, divPlan, releaseDiv, DEALS, SHOP, LAMP, MUSES, MK_BASE, mkCost,
@@ -1331,7 +1339,7 @@
     ui.fresh = id; setTimeout(() => { ui.fresh = null; mark(); }, 2200);
     if (at) { const big = pay >= 50000 ? 3 : pay >= 5000 ? 2 : 1; for (let k = 1; k < big + 1; k++) setTimeout(() => IMI.burst(at[0] + (k % 2 ? -1 : 1) * k * 40, at[1] - k * 20, ['banana', 'banana', 'spark', 'star'], 14), k * 220); }
     vib([20, 40, 70]); cheer(3000, 'SOLD!');
-    IMI.sfx.ding(); IMI.heroSay('PUBLISHED!', 1800);
+    IMI.sfx.ding();
     logIt(`The Jungle Press bought the rights to “${r.title}”: ${fmtBig(pay)} bananas${mk !== 1 ? ` (market x${mk.toFixed(2)})` : ''}. It will not be reprinted.`);
     newsPush(`EXTRA: The Jungle Press buys “${r.title}” for ${fmtBig(pay)} bananas${mk >= 1.3 ? ', cashing in on a hot market' : mk <= .8 ? ', in a cold market. Ouch' : ''}.`);
     const n = Object.keys(S.written).length;
@@ -1478,6 +1486,7 @@
           <div class="o-flies">${Array.from({ length: 7 }, () => `<i style="left:${5 + rand() * 90}%;top:${10 + rand() * 50}%;--d:${5 + rand() * 5}s;--dl:${-rand() * 8}s"></i>`).join('')}</div>
         </div>
         <div class="o-combo" id="oCombo" aria-hidden="true"><span id="oComboN"></span><i class="o-meter"><i id="oMeter"></i></i></div>
+        <div class="o-hud"><div class="o-stats" id="oStats"></div><div class="o-focus" id="oFocus"></div></div>
         <div class="o-dangle" id="oDangle" aria-hidden="true"></div>
         <div class="o-tw mk${cur().mk || 0} ${partsOf(cur())}" id="oTw">
           <div class="o-sheetwrap"><div class="o-sheet"><span id="oSheet"></span></div></div>
@@ -1491,11 +1500,8 @@
       </div>
       <div class="o-info">
         <div class="o-tray" id="oTray" aria-label="Recent letters"></div>
-        <div class="o-focus" id="oFocus"></div>
-        <div class="o-stats" id="oStats"></div>
         <div class="o-miles" id="oMiles"></div>
         <p class="o-guide" id="oGuide"></p>
-        <div class="o-shelf compact" id="oShelf"></div>
       </div>`;
     rt[i].col = 0; typists = []; syncTypists(true);
     if (ui.dropIn) { ui.dropIn = false; const st = $('#oStage'); st.classList.add('drop'); st.addEventListener('animationend', () => st.classList.remove('drop'), { once: true }); }
@@ -1646,16 +1652,16 @@
 
   /* ---- the bookshelf: one spine per title you have sold, ghost slots for the rest ---- */
   const hashOf = str => { let h = 0; for (const c of str) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
-  function shelfHTML(compact) {
+  function shelfHTML() {
     const ids = [...new Set([...Object.keys(S.editions || {}), ...Object.keys(S.written)])].filter(id => RBY[id]);
     const books = ids.map(id => {
-      const r = RBY[id], h = hashOf(id), w = Math.round((compact ? 17 : 24) + Math.min(r.total, 40) * (compact ? .3 : .5));
-      const ht = (compact ? 54 : 78) + r.band * (compact ? 8 : 12) + h % 14, hue = [150, 345, 215, 40, 275, 210][r.band] + (h % 30) - 15;
+      const r = RBY[id], h = hashOf(id), w = Math.round(24 + Math.min(r.total, 40) * .5);
+      const ht = 78 + r.band * 12 + h % 14, hue = [150, 345, 215, 40, 275, 210][r.band] + (h % 30) - 15;
       const drop = ui.fresh === id && !ui.dropped[id]; if (drop) ui.dropped[id] = true;
       return `<button type="button" class="o-spine b${r.band}${drop ? ' drop' : ''}${ui.pulled === id ? ' pulled' : ''}${S.written[id] ? '' : ' old'}" data-act="pull" data-id="${id}" style="--bw:${w}px;--bh:${ht}px;--hue:${hue};--tilt:${(h % 5) - 2}deg;--sd:${(h % 50) / 10}s" title="${esc(r.title)}" aria-label="${esc(r.title)}"><span>${esc(r.title)}</span></button>`;
     }).join('');
     const ghosts = Array.from({ length: Math.max(0, BOOKS - ids.filter(id => !RBY[id].gen).length) }, () => '<i class="o-slot"></i>').join('');
-    const plate = !compact && ui.pulled && (S.written[ui.pulled] || (S.editions || {})[ui.pulled]) ? (() => { const r = RBY[ui.pulled]; return `<div class="o-plate"><div class="o-row"><h3>${esc(r.title)}</h3><span class="o-tag b${r.band}">${DESKS[r.band].lo}–${DESKS[r.band].hi}</span></div><p class="o-dim">${r.total} words · rights sold for ${price(r.pay)} · ${S.written[ui.pulled] ? `pays <b>${fmtRate(bookRoy(r))}/s</b> in royalties` : '<b>out of print</b>: sell it again in this printing'}${(S.editions || {})[ui.pulled] ? ` · ${(S.editions || {})[ui.pulled]} earlier edition${(S.editions || {})[ui.pulled] > 1 ? 's' : ''}` : ''}</p><div class="o-read">${esc(r.text)}</div></div>`; })() : '';
+    const plate = ui.pulled && (S.written[ui.pulled] || (S.editions || {})[ui.pulled]) ? (() => { const r = RBY[ui.pulled]; return `<div class="o-plate"><div class="o-row"><h3>${esc(r.title)}</h3><span class="o-tag b${r.band}">${DESKS[r.band].lo}–${DESKS[r.band].hi}</span></div><p class="o-dim">${r.total} words · rights sold for ${price(r.pay)} · ${S.written[ui.pulled] ? `pays <b>${fmtRate(bookRoy(r))}/s</b> in royalties` : '<b>out of print</b>: sell it again in this printing'}${(S.editions || {})[ui.pulled] ? ` · ${(S.editions || {})[ui.pulled]} earlier edition${(S.editions || {})[ui.pulled] > 1 ? 's' : ''}` : ''}</p><div class="o-read">${esc(r.text)}</div></div>`; })() : '';
     return `<div class="o-shelfrow">${books}${ghosts}</div>${plate}`;
   }
   function renderFloorInfo() {
@@ -1672,7 +1678,6 @@
       (stormy() ? '<span class="o-warn">Storm! The typists are clinging to their vines (half speed).</span>' : ''));
     const now = performance.now();
     morph($('#oMiles'), `<span class="o-dim">Tap streak goals${S.best ? ` (best x${S.best})` : ''}:</span>` + MILES.map(m => `<span class="o-mile${combo.n >= m.n ? ' hit' : ''}${now < (ui.mcd[m.n] || 0) ? ' cd' : ''}" title="${esc(m.desc)}">x${m.n} ${m.name}</span>`).join(''));
-    const sh = $('#oShelf'); if (sh) morph(sh, Object.keys(S.written).length ? `<h3>Bookshelf</h3>${shelfHTML(true)}` : '');
     $('#oGuide').textContent = !d.paws ? 'Nobody is typing yet. Collect a few letters by hand, then hire a first typist at Primate Resources.' : S.hold ? 'Hold a finger, the mouse, or Space on the machine to type fast. Spend letters at Primate Resources or turn them into words at Coconut R&D.'
       : 'Tap or click the typewriter (focus it and press Space too). Spend letters at Primate Resources or make words at Coconut R&D.';
     syncTypists();
@@ -1760,7 +1765,7 @@
       <p class="o-lede">Vine Infrastructure carries finished titles to the Jungle Press. Write a title and its rights are sold <b>once</b>, for good. ${written}/${BOOKS} written${S.stats.pitchSold ? ` (+${S.stats.pitchSold} pitched)` : ''}. Each recipe is the exact word count of the short edition.</p>
  ${marketHTML()}
       ${pitchHTML()}
-      <div class="o-card o-shelf"><div class="o-row"><h3>Your bookshelf</h3><span class="o-dim">${written} sold · royalties ${fmtRate(royRate())}/s. Tap a spine to read it.</span></div>${shelfHTML(false)}</div>
+      <div class="o-card o-shelf"><div class="o-row"><h3>Your bookshelf</h3><span class="o-dim">${written} sold · royalties ${fmtRate(royRate())}/s. Tap a spine to read it.</span></div>${shelfHTML()}</div>
       <div class="o-card"><div class="o-row"><h3>Trophy shelf</h3><span class="o-dim">${awardCount()}/${AWARDS.length} · +${awardCount()}% income</span></div>${trophyHTML()}<button type="button" class="o-btn sm" data-act="go" data-tab="records">Hall of Records</button></div>
       <input class="o-search" id="oLibQ" placeholder="Search titles…" value="${esc(ui.libq)}" autocomplete="off" aria-label="Search titles">
       <div class="o-filters"><span class="o-seg">${[['all', 'All'], ['open', 'To write'], ['ready', 'Ready'], ['written', 'Written']].map(([k, n]) => `<button type="button" data-act="libf" data-f="${k}" aria-pressed="${ui.libf === k}">${n}</button>`).join('')}</span></div>
@@ -1886,16 +1891,23 @@
   }
   const buffBar = document.createElement('div'); buffBar.className = 'o-buffbar'; buffBar.setAttribute('aria-live', 'polite'); document.body.appendChild(buffBar);
   function renderBuffs() {
-    const now = performance.now(), tb = document.querySelector('.topbar');
-    if (tb) buffBar.style.top = Math.round(tb.getBoundingClientRect().bottom + 8) + 'px';
-    morph(buffBar, Object.keys(buffs).filter(buffOn).map(k => `<span class="o-buff ${k} ${BUFF_INFO[k][1]}">${BUFF_INFO[k][0]} ${Math.ceil((buffs[k] - now) / 1000)}s</span>`).join('') + (S.challenge ? `<span class="o-buff chal">OULIPO: ${esc(chDef(S.challenge.id).name)} ${chProgress()}</span>` : ''));
-    const hl = document.getElementById('heroLive'), r0 = royRate() + divRate();   // the hero's live board: the floor, as seen from the canopy
-    if (hl && S.stats.letters > 0) {
-      hl.hidden = false;
-      morph(hl, `<i class="hl-dot"></i><span class="hl-tag">LIVE</span><span><b>${cnt('h-ty', totalPaws())}</b> typists</span><span><b>${cnt('h-let', S.stats.letters, true)}</b> letters</span><span><b>${cnt('h-sold', soldCount())}</b> titles</span>${r0 > 0 ? `<span class="hl-rate">+${fmtRate(r0)}/s</span>` : ''}`);
+    const now = performance.now(), on = Object.keys(buffs).filter(buffOn);
+    morph(buffBar, on.map(k => `<span class="o-buff ${k} ${BUFF_INFO[k][1]}">${BUFF_INFO[k][0]} ${Math.ceil((buffs[k] - now) / 1000)}s</span>`).join('') + (S.challenge ? `<span class="o-buff chal">OULIPO: ${esc(chDef(S.challenge.id).name)} ${chProgress()}</span>` : ''));
+    if (buffBar.childElementCount) {                                 // float the chips over the room (under its stats), or at the top of the panel
+      const st = ui.tab === 'floor' && $('#oStage');
+      buffBar.style.top = Math.round(st ? st.getBoundingClientRect().top + 44 : $('.o-panel').getBoundingClientRect().top + 8) + 'px';
     }
     const st = $('#oStage'); if (st) { st.classList.toggle('frenzy', buffOn('frenzy')); st.classList.toggle('golden', buffOn('golden')); }
     const r = royRate() + divRate(); hudRate.textContent = r > 0 ? `+${fmtRate(r)}/s` : ''; hudRate.hidden = r <= 0;
+  }
+  /* the title screen: a live board of the floor, and PLAY turns into CONTINUE once you have started */
+  const menuLive = document.getElementById('heroLive'), playLabel = document.getElementById('playLabel');
+  function renderMenu() {
+    const started = S.stats.letters > 0, rate = royRate() + divRate();
+    if (playLabel) playLabel.textContent = playLabel.dataset[started ? 'cont' : 'new'];
+    if (!menuLive || !started) return;
+    menuLive.hidden = false;
+    morph(menuLive, `<i class="hl-dot"></i><span class="hl-tag">LIVE</span><span><b>${fmtBig(bananas.get())}</b> bananas</span><span><b>${totalPaws()}</b> typists</span><span><b>${fmtBig(S.stats.letters)}</b> letters</span><span><b>${soldCount()}</b> titles</span>${rate > 0 ? `<span class="hl-rate">+${fmtRate(rate)}/s</span>` : ''}`);
   }
   function renderChrome() {
     renderBuffs();
@@ -1906,14 +1918,20 @@
       const ar = autoRate(d); return `<button type="button" class="o-desk" style="--tw:${D.color}" data-act="sel" data-i="${i}" aria-pressed="${i === S.sel}">${ar > 0 ? `<i class="o-dact" style="--spd:${Math.max(.12, Math.min(2, 1 / ar)).toFixed(2)}s" aria-hidden="true"></i>` : ''}${dn(D)}<span class="o-d1">${D.lo}–${D.hi} letters · ${totalLetters(d)} held</span><span class="o-d2">${d.paws} typists · ${autoRate(d).toFixed(2)}/s</span><span class="o-d3">${totalLetters(d)} held</span></button>`;
     }).join(''));
     hydrate($('#oDesks'));
-    $$('.o-tab').forEach(b => { b.setAttribute('aria-selected', String(b.dataset.tab === ui.tab)); const bd = b.dataset.tab === ui.tab ? '' : badgeFor(b.dataset.tab); if (bd) b.dataset.badge = bd; else delete b.dataset.badge; });
+    const badge = (b, bd) => { if (bd) b.dataset.badge = bd; else delete b.dataset.badge; };
+    $$('.o-tab[data-tab]').forEach(b => { b.setAttribute('aria-selected', String(b.dataset.tab === ui.tab)); badge(b, b.dataset.tab === ui.tab ? '' : badgeFor(b.dataset.tab)); });
+    const hidden = TABS.filter(t => t[5] && t[0] !== ui.tab), more = $('#oMore');     // phones tuck some departments behind "More"; it wears their badges
+    more.setAttribute('aria-selected', String(!!TABS.find(t => t[5] && t[0] === ui.tab)));
+    badge(more, hidden.some(t => badgeFor(t[0])) ? '!' : '');
     $$('.o-pane').forEach(p => { p.hidden = p.id !== 'o-' + ui.tab; });
     const D = DESKS[S.sel];
-    const wrap = $('.o-wrap') || root;                               // on .o-wrap itself: its own defaults would otherwise shadow these
+    const wrap = $('.o-wrap');                                       // on .o-wrap itself: its own defaults would otherwise shadow these
+    wrap.dataset.tab = ui.tab;
     wrap.style.setProperty('--tw', D.color); wrap.style.setProperty('--tw-font', D.font); wrap.style.setProperty('--tw-fs', D.fs || '');
   }
   function render() {
     if (window.__OPS_HEADLESS) return;
+    if (IMI.screen() !== 'game') return renderMenu();                // nothing below is on screen from the title menu
     const ready = RECIPES.filter(canWrite).map(r => r.id);
     if (ui.readySet) { const fresh = ready.filter(id => !ui.readySet.includes(id)); if (fresh.length) { cheer(1100, 'READY!'); IMI.sfx.ding(); } }
     ui.readySet = ready;
@@ -1922,22 +1940,27 @@
   }
 
   /* ================= wiring ================= */
-  root.innerHTML = `<div class="o-wrap">
+  const tabBtn = ([k, ic, name, sub, short]) => `<button type="button" role="tab" class="o-tab" data-tab="${k}" aria-label="${name}" title="${name}: ${sub}"><span class="o-tabico">${ico(ic)}</span><em class="o-short">${short}</em></button>`;
+  root.innerHTML = `<div class="o-wrap" data-tab="floor">
     <div class="o-ticker" id="oTicker" role="marquee" aria-label="News" title="Tap for the next headline"><b class="o-tkr-tag">NEWS</b><div class="o-tkr-view"><span class="o-tkr-text" id="oTkrText"></span></div></div>
-    <div class="o-nav">
-      <div class="o-desks" id="oDesks"></div>
-      <div class="o-tabs" id="oTabs" role="tablist" aria-label="Departments">${TABS.map(([k, ic, name, sub, short]) => `<button type="button" role="tab" class="o-tab" data-tab="${k}" aria-label="${name}"><span class="o-tabico">${ico(ic)}</span><span class="o-tabtxt"><b>${name}</b><small>${sub}</small></span><em class="o-short">${short}</em></button>`).join('')}</div>
-    </div>
+    <div class="o-desks" id="oDesks"></div>
     <div class="o-panel">${TABS.map(([k]) => `<section class="o-pane" id="o-${k}" role="tabpanel" ${k === 'floor' ? '' : 'hidden'}></section>`).join('')}</div>
+    <nav class="o-tabs" id="oTabs" role="tablist" aria-label="Departments">
+      ${TABS.filter(t => !t[5]).map(tabBtn).join('')}
+      <button type="button" class="o-tab o-morebtn" id="oMore" aria-expanded="false" aria-label="More departments" title="More departments"><span class="o-tabico"><i class="o-dots"><b></b><b></b><b></b></i></span><em class="o-short">More</em></button>
+      <div class="o-moresheet">${TABS.filter(t => t[5]).map(tabBtn).join('')}</div>
+    </nav>
   </div>`;
   hydrate(root);
 
   function setTab(t) {
     const changed = ui.tab !== t, order = TABS.map(x => x[0]), dir = Math.sign(order.indexOf(t) - order.indexOf(ui.tab)); ui.tab = t;
-    $('#o-' + t).style.setProperty('--edir', dir);
-    const tabEl = $(`.o-tab[data-tab="${t}"]`), strip = $('#oTabs'); if (tabEl && strip && strip.scrollWidth > strip.clientWidth) strip.scrollTo({ left: tabEl.offsetLeft - strip.clientWidth / 2 + tabEl.offsetWidth / 2, behavior: 'smooth' }); if (t === 'records') ui.unseen = 0; if (t === 'floor') buildStage(); ui.cntZero = changed; render(); ui.cntZero = false;
+    $('#o-' + t).style.setProperty('--edir', dir); setMore(false);
+    if (t === 'records') ui.unseen = 0; if (t === 'floor') buildStage(); ui.cntZero = changed; render(); ui.cntZero = false;
     if (changed) { const p = $('#o-' + t); p.classList.remove('enter'); void p.offsetWidth; p.classList.add('enter'); p.addEventListener('animationend', () => p.classList.remove('enter'), { once: true }); IMI.sfx.tick(); }
   }
+  const setMore = open => { $('#oTabs').classList.toggle('open', open); $('#oMore').setAttribute('aria-expanded', String(open)); };
+  document.addEventListener('pointerdown', e => { if (!e.target.closest('#oTabs')) setMore(false); });
   const tap = () => { press(S.sel, false); };
   root.addEventListener('pointerdown', e => {
     if (!e.target.closest('#oStage')) return;
@@ -2012,7 +2035,8 @@
     reset: () => { if (confirm('Reset Typewriter Ops? Your bananas are kept.')) { S = fresh(); save(); buildStage(); mark(); } }
   };
   root.addEventListener('click', e => {
-    const tab = e.target.closest('.o-tab'); if (tab) return setTab(tab.dataset.tab);
+    const tab = e.target.closest('.o-tab');
+    if (tab) return tab.id === 'oMore' ? (IMI.sfx.tick(), setMore(!$('#oTabs').classList.contains('open'))) : setTab(tab.dataset.tab);
     const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
     ACTIONS[el.dataset.act]?.(el);
   });
@@ -2060,11 +2084,11 @@
     saveT += dt; if (saveT >= 5) { saveT = 0; save(); }
   }
   window.addEventListener('beforeunload', save);
-  document.addEventListener('visibilitychange', () => { if (document.hidden) save(); else { last = performance.now(); welcomeBack(30); setTimeout(dailyCrate, 1200); } });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) save(); else { last = performance.now(); welcomeBack(30); setTimeout(dailyLater, 1200); } });
   if (typeof Weather !== 'undefined') Weather.on('change', () => { paintWindow(); mark(); });
 
-  [...S.log].reverse().forEach(t => IMI.log(t));
-  S.desks.forEach(ensureCrew); if (totalReleased() > 0) loadArchive(); checkAwards(true); buildStage(); render(); startNews(); welcomeBack(60); setTimeout(dailyCrate, 1800);
+  S.desks.forEach(ensureCrew); if (totalReleased() > 0) loadArchive(); checkAwards(true); buildStage(); render(); startNews(); welcomeBack(60); setTimeout(dailyLater, 1800);
+  IMI.onScreen(name => { if (name === 'game') { mark(); buildStage(); startNews(); render(); } else render(); });
   setInterval(tick, 50);
   requestAnimationFrame(loop);
 })();

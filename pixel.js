@@ -154,7 +154,6 @@
     return { cv: render(px), W, H, pivot: [W / 2, 3 * k + 1], k };
   }
   const monkeySets = {
-    vine: { k: 0.55, max: 50, step: 10 },
     hero: { k: 2, max: 35, step: 7 },
     desk: { k: 0.6, max: 42, step: 6 },
   };
@@ -451,7 +450,7 @@
     banana: null, coconut: null,
     css(name, u) { document.documentElement.style.setProperty('--' + name, `url(${u})`); },
     el(name, mult = 1) { const d = document.createElement('div'), s = spr[name]; d.className = 'spr'; d.style.cssText = `width:${s.w * S * mult}px;height:${s.h * S * mult}px;background-image:url(${s.url});background-size:100% 100%`; return d; },
-    frame(el, sh, i) { el.style.width = sh.fw * S + 'px'; el.style.height = sh.fh * S + 'px'; el.style.backgroundImage = `url(${sh.url})`; el.style.backgroundSize = `${sh.fw * sh.n * S}px ${sh.fh * S}px`; el.style.backgroundPosition = `${-i * sh.fw * S}px 0`; },
+    frame(el, sh, i, k = S) { el.style.width = sh.fw * k + 'px'; el.style.height = sh.fh * k + 'px'; el.style.backgroundImage = `url(${sh.url})`; el.style.backgroundSize = `${sh.fw * sh.n * k}px ${sh.fh * k}px`; el.style.backgroundPosition = `${-i * sh.fw * k}px 0`; },
     blit(canvas, f) { if (canvas.width !== f.W) { canvas.width = f.W; canvas.height = f.H; canvas.style.width = f.W * S + 'px'; canvas.style.height = f.H * S + 'px'; } const g = canvas.getContext('2d'); g.clearRect(0, 0, canvas.width, canvas.height); g.drawImage(f.cv, 0, 0); },
     paintSky() {
       const w = Math.ceil(innerWidth / S), h = Math.ceil(innerHeight / S), px = S;

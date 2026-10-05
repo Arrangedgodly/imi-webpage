@@ -60,8 +60,7 @@
   }
   function surfaces() {
     const out = [];
-    document.querySelectorAll('.crate, .log-scroll').forEach(el => {
-      if (el.classList.contains('reveal') && !el.classList.contains('in')) return;
+    document.querySelectorAll('.tagline, .hero-live, .o-ticker, .o-stage').forEach(el => {          // rain splashes on whatever is on screen
       const r = el.getBoundingClientRect(); if (r.bottom < 0 || r.top > H || r.top < 70) return; out.push(r);
     });
     return out;

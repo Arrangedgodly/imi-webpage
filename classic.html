@@ -2,13 +2,14 @@
 <html lang="en" data-style="classic">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d2412">
   <title>INFINITE MONKEY INDUSTRIES</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka:wght@400;600&family=Barlow+Condensed:wght@500;700&family=Rokkitt:wght@500;800&family=Bree+Serif&family=Pacifico&display=swap" rel="stylesheet">
+  <script>document.documentElement.dataset.screen = location.hash === '#play' ? 'game' : 'menu';</script>
   <script src="style-swap.js"></script>
-  <script src="mobile-nav.js" defer></script>
   <link rel="stylesheet" href="classic.css">
   <link rel="stylesheet" href="ops.css">
 </head>
@@ -24,182 +25,14 @@
     <svg class="foliage foliage-r" viewBox="0 0 240 240" aria-hidden="true"><use href="#fronds"/></svg>
   </div>
 
-  <header class="topbar">
-    <a class="brand" href="#top" aria-label="Infinite Monkey Industries home">
-      <svg viewBox="0 0 40 40" width="34" height="34" aria-hidden="true"><use href="#banana-icon"/></svg>
-      <span>IMI</span>
-    </a>
-    <div class="hud" id="hud" title="Bananas collected">
-      <svg viewBox="0 0 40 40" width="26" height="26" aria-hidden="true"><use href="#banana-icon"/></svg>
-      <b id="score">0</b>
-    </div>
-    <nav>
-      <a class="leaf-link" href="#ops">Ops</a>
-      <a class="leaf-link" href="#controls">Controls</a>
-      <a class="leaf-link" href="#log">Field Log</a>
-      <a class="leaf-link" href="library.html">Library</a>
-      <button class="leaf-link style-swap" id="styleSwap" type="button" title="Switch to the pixel-art style">Pixel Mode</button>
-      <button class="drum-btn" id="soundBtn" aria-pressed="true" aria-label="Toggle sound effects" title="Sound on/off">
-        <span class="drum-skin"></span><span class="drum-label">ON</span>
-      </button>
-    </nav>
-  </header>
-
-  <main id="top">
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-rays" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-      <div class="hero-motes" id="heroMotes" aria-hidden="true"></div>
-      <div class="hero-monkey" id="heroMonkey" aria-hidden="true">
-        <div class="hm-vine"></div>
-        <div class="hm-bubble" id="hmBubble">OOH OOH!</div>
-      </div>
-      <h1 class="title" id="title" aria-label="Infinite Monkey Industries">
-        <span class="word" data-text="INFINITE"></span>
-        <span class="word" data-text="MONKEY"></span>
-        <span class="word" data-text="INDUSTRIES"></span>
-      </h1>
-      <p class="tagline">Typing Shakespeare since before it was cool.</p>
-      <a class="hero-live" id="heroLive" href="#ops" hidden></a>
-      <div class="hero-actions">
-        <a class="banana-btn" href="#ops"><span>Enter the Canopy</span></a>
-      </div>
-      <div class="scroll-hint" aria-hidden="true">swing down ↓</div>
-    </section>
-
-    <!-- TYPEWRITER OPS: the game. Everything inside #opsRoot is built by ops.js -->
-    <section class="section ops" id="ops">
-      <h2 class="section-title">Typewriter Ops</h2>
-      <p class="section-sub">Infinite monkeys, finite desks. Collect letters, spell words, write the Jungle Press a parody, sell the rights once. Bananas buy more typewriters.</p>
-      <div id="opsRoot"></div>
-    </section>
-
-    <!-- CONTROLS -->
-    <section class="section" id="controls">
-      <h2 class="section-title">Control Panel</h2>
-      <p class="section-sub">Every control is an object from the jungle. Poke them.</p>
-
-      <div class="panel-grid">
-        <!-- Banana toggle -->
-        <article class="crate">
-          <h3>Banana Switch</h3>
-          <button class="banana-toggle" id="bananaToggle" role="switch" aria-checked="false" aria-label="Banana switch">
-            <svg viewBox="0 0 120 120" class="banana-svg" aria-hidden="true">
-              <defs>
-                <clipPath id="bTop"><path d="M52 6 C45 8 43 16 44 28 C45 50 38 74 50 94 L74 94 C82 74 80 46 75 26 C73 14 69 6 62 6 Z"/></clipPath>
-                <clipPath id="bAll"><path d="M52 6 C45 8 43 16 44 28 C45 50 38 74 50 94 C55 102 68 102 74 94 C82 74 80 46 75 26 C73 14 69 6 62 6 Z"/></clipPath>
-              </defs>
-              <ellipse class="b-shadow" cx="60" cy="112" rx="26" ry="5"/>
-              <g class="banana-body">
-                <g class="b-fruit">
-                  <path d="M54 12 C49 14 48 20 49 30 C50 50 45 72 55 90 L70 90 C77 72 75 48 71 29 C69 19 66 12 61 12 Z"/>
-                  <path class="b-bite" d="M57 18 C55 40 57 62 60 84" />
-                </g>
-                <g clip-path="url(#bAll)"><rect x="30" y="72" width="60" height="40" class="b-peel"/></g>
-                <path class="b-stem" d="M56 100 L56 112 L68 112 L66 100 Z"/>
-                <g class="strip s-left"><g clip-path="url(#bTop)"><rect x="30" y="0" width="29" height="76" class="b-peel"/><path d="M44 10 C42 40 44 60 50 74" class="b-line"/></g></g>
-                <g class="strip s-right"><g clip-path="url(#bTop)"><rect x="59" y="0" width="30" height="76" class="b-peel b-peel-dark"/><path d="M76 10 C78 40 76 60 72 74" class="b-line"/></g></g>
-                <g class="strip s-mid"><g clip-path="url(#bTop)"><rect x="51" y="0" width="18" height="76" class="b-peel b-peel-mid"/></g></g>
-                <path class="b-tip" d="M52 6 C54 3 60 3 62 6 C60 9 54 9 52 6 Z"/>
-              </g>
-            </svg>
-            <span class="toggle-state" id="bananaState">UNPEELED</span>
-          </button>
-          <p class="hint">Tap to peel.</p>
-        </article>
-
-        <!-- Coconut button -->
-        <article class="crate">
-          <h3>Coconut Crack</h3>
-          <button class="coconut-btn" id="coconutBtn" aria-label="Crack the coconut">
-            <svg viewBox="0 0 120 120" class="coconut-svg" aria-hidden="true">
-              <defs>
-                <radialGradient id="cShell" cx="38%" cy="32%" r="75%">
-                  <stop offset="0" stop-color="#9b6a3a"/><stop offset="0.55" stop-color="#6b4423"/><stop offset="1" stop-color="#3d2410"/>
-                </radialGradient>
-                <clipPath id="cTop"><rect x="0" y="0" width="120" height="62"/></clipPath>
-                <clipPath id="cBot"><rect x="0" y="58" width="120" height="70"/></clipPath>
-              </defs>
-              <ellipse class="c-shadow" cx="60" cy="114" rx="30" ry="5"/>
-              <g class="half half-bottom" clip-path="url(#cBot)">
-                <g class="half-inner">
-                  <circle cx="60" cy="60" r="44" fill="url(#cShell)"/>
-                  <ellipse class="c-flesh" cx="60" cy="60" rx="38" ry="9"/>
-                  <ellipse class="c-milk" cx="60" cy="61" rx="30" ry="6"/>
-                </g>
-              </g>
-              <g class="half half-top" clip-path="url(#cTop)">
-                <g class="half-inner">
-                  <circle cx="60" cy="60" r="44" fill="url(#cShell)"/>
-                  <g class="c-hair"><path d="M30 40 l6 4 M50 28 l3 7 M74 30 l-2 7 M88 46 l-7 3 M40 52 l5 2 M80 56 l-6 1"/></g>
-                  <circle cx="48" cy="46" r="5" class="c-eye"/><circle cx="68" cy="44" r="5" class="c-eye"/><circle cx="58" cy="56" r="4.5" class="c-eye"/>
-                </g>
-              </g>
-            </svg>
-          </button>
-          <p class="hint">Click to crack. It heals.</p>
-        </article>
-
-        <!-- Sun / moon -->
-        <article class="crate">
-          <h3>Sun &amp; Moon</h3>
-          <button class="sunmoon" id="nightToggle" role="switch" aria-checked="false" aria-label="Night mode">
-            <span class="sm-stars"></span><span class="sm-clouds"></span>
-            <span class="sm-knob"><i></i><i></i><i></i></span>
-          </button>
-          <p class="hint" id="nightHint">Daytime. Monkeys are loud.</p>
-        </article>
-
-        <!-- Banana-shaped button + slider -->
-        <article class="crate crate-wide">
-          <h3>Banana Buttons &amp; Gauges</h3>
-          <div class="row">
-            <button class="banana-btn" id="honkBtn"><span>Ooh Ooh Ahh Ahh</span></button>
-            <button class="banana-btn banana-btn-green" id="greenBtn"><span>Unripe</span></button>
-          </div>
-          <label class="slider-label" for="ripeness">Ripeness: <b id="ripeVal">50</b>%</label>
-          <input class="vine-slider" id="ripeness" type="range" min="0" max="100" value="50">
-          <div class="toast" id="toast" role="status" aria-live="polite"></div>
-        </article>
-
-        <!-- Weather -->
-        <article class="crate">
-          <h3>Weather</h3>
-          <button class="weather-btn" id="weatherBtn" aria-label="Change the weather" data-state="0">
-            <svg viewBox="0 0 120 100" class="wx-svg" aria-hidden="true">
-              <g class="wx-sun"><circle cx="88" cy="26" r="13" fill="#ffd93b" stroke="#e0a912" stroke-width="2"/>
-                <g stroke="#ffd93b" stroke-width="4" stroke-linecap="round"><path d="M88 4v6M88 42v6M66 26h6M104 26h6M72 10l4 4M100 38l4 4M72 42l4-4M100 14l4-4"/></g></g>
-              <path class="wx-cloud" d="M30 70 C14 70 12 48 30 46 C32 28 56 24 64 40 C78 34 94 44 90 60 C100 62 100 70 88 70 Z"/>
-              <g class="wx-drops" stroke="#7ec8f0" stroke-width="4" stroke-linecap="round">
-                <path class="d d1" d="M30 78l-3 9"/><path class="d d2" d="M58 80l-3 9"/><path class="d d3" d="M84 78l-3 9"/>
-                <path class="d d4" d="M44 84l-3 9"/><path class="d d5" d="M72 84l-3 9"/><path class="d d6" d="M96 82l-3 9"/>
-              </g>
-              <path class="wx-bolt" d="M62 60 L50 80 L60 80 L53 98 L76 72 L64 72 L72 60Z" fill="#ffd93b" stroke="#a8740f" stroke-width="2" stroke-linejoin="round"/>
-            </svg>
-            <span class="toggle-state" id="wxState">CLEAR</span>
-          </button>
-          <p class="hint" id="wxHint">Click to make it rain.</p>
-        </article>
-      </div>
-    </section>
-
-    <!-- LOG: nested scroller demo -->
-    <section class="section" id="log">
-      <h2 class="section-title">Field Log</h2>
-      <p class="section-sub">What the Typewriter Ops floor has been up to. Scroll the vine.</p>
-      <div class="log-scroll" tabindex="0" aria-label="Field log"><ol id="logList"></ol></div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <p>© Infinite Monkey Industries. All typewriters reserved.</p>
-    <p class="secret">psst… try typing “banana”.</p>
-  </footer>
-
-  <!-- Vine scrollbar with swinging monkey -->
-  <div class="vine" id="vine" aria-hidden="true">
-    <div class="monkey" id="monkey">
-      <svg viewBox="0 0 80 110" width="64" height="88">
+  <!-- MENU: the title screen. Play drops you into the game. -->
+  <main class="screen menu" id="menu">
+    <div class="hero-rays" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="hero-motes" id="heroMotes" aria-hidden="true"></div>
+    <div class="hero-monkey" id="heroMonkey" aria-hidden="true">
+      <div class="hm-vine"></div>
+      <div class="hm-bubble" id="hmBubble">OOH OOH!</div>
+      <svg viewBox="0 0 80 110">
         <g class="m-tail"><path d="M48 80 C70 82 74 98 62 102 C56 104 54 98 60 96" fill="none" stroke="#6b4423" stroke-width="5" stroke-linecap="round"/></g>
         <g class="m-leg-l"><ellipse cx="33" cy="94" rx="6" ry="11" fill="#6b4423"/><ellipse cx="33" cy="104" rx="6" ry="3.5" fill="#d9a066"/></g>
         <g class="m-leg-r"><ellipse cx="47" cy="94" rx="6" ry="11" fill="#6b4423"/><ellipse cx="47" cy="104" rx="6" ry="3.5" fill="#d9a066"/></g>
@@ -220,7 +53,38 @@
         <g class="m-hat"><path d="M18 32 C20 10 60 10 62 32 C52 25 28 25 18 32Z" fill="#3a8a2e" stroke="#1f5a24" stroke-width="2" stroke-linejoin="round"/><path d="M40 14 L40 27 M40 19 L31 25 M40 19 L49 25" stroke="#7cc34a" stroke-width="2" stroke-linecap="round" fill="none"/></g>
       </svg>
     </div>
+    <h1 class="title" id="title" aria-label="Infinite Monkey Industries">
+      <span class="word" data-text="INFINITE"></span>
+      <span class="word" data-text="MONKEY"></span>
+      <span class="word" data-text="INDUSTRIES"></span>
+    </h1>
+    <p class="tagline">Typing Shakespeare since before it was cool.</p>
+    <div class="hero-live" id="heroLive" hidden></div>
+    <div class="menu-actions">
+      <a class="banana-btn" id="playBtn" href="#play"><span id="playLabel" data-new="Play" data-cont="Continue">Play</span></a>
+      <a class="banana-btn banana-btn-green" href="library.html"><span>Library</span></a>
+    </div>
+    <div class="menu-corner">
+      <button class="toy" data-sound type="button" aria-label="Toggle sound effects" title="Sound on/off"><span class="toy-art"></span></button>
+      <button class="leaf-link style-swap" id="styleSwap" type="button" title="Switch to the pixel-art style">Pixel Mode</button>
+    </div>
+    <p class="secret">psst… try typing “banana”.</p>
+  </main>
+
+  <!-- GAME: Typewriter Ops. Everything inside #opsRoot is built by ops.js -->
+  <div class="screen game" id="game">
+    <header class="topbar">
+      <button class="back-btn" id="menuBtn" type="button" aria-label="Back to the menu" title="Menu (Esc)">‹</button>
+      <div class="hud" id="hud" title="Bananas">
+        <svg viewBox="0 0 40 40" width="26" height="26" aria-hidden="true"><use href="#banana-icon"/></svg>
+        <b id="score">0</b>
+      </div>
+      <div class="toys" id="toyDock"></div>
+      <button class="toy" data-sound type="button" aria-label="Toggle sound effects" title="Sound on/off"><span class="toy-art"></span></button>
+    </header>
+    <div id="opsRoot"></div>
   </div>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
   <!-- Shared symbols -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -240,6 +104,7 @@
 
   <script src="weather.js"></script>
   <script src="mood.js"></script>
+  <script src="core.js"></script>
   <script src="classic.js"></script>
   <script src="readers.js"></script>
   <script src="ops.js"></script>

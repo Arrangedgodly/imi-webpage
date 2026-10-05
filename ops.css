@@ -1,21 +1,15 @@
-/* ============ TYPEWRITER OPS — the game, skinned for both editions ============
-   Shared layout first, then html[data-style="pixel"] (sprite frames from pixel.js) and html[data-style="classic"] (smooth). */
-.o-wrap { --tw: #78d9a0; --tw-font: inherit; position: relative; }
+/* ============ TYPEWRITER OPS: the game, skinned for both editions ============
+   An app shell that never scrolls the page: ticker, machine bar, one panel, department bar. The typewriter floor fits the
+   screen; the other panels scroll inside themselves. Shared layout first, then html[data-style="pixel"] (sprite frames from
+   pixel.js) and html[data-style="classic"] (smooth). */
+#opsRoot { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.o-wrap { --tw: #78d9a0; --tw-font: inherit; position: relative; flex: 1; min-height: 0; width: 100%; max-width: 1040px; margin: 0 auto; padding: 8px 10px 0; display: flex; flex-direction: column; gap: 8px; }
 .o-wrap * { box-sizing: border-box; }
 .o-wrap button { cursor: pointer; font: inherit; color: inherit; }
 .o-wrap button:disabled { cursor: not-allowed; }
 .o-wrap h3 { margin: 0; font-weight: 400; }
 .o-wrap p { margin: 0; }
 .o-ico { display: inline-block; vertical-align: middle; line-height: 1; flex: none; }
-.o-desks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 16px; }
-.o-desk { text-align: left; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-.o-desk b { font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.o-desk span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.o-tabs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 18px; }
-.o-tab { display: flex; align-items: center; gap: 8px; text-align: left; min-width: 0; }
-.o-tabtxt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.o-tabtxt b { font-weight: 400; line-height: 1.25; }
-.o-tabtxt small { opacity: .8; }
 .o-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin: 14px 0; }
 .o-card { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .o-card + .o-card, .o-lede + .o-card, .o-filters + .o-grid { margin-top: 14px; }
@@ -28,7 +22,6 @@
 .o-pips i.on { background: var(--tw); }
 .o-chips, .o-letters, .o-words { display: flex; flex-wrap: wrap; gap: 6px; }
 .o-words { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-.o-letters { gap: 6px; }
 .o-lcell { width: 48px; text-align: center; padding: 3px 0; font-family: var(--tw-font); }
 .o-lcell b { display: block; font-weight: 400; }
 .o-lcell.zero { opacity: .35; }
@@ -40,51 +33,82 @@
 .o-seg { display: inline-flex; flex-wrap: wrap; }
 .o-seg button { padding: 4px 12px; }
 .o-filters { margin: 10px 0; }
-.o-tray { display: flex; flex-wrap: wrap; gap: 5px; min-height: 44px; align-items: center; }
-.o-tile { width: 34px; height: 38px; display: grid; place-items: center; font-family: var(--tw-font); }
-.o-stats { display: flex; flex-wrap: wrap; gap: 8px 18px; }
-.o-stats b { font-weight: 400; }
-.o-info { max-width: 620px; margin: 18px auto 0; display: grid; gap: 12px; }
 .o-price { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
 .o-x { padding: 0 8px; margin-left: 4px; }
 .o-read { padding: 10px 12px; line-height: 1.3; }
 .o-tag { padding: 3px 7px; white-space: nowrap; }
 .o-btn { align-self: flex-start; }
 .o-btn:disabled { filter: grayscale(1) brightness(.7); }
+.o-log { margin: 8px 0 0; padding-left: 22px; display: grid; gap: 6px; }
+.o-log li::marker { content: "> "; color: var(--banana, #ffd93b); }
 
-/* ---------- the typewriter floor ---------- */
-.o-stage { position: relative; max-width: 640px; margin: 0 auto; padding: 150px 14px 14px; touch-action: manipulation; user-select: none; -webkit-user-select: none; cursor: pointer; }
-.o-tw { position: relative; font-family: var(--tw-font); }
-.o-sheetwrap { height: 116px; overflow: hidden; display: flex; justify-content: center; align-items: flex-end; }
-.o-sheet { width: 62%; min-width: 230px; height: 100%; padding: 8px 10px; word-break: break-all; overflow: hidden; display: flex; align-items: flex-end; }
+/* ---------- machine bar: one card per typewriter, scrolls sideways when there are more than fit ---------- */
+.o-desks { flex: none; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+.o-desks::-webkit-scrollbar { display: none; }
+.o-desk { position: relative; flex: 1 0 168px; max-width: 300px; min-width: 0; display: flex; flex-direction: column; gap: 4px; text-align: left; }
+.o-desk b { font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.o-desk span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.o-desk .o-d3 { display: none; }
+.o-wrap:is([data-tab="press"], [data-tab="shop"], [data-tab="studios"], [data-tab="muses"], [data-tab="records"]) .o-desks { display: none; }   /* machine-specific pages only */
+
+/* ---------- the panel: the floor fills it, every other department scrolls inside it ---------- */
+.o-panel { position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.o-pane { flex: 1; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 4px 4px 12px; }
+.o-pane[hidden] { display: none; }
+#o-floor { display: flex; flex-direction: column; gap: 8px; overflow: hidden; padding: 0; }
+#o-floor[hidden] { display: none; }
+
+/* ---------- department bar: five main tabs and More on phones, all nine on wide screens ---------- */
+.o-tabs { position: relative; flex: none; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; padding-bottom: max(8px, env(safe-area-inset-bottom)); }
+.o-moresheet { display: contents; }
+.o-tabs .o-morebtn { display: none; }
+.o-tab { position: relative; min-width: 0; min-height: 58px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; }
+.o-short { display: block; max-width: 100%; font-style: normal; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.o-dots { display: flex; gap: 3px; height: 20px; align-items: center; }
+.o-dots b { width: 6px; height: 6px; background: currentColor; }
+@media (max-width: 720px) {
+  .o-tabs .o-morebtn { display: flex; }
+  .o-moresheet { display: none; }
+  .o-tabs.open .o-moresheet { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; position: absolute; left: 0; right: 0; bottom: calc(100% + 8px); z-index: 10; padding: 8px; animation: o-enterx .2s; }
+}
+
+/* ---------- the typewriter floor: a room that fits the screen, the machine sits on the desk at the bottom ---------- */
+.o-stage { position: relative; flex: 1 1 0; min-height: 0; width: 100%; max-width: 760px; margin: 0 auto; touch-action: manipulation; user-select: none; -webkit-user-select: none; cursor: pointer; overflow: hidden; container-type: size; }
+/* the machine is drawn to the room it has: every size below follows the stage's own height and width (cq units) */
+.o-tw { --sheet: clamp(44px, 21cqh, 116px); --kh: clamp(22px, 9cqh, 34px); --kw: clamp(18px, min(8cqh, calc((100cqw - 64px) / 10.8)), 34px); --kg: clamp(3px, 1.5cqh, 6px);
+  position: absolute; left: 0; right: 0; bottom: 12px; width: min(calc(100% - 24px), 600px); margin: 0 auto; font-family: var(--tw-font); }
+.o-sheetwrap { height: var(--sheet); overflow: hidden; display: flex; justify-content: center; align-items: flex-end; }
+.o-sheet { width: 62%; min-width: 200px; height: 100%; padding: 8px 10px; word-break: break-all; overflow: hidden; display: flex; align-items: flex-end; }
 .o-carriage { position: relative; height: 18px; margin: 0 -8px; transition: transform .08s; }
 .o-carriage::before, .o-carriage::after { content: ''; position: absolute; top: -9px; width: 16px; height: 34px; background: var(--tw); }
 .o-carriage::before { left: -16px; } .o-carriage::after { right: -16px; }
 .o-carriage.ding { animation: o-ding .22s; }
 @keyframes o-ding { 50% { transform: translateX(10px); } }
-.o-bars { position: relative; height: 54px; margin: 0 14%; }
-.o-bar { position: absolute; left: 50%; bottom: 0; width: 6px; height: 46px; margin-left: -3px; transform-origin: 50% 100%; transform: rotate(var(--a)); transition: transform .09s; }
+.o-bars { position: relative; height: clamp(26px, 10cqh, 54px); margin: 0 14%; }
+.o-bar { position: absolute; left: 50%; bottom: 0; width: 6px; height: calc(100% - 8px); margin-left: -3px; transform-origin: 50% 100%; transform: rotate(var(--a)); transition: transform .09s; }
 .o-bar::after { content: ''; position: absolute; top: -8px; left: -4px; width: 14px; height: 10px; background: var(--tw); }
 .o-bar.hit { transform: rotate(0deg) translateY(-14px); transition-duration: .04s; }
 .o-body { position: relative; }
 .o-body::before { content: attr(data-name); position: absolute; top: -26px; left: 50%; transform: translateX(-50%); white-space: nowrap; padding: 3px 10px; font-size: 11px; z-index: 2; }
-.o-kbd { display: flex; flex-direction: column; gap: 6px; align-items: center; }
-.o-krow { display: flex; gap: 6px; }
-.o-key { width: 34px; height: 34px; display: grid; place-items: center; font-weight: 400; font-family: var(--tw-font); font-size: 12px; transition: transform .06s, box-shadow .06s, background .06s; }
+.o-kbd { display: flex; flex-direction: column; gap: var(--kg); align-items: center; }
+.o-krow { display: flex; gap: var(--kg); }
+.o-key { width: var(--kw); height: var(--kh); display: grid; place-items: center; font-weight: 400; font-family: var(--tw-font); font-size: 12px; transition: transform .06s, box-shadow .06s, background .06s; }
 .o-key.down { transform: translateY(4px); }
-.o-space { width: 214px; }
-.o-dangle { position: absolute; left: 0; right: 0; top: 0; height: 230px; pointer-events: none; z-index: 3; }
+.o-space { width: calc(var(--kw) * 6.3); }
+.o-dangle { position: absolute; left: 0; right: 0; top: 0; height: min(230px, 62%); pointer-events: none; z-index: 3; }
 .o-typist { position: absolute; top: 0; width: 0; }
 .o-pop { position: absolute; z-index: 4; pointer-events: none; font-style: normal; font-weight: 700; font-size: 28px; font-family: var(--tw-font); color: var(--pc); -webkit-text-stroke: 3px #1a0f14; paint-order: stroke fill; text-shadow: 3px 3px 0 #1a0f14; animation: o-pop .6s forwards; }
 @keyframes o-pop { 0% { transform: translateY(0) scale(.6); opacity: 1; } 30% { transform: translateY(-14px) scale(1.2); } 100% { transform: translateY(-50px) scale(1); opacity: 0; } }
-
-@media (max-width: 900px) { .o-tabs { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 640px) {
-  .o-desks { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .o-tabs { grid-template-columns: repeat(2, 1fr); }
-  .o-key { width: 25px; height: 29px; font-size: 10px; } .o-space { width: 150px; }
-  .o-stage { padding-top: 120px; }
-}
+/* stats and the focused title ride the top of the room; recent letters and streak goals sit under it */
+.o-hud { position: absolute; z-index: 5; left: 8px; right: 8px; top: 8px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; pointer-events: none; }
+.o-stats { display: inline-flex; flex-wrap: wrap; gap: 2px 14px; padding: 2px 10px; background: rgba(26,15,20,.78); }
+.o-stats b { font-weight: 400; }
+.o-focus { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 2px 10px; background: rgba(26,15,20,.78); }
+.o-focus:empty { display: none; }
+.o-focus .o-prog { min-width: 90px; }
+.o-info { flex: none; width: 100%; max-width: 760px; margin: 0 auto; display: grid; gap: 6px; }
+.o-tray { display: flex; flex-wrap: nowrap; gap: 5px; min-height: 38px; align-items: center; overflow: hidden; }
+.o-tile { flex: none; width: clamp(24px, 4.6vh, 34px); height: clamp(26px, 5vh, 38px); display: grid; place-items: center; font-family: var(--tw-font); }
 @media (prefers-reduced-motion: reduce) { .o-pop { animation-duration: .01s; } .o-carriage.ding { animation: none; } }
 
 /* ============================================================
@@ -96,10 +120,6 @@ html[data-style="pixel"] .o-dim { opacity: .75; }
 html[data-style="pixel"] .o-warn { color: #ffb4a0; }
 html[data-style="pixel"] .o-lvl { font-family: var(--font-px); font-size: 9px; color: var(--leaf-light); }
 html[data-style="pixel"] .o-lede { text-shadow: 3px 3px 0 var(--ink); }
-html[data-style="pixel"] .o-panel {
-  border: 21px solid transparent; border-image: var(--frame-wood) 7 / 21px stretch;
-  background: #a87c58 var(--plank) padding-box; background-size: 72px; background-blend-mode: multiply; padding: 16px 12px 22px; box-shadow: 0 9px 0 rgba(0,0,0,.4);
-}
 html[data-style="pixel"] .o-card, html[data-style="pixel"] .o-desk, html[data-style="pixel"] .o-tab, html[data-style="pixel"] .o-stage {
   border: 12px solid transparent; border-image: var(--frame-dark-s) 4 / 12px stretch; background: rgba(26,15,20,.9) padding-box; padding: 0 4px 6px;
 }
@@ -109,11 +129,7 @@ html[data-style="pixel"] .o-desk b { font-family: var(--font-px); font-size: 10p
 html[data-style="pixel"] .o-desk.locked { filter: saturate(.4) brightness(.8); }
 html[data-style="pixel"] .o-desk:hover, html[data-style="pixel"] .o-tab:hover { transform: translateY(-6px); }
 html[data-style="pixel"] .o-desk[aria-pressed="true"], html[data-style="pixel"] .o-tab[aria-selected="true"] { border-image-source: var(--frame-yellow-s); }
-html[data-style="pixel"] .o-tab { padding: 0 4px 4px; transition: transform .2s steps(2); }
 html[data-style="pixel"] .o-tab[aria-selected="true"] { background-color: #3a2a10; transform: translateY(-3px); }
-html[data-style="pixel"] .o-tabtxt b { font-family: var(--font-px); font-size: 9px; color: #fff; }
-html[data-style="pixel"] .o-tabtxt small { font-size: 20px; }
-html[data-style="pixel"] .o-tab .o-ico { width: 32px !important; height: 32px !important; }
 html[data-style="pixel"] .o-btn {
   font-family: var(--font-px); font-size: 10px; line-height: 1.4; color: #fff; text-shadow: 2px 2px 0 #17481f; text-align: center;
   border: 12px solid transparent; border-image: var(--frame-leaf-s) 4 / 12px stretch; background: var(--leaf) padding-box; padding: 2px 4px; transition: transform .15s steps(2);
@@ -176,10 +192,6 @@ html[data-style="classic"] .o-wrap h3 { font-family: var(--font-display); font-s
 html[data-style="classic"] .o-dim { opacity: .75; }
 html[data-style="classic"] .o-warn { color: #ffc2a8; }
 html[data-style="classic"] .o-lvl { font-family: var(--font-display); letter-spacing: 1px; font-size: 14px; color: var(--leaf-light); }
-html[data-style="classic"] .o-panel {
-  padding: 22px; background: repeating-linear-gradient(90deg, rgba(0,0,0,.08) 0 2px, transparent 2px 26px), linear-gradient(180deg, #a2692f, var(--wood));
-  border: 6px solid var(--wood-dark); border-radius: 14px; box-shadow: 0 8px 0 #3a210d, 0 14px 24px rgba(0,0,0,.35), inset 0 0 0 2px rgba(255,255,255,.08);
-}
 html[data-style="classic"] .o-card, html[data-style="classic"] .o-desk, html[data-style="classic"] .o-tab, html[data-style="classic"] .o-stage {
   padding: 14px 16px; background: rgba(8,24,12,.62); border: 3px solid var(--wood-dark); border-radius: 14px; box-shadow: inset 0 0 18px rgba(0,0,0,.4);
 }
@@ -189,10 +201,6 @@ html[data-style="classic"] .o-desk b { font-family: var(--font-display); font-si
 html[data-style="classic"] .o-desk.locked { filter: saturate(.4) brightness(.85); }
 html[data-style="classic"] .o-desk:hover, html[data-style="classic"] .o-tab:hover { transform: translateY(-4px) rotate(-1deg); }
 html[data-style="classic"] .o-desk[aria-pressed="true"], html[data-style="classic"] .o-tab[aria-selected="true"] { border-color: var(--banana); box-shadow: 0 0 0 3px rgba(255,217,59,.25), inset 0 0 18px rgba(0,0,0,.4); }
-html[data-style="classic"] .o-tab { padding: 10px 12px; transition: transform .35s var(--bounce); }
-html[data-style="classic"] .o-tab .o-ico { font-size: 30px; }
-html[data-style="classic"] .o-tabtxt b { font-family: var(--font-display); font-size: 15px; color: #fff; letter-spacing: .5px; }
-html[data-style="classic"] .o-tabtxt small { font-size: 13px; }
 html[data-style="classic"] .o-btn {
   padding: 8px 18px; font-family: var(--font-display); font-size: 15px; letter-spacing: 1px; color: #fff; border: 0;
   background: linear-gradient(135deg, var(--leaf-light), var(--leaf)); border-radius: 4px 22px 4px 22px; box-shadow: 0 3px 0 #1f5a24, inset 0 -2px 0 rgba(0,0,0,.15); transition: transform .35s var(--bounce);
@@ -245,88 +253,116 @@ html[data-style="classic"] .o-hat { display: none; position: absolute; left: -16
 html[data-style="classic"] .o-typist.rainy .o-hat { display: block; }
 html[data-style="classic"] .o-pop { -webkit-text-stroke: 3px #3d2410; text-shadow: 0 3px 0 #3d2410; animation-timing-function: var(--bounce); }
 
-/* ---------- field log entries written by the game ---------- */
-.log-scroll li.real { color: var(--banana); }
-html[data-style="pixel"] .log-scroll li.real { text-shadow: 2px 2px 0 var(--ink); }
-
-/* ---------- legibility on the bright canopy + tidier labels ---------- */
-html[data-style="pixel"] .ops .section-sub { display: inline-block; padding: 4px 10px 6px; border: 12px solid transparent; border-image: var(--frame-dark-s) 4 / 12px stretch; background: rgba(26,15,20,.88) padding-box; font-size: 26px; }
-html[data-style="classic"] .ops .section-sub { display: inline-block; padding: 8px 16px; background: rgba(8,24,12,.6); border-radius: 12px; }
-html[data-style="pixel"] .o-desk, html[data-style="pixel"] .o-tab { padding-top: 4px; }
+/* ---------- department-bar and machine-bar details ---------- */
 html[data-style="pixel"] .o-desk b { font-size: 9px; line-height: 1.4; }
-html[data-style="pixel"] .o-tabtxt b { font-size: 8px; overflow-wrap: anywhere; }
-html[data-style="pixel"] .o-tabtxt small { font-size: 19px; line-height: 1; }
-html[data-style="pixel"] .o-tab .o-tabico { flex: none; }
-.o-hint { text-align: center; }
-.o-tab { flex-direction: column; justify-content: center; text-align: center; gap: 4px; }
-.o-tabtxt { align-items: center; }
-html[data-style="pixel"] .o-tabtxt b { overflow-wrap: normal; font-size: 8px; }
-@media (max-width: 640px) {
-  .o-desk span, .o-desk b { white-space: normal; overflow: visible; }
-  html[data-style="pixel"] .o-panel { padding: 8px 2px 14px; border-width: 15px; }
-  html[data-style="pixel"] .o-body { border-width: 15px; }
-  .o-dangle { height: 190px; }
-}
-
 /* ============================================================
-   PHONES — a sticky machine + department strip, single-column cards, bigger touch targets
+   APP SHELL: panel, department bar, machine bar, floor readouts and phone sizes
    ============================================================ */
-.o-short { display: none; font-style: normal; }
-.o-rest { font-style: normal; }
+/* the floor is the whole screen; every other department sits in a wooden panel */
+html[data-style="pixel"] .o-wrap:not([data-tab="floor"]) .o-panel {
+  border: 12px solid transparent; border-image: var(--frame-wood) 7 / 12px stretch;
+  background: #a87c58 var(--plank) padding-box; background-size: 72px; background-blend-mode: multiply; padding: 2px; box-shadow: 0 6px 0 rgba(0,0,0,.4);
+}
+html[data-style="classic"] .o-wrap:not([data-tab="floor"]) .o-panel {
+  padding: 6px; background: repeating-linear-gradient(90deg, rgba(0,0,0,.08) 0 2px, transparent 2px 26px), linear-gradient(180deg, #a2692f, var(--wood));
+  border: 5px solid var(--wood-dark); border-radius: 14px; box-shadow: 0 6px 0 #3a210d, 0 12px 20px rgba(0,0,0,.3), inset 0 0 0 2px rgba(255,255,255,.08);
+}
+html[data-style="pixel"] .o-pane { scrollbar-color: var(--wood-dark) var(--leaf); }
+html[data-style="classic"] .o-pane { scrollbar-color: var(--wood-dark) transparent; }
+html[data-style="pixel"] .o-pane::-webkit-scrollbar { width: 12px; }
+html[data-style="pixel"] .o-pane::-webkit-scrollbar-thumb { background: var(--wood-dark); border: 3px solid var(--ink); }
+
+/* department bar */
+html[data-style="pixel"] .o-tab { padding: 4px 2px 2px; border-width: 6px; border-image-width: 6px; transition: transform .2s steps(2); }
+html[data-style="pixel"] .o-tab .o-ico { width: 28px !important; height: 28px !important; }
+html[data-style="pixel"] .o-short { font-family: var(--font-px); font-size: 8px; color: #fff; text-shadow: 1px 1px 0 var(--ink); }
+html[data-style="pixel"] .o-dots { color: #fff; }
+html[data-style="pixel"] .o-tabs.open .o-moresheet { border: 12px solid transparent; border-image: var(--frame-dark) 7 / 12px stretch; background: rgba(26,15,20,.97) padding-box; padding: 0; box-shadow: 0 8px 0 rgba(0,0,0,.4); }
+html[data-style="classic"] .o-tab { padding: 6px 4px; transition: transform .35s var(--bounce); }
+html[data-style="classic"] .o-tab .o-ico { font-size: 26px; }
+html[data-style="classic"] .o-short { font-family: var(--font-display); font-size: 13px; letter-spacing: .3px; color: #fff; }
+html[data-style="classic"] .o-dots { color: #fff; }
+html[data-style="classic"] .o-tabs.open .o-moresheet { background: rgba(13,36,18,.97); border: 3px solid var(--wood-dark); border-radius: 16px; box-shadow: 0 10px 24px rgba(0,0,0,.5); }
+
+/* machine bar: compact cards, one line per fact */
+html[data-style="pixel"] .o-desk { border-width: 7px; border-image-width: 7px; padding: 0 4px 2px 10px; gap: 2px; }
+html[data-style="pixel"] .o-desk b { font-size: 9px; line-height: 1.4; }
+html[data-style="pixel"] .o-desk span { font-size: 19px; line-height: 1; }
+html[data-style="pixel"] .o-ticker { padding: 1px 8px; font-size: 21px; }
+html[data-style="classic"] .o-desk { padding: 6px 12px; gap: 2px; }
+html[data-style="classic"] .o-desk b { font-size: 16px; }
+html[data-style="classic"] .o-desk span { font-size: 14px; }
+html[data-style="classic"] .o-ticker { padding: 4px 12px; }
+
+/* the stage is a framed window onto the room: no inner padding, the machine is placed by the stage itself */
+html[data-style="pixel"] .o-stage { padding: 0; }
+html[data-style="classic"] .o-stage { padding: 0; }
+html[data-style="pixel"] .o-stats, html[data-style="pixel"] .o-focus { border: 3px solid #1a0f14; font-size: 21px; line-height: 1.1; text-shadow: 2px 2px 0 var(--ink); }
+html[data-style="classic"] .o-stats, html[data-style="classic"] .o-focus { border-radius: 99px; padding: 3px 14px; font-size: 15px; }
+html[data-style="pixel"] .o-info, html[data-style="classic"] .o-info { padding: 4px 8px; background: rgba(26,15,20,.8); }
+html[data-style="pixel"] .o-info { border: 3px solid #1a0f14; box-shadow: 0 3px 0 rgba(0,0,0,.4); }
+html[data-style="classic"] .o-info { border-radius: 16px; border: 2px solid var(--wood-dark); }
+html[data-style="pixel"] .o-guide { font-size: 20px; }
+.o-window { top: 44px; }
+.o-fleck { top: calc(var(--sheet) - 4px); }
+.o-info .o-miles, .o-info .o-guide { display: none; }              /* the streak goals and the how-to only show when there is room to spare */
+@media (min-width: 900px) and (min-height: 940px) { .o-info .o-miles { display: flex; } .o-info .o-guide { display: block; } }
+.o-combo { top: 54px; }
+.o-stage.holding::after { top: 64px; }
+
+/* ---------- phones ---------- */
 @media (max-width: 720px) {
-  .ops.section { padding: 40px 6px 56px; }
-  .o-nav { position: sticky; top: var(--bar, 48px); z-index: 15; margin: 0 -6px 10px; padding: 6px 6px 6px; }
-  html[data-style="pixel"] .o-nav { background: rgba(10,42,28,.97); border-bottom: 4px solid #1a0f14; }
-  html[data-style="classic"] .o-nav { background: rgba(13,36,18,.96); border-bottom: 3px solid var(--wood-dark); backdrop-filter: blur(6px); }
-  .o-desks { grid-template-columns: repeat(4, 1fr); gap: 4px; margin: 0 0 5px; }
-  .o-desk { gap: 0; padding: 3px 5px !important; align-items: flex-start; }
+  .o-wrap { padding: 6px 6px 0; gap: 6px; }
+  .o-desks { gap: 4px; }
+  .o-desk { flex: 0 0 92px; gap: 0; padding: 3px 5px !important; }
   .o-desk .o-d1, .o-desk .o-d2, .o-rest { display: none; }
   .o-desk.locked .o-d2 { display: block; }
   .o-desk .o-d3 { display: block; }
-  .o-tabs { grid-template-columns: repeat(6, 1fr); gap: 4px; margin: 0; }
-  .o-tab { padding: 4px 0 !important; gap: 2px; }
-  .o-tabtxt { display: none; }
-  .o-short { display: block; }
+  .o-desk .o-price .o-ico { display: none; }
+  .o-desk .o-price { font-size: 17px; }
+  .o-tabs { gap: 4px; }
+  .o-tab { min-height: 50px; gap: 2px; }
   .o-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .o-btn, .o-word, .o-seg button, .o-x, .o-search, .o-num { min-height: 42px; }
   .o-btn.sm { min-height: 40px; }
   .o-row { gap: 8px; }
-  html[data-style="pixel"] .o-wrap { font-size: 22px; }
-  html[data-style="pixel"] .o-panel { border-width: 12px; border-image-width: 12px; padding: 8px 2px 14px; }
-  html[data-style="pixel"] .o-card, html[data-style="pixel"] .o-stage { border-width: 8px; border-image-width: 8px; }
-  html[data-style="pixel"] .o-desk, html[data-style="pixel"] .o-tab { border-width: 6px; border-image-width: 6px; }
-  html[data-style="pixel"] .o-desk b { font-size: 7px; line-height: 1.5; }
-  html[data-style="pixel"] .o-desk span { font-size: 19px; }
-  html[data-style="pixel"] .o-tab .o-ico { width: 24px !important; height: 24px !important; }
-  html[data-style="pixel"] .o-short { font-family: var(--font-px); font-size: 6px; color: #fff; text-shadow: 1px 1px 0 var(--ink); }
-  html[data-style="pixel"] .o-body { border-width: 12px; border-image-width: 12px; }
-  html[data-style="pixel"] .o-btn { border-width: 9px; border-image-width: 9px; }
-  html[data-style="pixel"] .o-wrap h3 { font-size: 10px; }
-  html[data-style="classic"] .o-panel { padding: 10px 8px 14px; border-width: 4px; }
-  html[data-style="classic"] .o-card { padding: 12px; }
-  html[data-style="classic"] .o-desk { border-left-width: 8px; padding: 4px 6px !important; }
-  html[data-style="classic"] .o-desk b { font-size: 13px; }
-  html[data-style="classic"] .o-d3 { font-size: 12px; opacity: .8; }
-  html[data-style="classic"] .o-tab .o-ico { font-size: 22px; }
-  html[data-style="classic"] .o-short { font-family: var(--font-display); font-size: 11px; letter-spacing: .3px; }
-  .o-stage { padding: 112px 2px 10px; }
-  .o-sheetwrap { height: 100px; }
-  .o-sheet { min-width: 0; width: 70%; }
-  .o-dangle { height: 180px; }
-  .o-bars { margin: 0 10%; height: 44px; }
-  .o-bar { height: 38px; }
   .o-body::before { top: -22px; }
   .o-pop { font-size: 24px; }
+  .o-float.big { font-size: 28px; }
+  .o-spine span { font-size: 10px; }
+  .o-mile { font-size: 16px; }
+  .o-portrait { width: 64px; height: 74px; } .o-portrait img { width: 116px; top: 4px; }
+  .o-window { width: 76px; height: 62px; top: 40px; left: 4%; border-width: 4px; }
+  .o-lamp { right: 8%; }
+  .o-lamp-cone { left: -100px; width: 200px; }
+  .o-desktop { height: 70px; }
+  .o-meter { width: 60px; height: 8px; }
+  html[data-style="pixel"] .o-wrap { font-size: 22px; }
+  html[data-style="pixel"] .o-wrap h3 { font-size: 10px; }
+  html[data-style="pixel"] .o-card { border-width: 8px; border-image-width: 8px; }
+  html[data-style="pixel"] .o-stage { border-width: 8px; border-image-width: 8px; }
+  html[data-style="pixel"] .o-desk { border-width: 6px; border-image-width: 6px; }
+  html[data-style="pixel"] .o-desk b { font-size: 7px; line-height: 1.5; }
+  html[data-style="pixel"] .o-desk span { font-size: 19px; }
+  html[data-style="pixel"] .o-short { font-size: 7px; }
+  html[data-style="pixel"] .o-tab .o-ico { width: 24px !important; height: 24px !important; }
+  html[data-style="pixel"] .o-body { border-width: 12px; border-image-width: 12px; }
+  html[data-style="pixel"] .o-btn { border-width: 9px; border-image-width: 9px; }
+  html[data-style="pixel"] .o-wrap:not([data-tab="floor"]) .o-panel { border-width: 9px; border-image-width: 9px; }
+  html[data-style="pixel"] .o-stats, html[data-style="pixel"] .o-focus { font-size: 18px; }
+  html[data-style="classic"] .o-card { padding: 12px; }
+  html[data-style="classic"] .o-desk { border-left-width: 8px; }
+  html[data-style="classic"] .o-desk b { font-size: 13px; }
+  html[data-style="classic"] .o-desk .o-price { font-size: 15px; }
+  html[data-style="classic"] .o-d3 { font-size: 12px; opacity: .8; }
+  html[data-style="classic"] .o-tab .o-ico { font-size: 22px; }
+  html[data-style="classic"] .o-short { font-size: 11px; }
+  html[data-style="classic"] .o-wrap:not([data-tab="floor"]) .o-panel { padding: 4px; border-width: 4px; }
 }
 @media (max-width: 480px) {
-  .o-krow { gap: 3px; } .o-kbd { gap: 4px; }
-  .o-key { width: 22px; height: 28px; font-size: 9px; }
-  .o-space { width: 128px; }
   html[data-style="classic"] .o-body { padding: 14px 6px 10px; }
-  .o-tile { width: 28px; height: 32px; }
+  .o-stats { gap: 0 10px; padding: 2px 8px; }
 }
-@media (max-width: 720px) { .o-desk .o-price .o-ico { display: none; } .o-desk .o-price { font-size: 17px; } }
-@media (max-width: 720px) { html[data-style="classic"] .o-desk b { font-size: 12px; } html[data-style="classic"] .o-desk .o-price { font-size: 15px; } }
 
 /* ============================================================
    JUICE — badges, progress bars, combos, stamps, floaters, drop-ins
@@ -403,8 +439,6 @@ html[data-style="classic"] .o-say { font-family: var(--font-display); border-rad
   .o-combo.show, .o-tile.new, .o-float, .o-chip.pop, .o-book.ready, .o-book.fresh, .o-stamp.slam, .o-btn, .o-pane.enter, .o-stage.drop, .o-typist.drop, .o-say, .o-tab::after { animation: none !important; }
 }
 @media (max-width: 720px) { .o-tab[data-badge]::after { top: -5px; right: -2px; min-width: 16px; height: 16px; font-size: 8px !important; } }
-.o-desk .o-d3 { display: none; }
-@media (max-width: 720px) { .o-desk .o-d3 { display: block; } }
 
 /* ============================================================
    BOOKSHELF, MILESTONES, BUFFS, CHEERS
@@ -414,7 +448,6 @@ html[data-style="classic"] .o-say { font-family: var(--font-display); border-rad
 .o-spine, .o-slot { position: relative; flex: none; width: var(--bw, 24px); height: var(--bh, 78px); margin-bottom: 10px; }
 .o-spine::after, .o-slot::after { content: ''; position: absolute; left: -3px; right: -3px; bottom: -10px; height: 10px; background: #6b4423; box-shadow: inset 0 3px 0 #8a5a2b, 0 3px 0 rgba(0,0,0,.4); z-index: -1; }
 .o-slot { height: 60px; border: 3px dashed rgba(255,246,214,.28); border-bottom: 0; opacity: .7; }
-.o-compact .o-slot, .o-shelf.compact .o-slot { height: 44px; }
 .o-spine { padding: 0; cursor: pointer; background: hsl(var(--hue) 52% 46%); border: 3px solid #1a0f14; border-top-width: 9px; border-top-color: var(--bandc, #78d9a0); transform: rotate(var(--tilt, 0deg)); transform-origin: 50% 100%; transition: transform .2s; overflow: hidden; }
 .o-spine.b0 { --bandc: #78d9a0; } .o-spine.b1 { --bandc: #f08aa4; } .o-spine.b2 { --bandc: #5fa8f0; } .o-spine.b3 { --bandc: #f2b23a; }
 .o-spine span { display: block; height: 100%; padding: 4px 0; writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); font-size: 11px; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff6d6; text-shadow: 1px 1px 0 rgba(0,0,0,.5); text-align: left; }
@@ -429,10 +462,6 @@ html[data-style="pixel"] .o-spine.pulled { box-shadow: inset 4px 0 0 rgba(255,25
 html[data-style="classic"] .o-spine { border-radius: 4px 4px 2px 2px; border-width: 2px; border-top-width: 8px; box-shadow: inset 3px 0 0 rgba(255,255,255,.25), inset -3px 0 0 rgba(0,0,0,.25); }
 html[data-style="classic"] .o-spine span { font-family: var(--font-display); font-size: 12px; letter-spacing: .3px; }
 html[data-style="classic"] .o-slot { border-radius: 4px 4px 0 0; }
-.o-shelf.compact { margin-top: 6px; }
-.o-shelf.compact:empty { display: none; }
-.o-shelf.compact .o-spine span { font-size: 9px; }
-html[data-style="pixel"] .o-shelf.compact .o-spine span { font-size: 6px; }
 .o-plate { margin-top: 8px; display: grid; gap: 8px; }
 
 .o-miles { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; }
@@ -441,8 +470,6 @@ html[data-style="pixel"] .o-mile { font-size: 19px; background: #000; border-col
 html[data-style="classic"] .o-mile { border-radius: 99px; border-width: 2px; font-size: 14px; }
 .o-mile.hit { opacity: 1; border-color: var(--banana, #ffd93b); color: #ffd23a; transform: scale(1.08); }
 .o-mile.cd { filter: grayscale(1); opacity: .5; }
-.o-buffs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-.o-buffs:empty { display: none; }
 .o-buff { padding: 3px 12px; font-size: 20px; color: #3a210d; background: #ffd23a; border: 3px solid #1a0f14; text-shadow: none; animation: o-buffpulse .8s infinite; }
 .o-buff.golden { background: #ffb627; }
 html[data-style="pixel"] .o-buff { font-family: var(--font-px); font-size: 9px; animation-timing-function: steps(2); }
@@ -493,11 +520,8 @@ html[data-style="pixel"] .hud-col .hud-rate { font-size: 8px; }
 /* ============================================================
    PHASE 2 — news ticker, Hall of Records, trophies, 7-tab strip
    ============================================================ */
-.o-tabs { grid-template-columns: repeat(7, 1fr); }
-@media (max-width: 900px) { .o-tabs { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 720px) { .o-tabs { grid-template-columns: repeat(7, 1fr); gap: 3px; } }
 
-.o-ticker { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; overflow: hidden; cursor: pointer; }
+.o-ticker { flex: none; display: flex; align-items: center; gap: 10px; overflow: hidden; cursor: pointer; }
 .o-tkr-tag { flex: none; padding: 2px 8px; background: #ffd23a; color: #3a210d; font-weight: 400; text-shadow: none; letter-spacing: 1px; }
 .o-tkr-view { position: relative; flex: 1; height: 1.5em; overflow: hidden; white-space: nowrap; }
 .o-tkr-text { position: absolute; left: 0; top: 0; white-space: nowrap; will-change: transform; }
@@ -505,7 +529,7 @@ html[data-style="pixel"] .o-ticker { border: 6px solid transparent; border-image
 html[data-style="pixel"] .o-tkr-tag { font-family: var(--font-px); font-size: 9px; padding: 5px 7px; border: 3px solid #1a0f14; }
 html[data-style="classic"] .o-ticker { padding: 7px 12px; border-radius: 99px; background: rgba(8,24,12,.7); border: 3px solid var(--wood-dark); color: var(--cream); font-size: 16px; }
 html[data-style="classic"] .o-tkr-tag { font-family: var(--font-display); border-radius: 99px; font-size: 13px; padding: 2px 12px; }
-@media (max-width: 720px) { html[data-style="pixel"] .o-ticker { font-size: 20px; } .o-ticker { margin-bottom: 10px; } }
+@media (max-width: 720px) { html[data-style="pixel"] .o-ticker { font-size: 20px; } }
 
 .o-awards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
 .o-award { display: flex; align-items: center; gap: 10px; padding: 8px 10px; min-width: 0; }
@@ -595,7 +619,6 @@ html[data-style="classic"] .o-spark i { border-radius: 2px 2px 0 0; }
 .o-nm { display: block; align-self: flex-start; margin: 2px 0 0 -36px; width: 72px; text-align: center; font-size: 12px; line-height: 1; color: #fff6d6; text-shadow: 1px 1px 0 #000, -1px 1px 0 #000; opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 html[data-style="pixel"] .o-nm { font-family: var(--font-px); font-size: 6px; margin-top: 3px; }
 html[data-style="classic"] .o-nm { font-family: var(--font-display); font-size: 12px; margin-left: -34px; }
-html[data-style="classic"] .o-typist.hatted .o-hat, html[data-style="classic"] .o-typist.rainy .o-hat { display: block; }
 .o-crewcard { gap: 6px; }
 .o-name { background: none; border: 0; padding: 0; text-align: left; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 4px; }
 html[data-style="pixel"] .o-name { font-family: var(--font-px); font-size: 11px; color: var(--banana); }
@@ -608,7 +631,6 @@ html[data-style="classic"] .o-chip.trait { --bc: #ffd23a; }
 /* ============================================================
    PHASE 6: more machines, the pitch desk, restorations
    ============================================================ */
-.o-desks { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
 .o-chip.b4 { --bc: #b58cf0; border-color: #b58cf0; } .o-chip.b5 { --bc: #dfe3f2; border-color: #dfe3f2; }
 .o-chip.b4, .o-chip.b5 { box-shadow: inset 0 -4px 0 var(--bc); }
 html[data-style="pixel"] .o-tag.b4 { --bc: #b58cf0; } html[data-style="pixel"] .o-tag.b5 { --bc: #dfe3f2; }
@@ -626,9 +648,6 @@ html[data-style="classic"] .o-pit { font-family: var(--font-display); border-rad
 .o-tw.mk2 .o-body { outline: 4px solid #ffd23a; outline-offset: -2px; box-shadow: 0 0 22px rgba(255,210,58,.55), 0 8px 0 rgba(0,0,0,.4); }
 .o-tw.mk2 .o-carriage { background-image: linear-gradient(90deg, transparent 35%, rgba(255,255,255,.8) 50%, transparent 65%); background-size: 260% 100%; animation: o-shimmer 4s infinite; }
 html[data-style="pixel"] .o-tw.mk1 .o-body, html[data-style="pixel"] .o-tw.mk2 .o-body { outline-offset: -8px; }
-@media (max-width: 720px) {
-  .o-desks { grid-template-columns: repeat(3, 1fr); }
-}
 @media (prefers-reduced-motion: reduce) { .o-tw.mk2 .o-carriage { animation: none; } }
 
 html[data-style="pixel"] .o-key, html[data-style="pixel"] .o-tile, html[data-style="pixel"] .o-lcell, html[data-style="pixel"] .o-lcell b { font-size: var(--tw-fs, 12px); }
@@ -637,9 +656,6 @@ html[data-style="pixel"] .o-tile { font-size: var(--tw-fs, 13px); }
 /* ============================================================
    PHASE 7: IMI Studios
    ============================================================ */
-.o-tabs { grid-template-columns: repeat(8, 1fr); }
-@media (max-width: 900px) { .o-tabs { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 720px) { .o-tabs { grid-template-columns: repeat(8, 1fr); gap: 2px; } }
 .o-div b { font-weight: 400; color: #ffd23a; }
 .o-quirk { font-style: italic; }
 .o-card.locked { opacity: .55; filter: grayscale(.6); }
@@ -647,12 +663,6 @@ html[data-style="pixel"] .o-tile { font-size: var(--tw-fs, 13px); }
 /* ============================================================
    PHASE 8: Muse Salon, letter garden, nine-tab strip
    ============================================================ */
-.o-tabs { grid-template-columns: repeat(5, 1fr); }
-@media (max-width: 720px) {
-  .o-tabs { display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(60px, 1fr); overflow-x: auto; scrollbar-width: none; gap: 3px; padding-bottom: 2px; }
-  .o-tabs::-webkit-scrollbar { display: none; }
-  html[data-style="pixel"] .o-short { font-size: 7px; }
-}
 .o-seeds { display: flex; flex-wrap: wrap; gap: 4px; }
 .o-seed { width: 34px; height: 36px; display: grid; place-items: center; font-family: var(--tw-font); }
 .o-seed.on { transform: translateY(-4px); }
@@ -681,10 +691,6 @@ html[data-style="pixel"] .o-plot.ripe, html[data-style="pixel"] .o-plot.grow .o-
 .o-plot .o-prog { width: 100%; }
 .o-seat.on { box-shadow: 0 0 0 3px rgba(255,210,58,.5); }
 @media (prefers-reduced-motion: reduce) { .o-plot.ripe, .o-plot.grow .o-pl-ch { animation: none; } }
-@media (max-width: 720px) {
-  .o-desks { display: grid; grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(84px, 1fr); overflow-x: auto; scrollbar-width: none; }
-  .o-desks::-webkit-scrollbar { display: none; }
-}
 
 /* ============================================================
    PHASE 9: second printing, challenges
@@ -1241,3 +1247,14 @@ html[data-style="classic"] .o-dact { border-radius: 50%; top: 8px; right: 10px; 
   .o-ach em { display: none; }
   .o-ach .o-ico { width: 28px !important; height: 28px !important; }
 }
+
+html[data-screen="menu"] .o-buffbar { display: none; }
+
+/* ---------- very short screens (a phone on its side): the room and the department icons get all the height ---------- */
+@media (max-height: 480px) {
+  .o-ticker, .o-desks, .o-info { display: none; }
+  .o-short { display: none; }
+  .o-tab { min-height: 40px; }
+  .o-wrap { gap: 4px; }
+}
+@media (max-width: 400px) { html[data-style="pixel"] .o-short { font-size: 6px; } }

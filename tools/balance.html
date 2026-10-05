@@ -39,7 +39,8 @@ try { localStorage.clear(); } catch (e) {}
   let score = 0; const watchers = [];
   const paint = () => { document.getElementById('score').textContent = score; watchers.forEach(f => f(score)); };
   window.IMI = {
-    edition: 'classic', reduceMotion: true, sfx: new Proxy({}, { get: () => () => {} }), centerOf: () => [0, 0], say() {}, banner() {}, heroSay() {}, log() {}, burst() {}, fall() {},
+    edition: 'classic', reduceMotion: true, sfx: new Proxy({}, { get: () => () => {} }), centerOf: () => [0, 0], say() {}, banner() {}, burst() {}, fall() {},
+    fmt: n => String(Math.round(n)), screen: () => 'game', onScreen() {}, whenPlaying: f => f(),
     bananas: { get: () => score, add: n => { score += n; paint(); }, spend: n => { if (n > score) return false; score -= n; paint(); return true; }, earn: n => { score += n; paint(); }, watch: f => watchers.push(f) }
   };
 })();
