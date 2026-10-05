@@ -131,14 +131,30 @@
     if (expr === 'screech') { sh(E(0, 18.4, 2.6, 2.2), R.red, 15); sh(E(0, 19.4, 1.5, .9), R.skin, 16); }
     else if (expr === 'scared') { sh(E(0, 18.6, 1.4, 1.7), R.red, 15); sh(C(-4.6, 10.8, -1.4, 9.4, .5), R.ink, 15); sh(C(4.6, 10.8, 1.4, 9.4, .5), R.ink, 15); }
     else { sh(C(-2.6, 18.1, -1.2, 18.9, .55), R.ink, 15); sh(C(-1.2, 18.9, 1.2, 18.9, .55), R.ink, 15); sh(C(1.2, 18.9, 2.6, 18.1, .55), R.ink, 15); }
-    if (hat) {                                                   // big leaf worn as a rain hat
+    if (hat === 1) {                                             // big leaf worn as a rain hat
       const P = [[-9.8, 10.8], [-8.2, 6.4], [-4.6, 3.4], [0, 2.4], [4.6, 3.4], [8.2, 6.4], [9.8, 10.8], [5, 9.2], [0, 8.4], [-5, 9.2]].map(([x, y]) => [x * k, y * k]);
       sh(poly(P), R.leaf, 17); sh(C(0, 3, 0, 8, .5), R.leafD, 18); sh(C(0, 5, -4.4, 8.2, .4), R.leafD, 18); sh(C(0, 5, 4.4, 8.2, .4), R.leafD, 18);
+    }
+    const pts = a => a.map(([x, y]) => [x * k, y * k]);
+    if (hat === 2) {                                             // top hat
+      sh(B(-7, 7.4, 14, 1.8), R.ink, 17); sh(B(-4.4, 0.6, 8.8, 7.4), R.ink, 18); sh(B(-4.4, 5.2, 8.8, 1.6), R.red, 19);
+    } else if (hat === 3) {                                      // party cone
+      sh(poly(pts([[-4.6, 8.4], [4.6, 8.4], [0, -2]])), R.red, 17); sh(B(-4.6, 6.6, 9.2, 1.2), R.banY, 18); sh(E(0, -2, 1.2, 1.2), R.banY, 18);
+    } else if (hat === 4) {                                      // beret
+      sh(E(0, 6.2, 7.6, 3.4), R.blue, 17); sh(B(-.7, 2.2, 1.4, 1.8), R.blue, 18);
+    } else if (hat === 5) {                                      // crown
+      sh(poly(pts([[-5, 7], [-5, 1.5], [-2.5, 4], [0, .5], [2.5, 4], [5, 1.5], [5, 7]])), R.banY, 17); sh(B(-5, 6, 10, 2.6), R.banY, 18); sh(E(0, 7.3, .9, .9), R.red, 19);
+    } else if (hat === 6) {                                      // baseball cap
+      sh(E(0, 7.4, 6.8, 4.4), R.red, 17); sh(B(1, 8.2, 9.5, 1.5), R.ink, 18);
+    } else if (hat === 7) {                                      // hibiscus flower
+      sh(E(5.2, 6.4, 1.5, 1.5), R.red, 17); sh(E(3.4, 8, 1.5, 1.5), R.red, 17); sh(E(7, 8, 1.5, 1.5), R.red, 17); sh(E(5.2, 9.6, 1.5, 1.5), R.red, 17); sh(E(5.2, 8, 1, 1), R.banY, 18);
+    } else if (hat === 8) {                                      // graduation cap
+      sh(B(-5, 6.4, 10, 2.4), R.ink, 17); sh(B(-8, 4.8, 16, 1.6), R.ink, 18); sh(C(7, 5.6, 7.6, 9.8, .45), R.banY, 19);
     }
     return { cv: render(px), W, H, pivot: [W / 2, 3 * k + 1], k };
   }
   const monkeySets = {
-    vine: { k: 0.8, max: 50, step: 10 },
+    vine: { k: 0.55, max: 50, step: 10 },
     hero: { k: 2, max: 35, step: 7 },
     desk: { k: 0.6, max: 42, step: 6 },
   };
@@ -297,6 +313,26 @@
   reg('i-log', make(16, 16, px => {
     px.shape(box(2, 4, 12, 9), R.woodL, 1); px.shape(ell(3, 8.5, 3, 4.5), R.wood, 2);
     px.shape(ell(3, 8.5, 1.4, 2.4), R.woodL, 3); px.shape(or(box(8, 6, 4, .9), box(6, 10, 6, .9)), R.woodD, 4);
+  }));
+
+  const trophy = (ramp, name) => reg(name, make(16, 16, px => {
+    px.shape(poly([[3, 2], [13, 2], [12.5, 7], [10, 10], [6, 10], [3.5, 7]]), ramp, 1);
+    px.shape(or(ell(2, 5, 1.6, 2.4), ell(14, 5, 1.6, 2.4)), ramp, 2);
+    px.shape(box(7, 9.5, 2, 3.5), ramp, 1);
+    px.shape(box(4, 13, 8, 2), R.woodD, 3);
+    px.tone(5, 3, 2, 1); px.tone(5, 4, 2, 1);
+  }));
+  trophy(R.woodL, 'trophy-0'); trophy(R.metal, 'trophy-1'); trophy(R.banY, 'trophy-2');
+
+  reg('i-reel', make(16, 16, px => {
+    px.shape(ell(8, 8, 6.8, 6.8), R.metal, 1);
+    [[8, 4], [11.8, 8], [8, 12], [4.2, 8]].forEach(([x, y]) => px.shape(ell(x, y, 1.6, 1.6), R.ink, 2));
+    px.shape(ell(8, 8, 1.5, 1.5), R.ink, 2);
+  }));
+
+  reg('i-quill', make(16, 16, px => {
+    px.shape(poly([[13, 1], [14.5, 2.5], [8, 10], [5, 11], [6, 8]]), R.white, 1);
+    px.shape(cap(5.5, 10.5, 2, 14.5, .8), R.ink, 2);
   }));
 
   /* ---------- 9-slice frames (16x16, slice 6) ---------- */

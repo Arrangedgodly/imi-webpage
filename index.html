@@ -6,8 +6,9 @@
   <title>INFINITE MONKEY INDUSTRIES</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Pixelify+Sans:wght@400;700&family=Silkscreen&family=Tiny5&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Pixelify+Sans:wght@400;700&family=Silkscreen&family=Tiny5&family=Jersey+10&family=Micro+5&display=swap" rel="stylesheet">
   <script src="style-swap.js"></script>
+  <script src="mobile-nav.js" defer></script>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="ops.css">
 </head>
@@ -46,6 +47,8 @@
   <main id="top">
     <!-- HERO -->
     <section class="hero">
+      <div class="hero-rays" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="hero-motes" id="heroMotes" aria-hidden="true"></div>
       <div class="hero-monkey" id="heroMonkey" aria-hidden="true">
         <div class="hm-vine"></div>
         <canvas class="hm-cv" id="heroCv"></canvas>
@@ -59,6 +62,7 @@
         <span class="word" data-text="INDUSTRIES"></span>
       </h1>
       <p class="tagline">Typing Shakespeare since before it was cool.</p>
+      <a class="hero-live" id="heroLive" href="#ops" hidden></a>
       <div class="hero-actions">
         <a class="banana-btn" href="#ops"><span>ENTER CANOPY</span></a>
       </div>

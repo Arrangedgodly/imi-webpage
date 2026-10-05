@@ -47,7 +47,12 @@
     day()     { tone(523, .14, { type: 'square', vol: .06 }); tone(659, .14, { type: 'square', delay: .1, vol: .06 }); tone(784, .26, { type: 'square', delay: .2, vol: .06 }); },
     night()   { tone(784, .16, { type: 'square', vol: .06 }); tone(587, .16, { type: 'square', delay: .12, vol: .06 }); tone(392, .36, { type: 'square', delay: .24, vol: .06 }); },
     tick()    { tone(1200, .03, { type: 'square', vol: .03 }); },
-    key()     { noise(.03, { freq: 2600, vol: .1 }); tone(170 + Math.random() * 60, .04, { type: 'square', f1: 70, vol: .04 }); },
+    key(p = 1) { noise(.03, { freq: 2600 * p, vol: .1 }); tone((170 + Math.random() * 60) * p, .04, { type: 'square', f1: 70 * p, vol: .04 }); },
+    combo(n)  { const sc = [0, 2, 4, 7, 9], k = Math.min(n - 5, 10); tone(523.25 * Math.pow(2, (sc[k % 5] + 12 * Math.floor(k / 5)) / 12), .07, { type: 'square', vol: .03 }); },   // a rising pentatonic run while a tap streak holds
+    rip()     { noise(.16, { freq: 4200, vol: .12 }); noise(.08, { freq: 1500, vol: .08, delay: .05 }); },
+    chest()   { noise(.08, { freq: 500, vol: .3 }); tone(220, .12, { type: 'square', f1: 440, delay: .05, vol: .05 }); },
+    coinlet() { tone(1760 + Math.random() * 220, .05, { type: 'square', vol: .018 }); },
+    triumph() { [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => tone(f, .3, { type: 'square', delay: i * .09, vol: .06 })); [262, 392, 523].forEach(f => tone(f, 1.2, { type: 'triangle', delay: .55, vol: .07 })); },
     ding()    { tone(1568, .32, { type: 'triangle', vol: .07 }); },
     fanfare() { [523, 659, 784, 1047].forEach((f, i) => tone(f, .2, { type: 'square', delay: i * .1, vol: .07 })); },
   };
@@ -103,6 +108,21 @@
     flies.appendChild(s);
   }
 
+  /* =====================  HERO AIR: pollen in the sunbeams, layers that lean toward the pointer  ===================== */
+  const motes = document.getElementById('heroMotes');
+  if (motes && !reduceMotion) {
+    for (let i = 0; i < 22; i++) {
+      const m = document.createElement('i');
+      m.style.cssText = `left:${Math.random() * 100}%;top:${20 + Math.random() * 75}%;--d:${9 + Math.random() * 10}s;--dl:${-Math.random() * 18}s;--sz:${Math.random() < .3 ? 2 : 1}`;
+      motes.appendChild(m);
+    }
+  }
+  if (!reduceMotion && matchMedia('(pointer: fine)').matches) {
+    let px = 0, tx = 0, raf = 0;
+    const ease = () => { px += (tx - px) * .08; root.style.setProperty('--px', px.toFixed(3)); raf = Math.abs(tx - px) > .002 ? requestAnimationFrame(ease) : 0; };
+    addEventListener('pointermove', e => { tx = e.clientX / innerWidth * 2 - 1; if (!raf) raf = requestAnimationFrame(ease); }, { passive: true });
+  }
+
   /* =====================  REVEAL ON SCROLL  ===================== */
   const revealEls = document.querySelectorAll('.section-title, .section-sub, .crate, .log-scroll');
   revealEls.forEach(el => el.classList.add('reveal'));
@@ -142,7 +162,10 @@
   /* =====================  BANANA SCORE  ===================== */
   const hud = $('#hud'), scoreEl = $('#score');
   let score = +localStorage.getItem('imi-score') || 0;
-  const fmt = n => Math.round(n).toLocaleString('en-US');
+  const fmt = n => {                                         // commas below a million, then 1.23M / 4.5B / ...
+    n = Math.round(n); if (n < 1e6) return n.toLocaleString('en-US');
+    for (const [v, s] of [[1e15, 'Qa'], [1e12, 'T'], [1e9, 'B'], [1e6, 'M']]) if (n >= v) { const x = n / v; return (x >= 100 ? x.toFixed(0) : x >= 10 ? x.toFixed(1) : x.toFixed(2)).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') + s; }
+  };
   scoreEl.textContent = fmt(score);
   const bananaWatchers = [];
   const milestones = { 10: 'BANANA HOARDER!', 25: 'CERTIFIED PRIMATE!', 50: 'CHIEF BANANA OFFICER', 100: 'INFINITE MONKEY!' };
@@ -155,8 +178,16 @@
     ], { duration: 2600, easing: 'steps(10)' }).onfinish = () => b.remove();
     const [x, y] = centerOf(hud); burst(x, y + 60, ['banana', 'spark', 'star'], 16);
   }
+  let shown = score, tweening = false;
+  function tweenScore() {                                   // the HUD number rolls toward the real total
+    const d = score - shown;
+    if (Math.abs(d) < 1) { shown = score; scoreEl.textContent = fmt(shown); tweening = false; return; }
+    shown += d * 0.16 + Math.sign(d); scoreEl.textContent = fmt(shown); requestAnimationFrame(tweenScore);
+  }
   function paintScore(bump) {
-    scoreEl.textContent = fmt(score); localStorage.setItem('imi-score', score);
+    localStorage.setItem('imi-score', score);
+    hud.title = 'Bananas collected: ' + Math.round(score).toLocaleString('en-US');
+    if (reduceMotion) { shown = score; scoreEl.textContent = fmt(score); } else if (!tweening) { tweening = true; requestAnimationFrame(tweenScore); }
     if (bump) { hud.classList.remove('bump'); void hud.offsetWidth; hud.classList.add('bump'); }
     bananaWatchers.forEach(f => f(score));
   }
@@ -289,10 +320,17 @@
   }
 
   /* =====================  VINE SCROLLBAR + SWINGING MONKEY  ===================== */
-  const state = { y: 0, angle: 0, vel: 0, lastY: 0, dragging: false, leafT: 0, blinkAt: 3000, blinkUntil: 0, frame: null, expr: 'normal' };
+  const state = { lastScroll: -1e9, y: 0, angle: 0, vel: 0, lastY: 0, dragging: false, leafT: 0, blinkAt: 3000, blinkUntil: 0, frame: null, expr: 'normal' };
   const maxScroll = () => Math.max(1, root.scrollHeight - innerHeight);
   const travel = () => vine.clientHeight - (state.frame ? state.frame.H * S : 150);
 
+  /* the vine + monkey fade away unless you are scrolling, dragging or pointing at them */
+  let vineOn = false;
+  addEventListener('scroll', () => { state.lastScroll = performance.now(); }, { passive: true });
+  function syncVineActive(now, moving) {
+    const on = state.dragging || moving || now - state.lastScroll < 1300 || Mood.shaking(now) || vine.matches(':hover');
+    if (on !== vineOn) { vineOn = on; vine.classList.toggle('active', on); }
+  }
   function frame(now) {
     const p = Math.min(1, Math.max(0, scrollY / maxScroll()));
     root.style.setProperty('--scroll', p.toFixed(4));
@@ -305,6 +343,7 @@
     state.angle = Math.max(-0.87, Math.min(0.87, state.angle + state.vel));
 
     Mood.update(now);
+    syncVineActive(now, Math.abs(dy) > 0.3);
     if (now > state.blinkAt) { state.blinkUntil = now + 140; state.blinkAt = now + rand(2500, 5500); }
     const shakeA = Mood.shakeAmp(now), react = state.dragging || Mood.startle(now) || shakeA > 0;
     const angle = Math.max(-0.87, Math.min(0.87, state.angle + (shakeA > 0 ? 0.5 * shakeA * Math.sin(now / 55) : 0)));
@@ -383,7 +422,15 @@
   /* =====================  TYPEWRITER OPS BRIDGE  =====================
      ops.js (the game) lives inside this page. It spends and earns the same bananas shown in the HUD,
      borrows the synth sounds, particles, banners and the hero monkey's speech bubble, and writes to the field log. */
-  function spend(n) { if (n > score) return false; score -= n; paintScore(true); sfx.tick(); return true; }
+  function spend(n) {
+    if (n > score) return false; score -= n; paintScore(true); sfx.tick();
+    if (n >= 1 && !reduceMotion) {                                 // the price drops out of the counter
+      const [x, y] = centerOf(hud), f = document.createElement('div'); f.className = 'fly-minus'; f.textContent = '-' + fmt(n);
+      f.style.left = x + 'px'; f.style.top = (y + 18) + 'px'; document.body.appendChild(f);
+      f.animate([{ transform: 'translate(-50%, 0)', opacity: 1 }, { transform: 'translate(-50%, 46px)', opacity: 0 }], { duration: 900, easing: 'steps(8)' }).onfinish = () => f.remove();
+    }
+    return true;
+  }
   function logEntry(text) {
     const li = document.createElement('li'); li.className = 'real'; li.textContent = text;
     list.prepend(li); while (list.querySelectorAll('li.real').length > 40) list.querySelector('li.real:last-of-type')?.remove();
@@ -394,6 +441,6 @@
     edition: 'pixel', S, reduceMotion, sfx, centerOf, say, banner, heroSay, log: logEntry,
     burst: (x, y, names, n) => burst(x, y, names.map(k => FX[k] || k), n),
     fall: (x, y, name, life) => fall(x, y, FX[name] || name, life),
-    bananas: { get: () => score, spend, earn: (n, from) => addScore(n, from, true), watch: f => bananaWatchers.push(f) },
+    bananas: { get: () => score, add: n => { score += n; paintScore(false); }, spend, earn: (n, from) => addScore(n, from, true), watch: f => bananaWatchers.push(f) },
   };
 })();

@@ -111,3 +111,16 @@ html[data-style="pixel"] .reader-body h2 { font-size: clamp(18px, 4vw, 26px); li
 }
 .footer { text-align: center; padding: 20px; opacity: .7; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* ---------- phones: slim header, scrolling shelf chips, controls that don't eat the screen ---------- */
+@media (max-width: 720px) {
+  .topbar { padding: 6px 10px; }
+  .brand { font-size: 20px; } html[data-style="pixel"] .brand { font-size: 13px; }
+  .leaf-link { padding: 7px 12px; font-size: 13px; } html[data-style="pixel"] .leaf-link { font-size: 9px; }
+  main { padding: 18px 12px 20px; }
+  .intro { margin-bottom: 14px; }
+  .controls { position: static; background: none; padding: 4px 0 10px; }
+  .shelves { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+  .shelves::-webkit-scrollbar { display: none; }
+  .shelf { flex: none; white-space: nowrap; min-height: 42px; }
+}
