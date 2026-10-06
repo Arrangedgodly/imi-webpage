@@ -1,0 +1,99 @@
+# Typewriter Ops: game plan
+
+This folder is the work queue. Each `NN-*.md` file is one self-contained task for one agent session. **Read this README first, then only your task file.** Do not explore the repo beyond what your task names; the file map and rules below are meant to save you that.
+
+## Order of work
+
+| # | Task | Size | Depends on |
+|---|---|---|---|
+| 01 | Settings button in the game (Pixel/Classic switch, sound, reset) | S | none |
+| 02 | Typewriter stage: stop clipping the machine and the streak counter | S | none |
+| 03 | Keepers are free, automatic, and share one goal | L | none |
+| 04 | Titles page: sub-tabs, shelf first, market last | L | 03 |
+| 05 | Pitch desk: make commissions understandable | M | 04 |
+| 06 | Awards page slimmed, Legacy gets its own tab | M | 04 (reuses its sub-tab helper) |
+| 07 | Import the 300 kids' books as early titles | L | 03, 04 |
+| 08 | Balance pass for the new economy | M | 03, 07 |
+| 09 | Guided tutorial / progressive reveal | L | all of the above |
+
+Do them in order. Tasks 01 and 02 are independent quick wins and can run in parallel with 03. When a task ends, update the "Status" line at the bottom of its file and add anything the next agent must know under "Handoff notes".
+
+## Decisions already made with the owner (do not re-litigate)
+
+- Keep **both** art styles; both must be switchable in game (01).
+- Keepers are **free and automatic**, **one shared goal** (global focus, with an Auto mode). Letter pools stay **separate per desk**; pausing a keeper is the "hoard letters" lever (03, 08).
+- **Try-and-test direction:** if the owner finds the single global goal wrong after playing it, the fallback is a *shared letter pool* across typewriters with steeper typist costs on later machines. Do not build the fallback now; keep the goal logic isolated (`focusRecipe`, `pickAutoFocus`) so it is easy to change.
+- The Titles page is split into sub-tabs with the bookshelf first and the rights market last (04). Awards is only awards; Legacy/Second Printing is its own tab (06).
+- Early game gets many easy titles from the 300 kids' books, revealed a few at a time (07); progression gates must not be satisfied by them.
+- A guided tutorial plus progressive reveal comes last (09).
+
+## What the project is
+
+A browser idle/clicker game, "Typewriter Ops": monkeys type letters, letters become words, words become parody titles that sell for bananas, bananas buy more typewriters. Static site, no build step, no dependencies. Two art editions share all game logic: **pixel** (`index.html`) and **classic** (`classic.html`, smooth/emoji/SVG). The site never scrolls as a page: a title **menu** screen and a full-screen **game** screen (`html[data-screen="menu"|"game"]`).
+
+## File map
+
+| File | Role |
+|---|---|
+| `index.html` / `classic.html` | Page shells (menu + game header + `#opsRoot`). Pixel loads `pixel.js`, `app.js`; classic loads `classic.js` |
+| `core.js` | Shared shell: synth sound `sfx`, banana counter (`IMI.bananas`), screens, header **toys** (snack banana, coconut, weather, night), builds `window.IMI` |
+| `app.js` / `classic.js` | Per-edition art layer: particles, toy visuals, menu monkey. Pass an `art` object to `Core.boot` |
+| `ops.js` (~2100 lines) | **The game.** State, economy, all department panels, news ticker, offline progress, awards, prestige. Everything is in one IIFE |
+| `ops.css` (~1260 lines) | Game styling for both editions: shared layout first, then `html[data-style="pixel"]` and `html[data-style="classic"]` blocks |
+| `styles.css` / `classic.css` | Shell styling (menu, header, toys) per edition |
+| `readers.js` | `window.READERS`: the 16 authored short titles (`id, title, pay, text`). The text's exact word counts are the recipe |
+| `weather.js`, `mood.js` | Shared weather simulation and monkey mood events |
+| `pixel.js` | Procedural pixel-art sprite engine (`PXA`) |
+| `library.html/js/css`, `library/` | Separate scrolling Library page; `library/` is synced from the `monkey-library` GitHub repo by `node sync-library.mjs` |
+| `style-swap.js` | Pixel/Classic switcher (bar-wipe, keeps the `#play` hash) |
+| `tools/balance.html`, `bot.js`, `balance.mjs`, `sweep.mjs` | Headless economy simulator (see `BALANCE.md`) |
+| `tools/shot.mjs` | Screenshot/automation helper (below) |
+| `BALANCE.md`, `ROADMAP.md` | Economy notes and the history of shipped phases |
+
+## How `ops.js` works (read this instead of reading the file)
+
+- **State** is one object `S` (line ~137, `fresh()` is the schema; `save()` writes `localStorage['imi-ops-v1']` every 5s). Per desk: `S.desks[i] = { owned, paws, crew[], mk, letters{}, tray[], up{}, keeper{ owned,on,def,targets,focus } }`. Shared: `S.bank{word:count}` (finished words), `S.written{id:true}` (sold titles), `S.pitches[]` (generated titles), `S.offers[]`, `S.awards`, `S.stats`, `S.legacy`, `S.market`, `S.divs`, `S.muses`, `S.garden`. Runtime-only UI state is `ui` (line ~148) and `rt[]`.
+- **Old saves must keep working.** Schema changes need a migration in the load block (line ~137-147: `Object.assign(f, saved)` then per-desk merge). Never rename a persisted field without migrating it.
+- **Rendering:** `render()` runs at most 4x/s when `dirty` (set by `mark()`), only while `IMI.screen()==='game'`. Each department has a `renderX()` that builds an HTML string and calls `morph(el, html)` (a DOM patcher; do **not** switch panes back to `innerHTML`, it destroys hover/animation state). Registered in the `RENDER` map (line ~1859). Tabs are the `TABS` array (line 28: `[id, icon, name, sub, shortLabel, tuckedBehindMoreOnPhones]`); `setTab(id)` switches; `badgeFor(id)` returns the "!" badge text.
+- **Clicks** are delegated: markup carries `data-act="name"` and the `ACTIONS` map (line ~1975) handles it. Inputs use `data-in`.
+- **Typing loop:** `tick()` every 50ms. `press(i, auto, p)` types one letter (`roll()` picks it, biased by upgrades and the **focused title**). `keeperStep(d,i)` (every 0.4s) banks words into `S.bank`; `canWrite(r)` = every word in recipe `r.need` is banked; `writeTitle(id)` sells it. Offline progress: `simulateAway()` / `keeperBulk()` / `offlineDist()`.
+- **Bands:** desk `i` types words of length band `i` (`bandOf(len)`: 2-3, 4-5, 6-7, 8-9, 10-11, 12-13 letters). A title's `band` is its longest word's band; a title needs words from several bands.
+- **Dev hooks:** `IMI.ops.dev` (line ~1275) exposes `S()`, `press`, `tick`, `buy`, `writeTitle`, `RECIPES`, etc. for the balance harness and tests. Keep it working.
+- **Balance knobs** are at the top (`PAW_*`, `SHOP`, `PITCH_PAY`, ...) and overridable via `window.__TUNE` (harness only).
+
+## Hard rules for every task
+
+1. **No page scroll.** The floor tab never scrolls; other tabs scroll inside `.o-pane`. Do not add `overflow: auto` to `body`/`html`. Do not add a modal that is taller than the viewport without internal scrolling.
+2. **Both editions.** Every visual change needs a pixel rule and a classic rule (`html[data-style="pixel"] ...` / `html[data-style="classic"] ...`). Pixel uses `var(--font-px)` headings, hard edges, `steps()` easing; classic uses rounded shapes and `var(--bounce)`. The `PX` constant in `ops.js` is true in pixel.
+3. **Mobile first.** Verify at 390x700 and 360x560 as well as 1280x800. Touch targets >= 40px.
+4. **Respect reduced motion** (`IMI.reduceMotion` in JS, the `prefers-reduced-motion` blocks in CSS).
+5. **Keep the harness green.** After any change to `ops.js`: `node --check ops.js`, and run the balance simulation (below) to confirm no exceptions.
+6. **No new build tooling or dependencies.** Plain JS/CSS/HTML. New files must be added to **both** `index.html` and `classic.html` (and `tools/balance.html` if ops logic needs them).
+7. **Stay in scope.** Do not refactor unrelated code. If you find a bug outside your task, add it to "Handoff notes" instead of fixing it.
+8. **Juice is welcome** (the owner wants an app-game feel: shockwaves, floaters, counters) but never at the cost of performance: no unbounded DOM growth, no per-frame layout reads on big lists. A prior bug hung the page with an infinite `while` loop; every loop you write must provably terminate.
+9. Do not commit unless the task says so. Leave changes in the working tree and report a short summary of files changed.
+
+## Running and testing
+
+```bash
+# from the repo root: serve the site
+python -m http.server 8123
+```
+
+Automation (one-time setup, outside the repo so nothing is added to it):
+
+```bash
+mkdir %TEMP%\pp && cd %TEMP%\pp && npm init -y && npm i puppeteer-core
+copy <repo>\tools\shot.mjs .          # Chrome is expected at C:\Program Files\Google\Chrome\Application\chrome.exe
+node shot.mjs "http://localhost:8123/index.html#play" 1280 800 out.png            # desktop pixel game screen
+node shot.mjs "http://localhost:8123/classic.html#play" 390 700 out.png "" 1      # phone classic (last arg 1 = mobile emulation)
+node shot.mjs "<url>" 1280 800 out.png script.js                                   # script.js is the body of an async fn(page, sleep)
+```
+
+`script.js` may `await page.click(...)`, `await page.evaluate(...)` (use `IMI.ops.dev.S()` to read/modify state, `IMI.bananas.add(n)` to grant bananas), and `return` JSON that gets printed. Screenshots are PNGs; view them with the Read tool. The tool prints console errors; a `favicon.ico` 404 is expected and harmless. To test a persisted/old save, plant `localStorage` with `page.evaluateOnNewDocument` and navigate to a URL that differs by query string (a hash-only change is not a new document).
+
+Balance simulation (virtual clock, plays hours in seconds): see `BALANCE.md`. Quick version: serve the site, then run `tools/balance.mjs` (it imports `puppeteer-core`, so run it from the temp folder with a copy, or temporarily set the import path) with `node balance.mjs 60 active 0 1`. It prints milestone minutes and any page errors.
+
+## Reporting back
+
+End your session by (1) updating the task file's Status and Handoff notes, (2) listing files changed, (3) stating what you verified (screens/sizes/editions) and what you could not.

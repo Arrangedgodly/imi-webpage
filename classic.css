@@ -289,3 +289,13 @@ body.night .hero-motes i { background: #c8ff7a; box-shadow: 0 0 8px 3px rgba(200
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .hero-rays i, .hero-motes, .hl-dot { animation: none !important; }
 }
+
+/* ---------- settings popover ---------- */
+.set-pop { position: fixed; top: 66px; right: 10px; z-index: 300; width: 270px; max-width: calc(100vw - 20px); padding: 14px; display: grid; gap: 10px; background: rgba(8,24,12,.94); border: 3px solid var(--wood-dark); border-radius: 22px; box-shadow: 0 6px 0 #3a210d, 0 14px 24px rgba(0,0,0,.4); color: #fff; font-weight: 800; }
+.set-pop[hidden] { display: none; }
+.set-row[hidden] { display: none; }
+.set-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.set-seg { display: flex; border-radius: 999px; overflow: hidden; border: 2px solid var(--wood-dark); }
+.set-seg button, .set-btn { font: inherit; font-size: 14px; color: #fff; background: rgba(255,255,255,.1); border: 0; padding: 6px 12px; cursor: pointer; }
+.set-btn { border: 2px solid var(--wood-dark); border-radius: 999px; }
+.set-seg button[aria-pressed="true"], .set-btn[aria-pressed="true"] { background: var(--banana); color: #3a210d; }

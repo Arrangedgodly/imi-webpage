@@ -73,10 +73,12 @@
 }
 
 /* ---------- the typewriter floor: a room that fits the screen, the machine sits on the desk at the bottom ---------- */
-.o-stage { position: relative; flex: 1 1 0; min-height: 0; width: 100%; max-width: 760px; margin: 0 auto; touch-action: manipulation; user-select: none; -webkit-user-select: none; cursor: pointer; overflow: hidden; container-type: size; }
+.o-stagewrap { position: relative; flex: 1 1 0; min-height: 0; width: 100%; max-width: 880px; margin: 0 auto; }
+.o-fx { position: absolute; inset: 0; pointer-events: none; overflow: visible; z-index: 6; }
+.o-stage { position: absolute; inset: 0; touch-action: manipulation; user-select: none; -webkit-user-select: none; cursor: pointer; overflow: hidden; container-type: size; }
 /* the machine is drawn to the room it has: every size below follows the stage's own height and width (cq units) */
-.o-tw { --sheet: clamp(44px, 21cqh, 116px); --kh: clamp(22px, 9cqh, 34px); --kw: clamp(18px, min(8cqh, calc((100cqw - 64px) / 10.8)), 34px); --kg: clamp(3px, 1.5cqh, 6px);
-  position: absolute; left: 0; right: 0; bottom: 12px; width: min(calc(100% - 24px), 600px); margin: 0 auto; font-family: var(--tw-font); }
+.o-tw { --sheet: clamp(44px, 21cqh, 116px); --kh: clamp(22px, 9cqh, 34px); --kw: clamp(18px, min(8cqh, calc((100cqw - 140px) / 10.8)), 34px); --kg: clamp(3px, 1.5cqh, 6px);
+  position: absolute; left: 0; right: 0; bottom: 12px; width: min(calc(100% - 128px), 600px); margin: 0 auto; font-family: var(--tw-font); }
 .o-sheetwrap { height: var(--sheet); overflow: hidden; display: flex; justify-content: center; align-items: flex-end; }
 .o-sheet { width: 62%; min-width: 200px; height: 100%; padding: 8px 10px; word-break: break-all; overflow: hidden; display: flex; align-items: flex-end; }
 .o-carriage { position: relative; height: 18px; margin: 0 -8px; transition: transform .08s; }
@@ -106,7 +108,7 @@
 .o-focus { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 2px 10px; background: rgba(26,15,20,.78); }
 .o-focus:empty { display: none; }
 .o-focus .o-prog { min-width: 90px; }
-.o-info { flex: none; width: 100%; max-width: 760px; margin: 0 auto; display: grid; gap: 6px; }
+.o-info { flex: none; width: 100%; max-width: 880px; margin: 0 auto; display: grid; gap: 6px; }
 .o-tray { display: flex; flex-wrap: nowrap; gap: 5px; min-height: 38px; align-items: center; overflow: hidden; }
 .o-tile { flex: none; width: clamp(24px, 4.6vh, 34px); height: clamp(26px, 5vh, 38px); display: grid; place-items: center; font-family: var(--tw-font); }
 @media (prefers-reduced-motion: reduce) { .o-pop { animation-duration: .01s; } .o-carriage.ding { animation: none; } }
@@ -384,10 +386,10 @@ html[data-style="classic"] .o-prog i { border-radius: 99px; transition: width .5
 .o-focus:empty { display: none; }
 .o-focus .o-prog { min-width: 110px; }
 
-.o-combo { position: absolute; top: 96px; right: 12px; z-index: 5; pointer-events: none; opacity: 0; font-family: var(--tw-font); font-size: 34px; font-weight: 700; color: #ffd23a; -webkit-text-stroke: 4px #1a0f14; paint-order: stroke fill; text-shadow: 4px 4px 0 #1a0f14; }
+.o-combo { position: absolute; top: 96px; right: 12px; z-index: 5; transform-origin: top right; pointer-events: none; opacity: 0; font-family: var(--tw-font); font-size: 34px; font-weight: 700; color: #ffd23a; -webkit-text-stroke: 4px #1a0f14; paint-order: stroke fill; text-shadow: 4px 4px 0 #1a0f14; }
 .o-combo.show { opacity: 1; animation: o-combo .22s; }
 .o-combo.warm { color: #ff9a3a; font-size: 42px; } .o-combo.hot { color: #ff5d73; font-size: 52px; animation: o-combo .22s, o-jitter .12s infinite; }
-@keyframes o-combo { 0% { transform: scale(1.8) rotate(-8deg); } 100% { transform: none; } }
+@keyframes o-combo { 0% { transform: scale(1.8) rotate(-8deg); transform-origin: top right; } 100% { transform: none; } }
 @keyframes o-jitter { 50% { translate: 2px -2px; } }
 
 .o-tile.new { animation: o-tilein .28s; }
@@ -1132,7 +1134,7 @@ html[data-style="classic"] .o-tw.p-brass .o-key { border-color: #b8862a; box-sha
 .o-tw.p-led .o-led { display: block; z-index: 3; left: 10px; top: -15px; width: 10px; height: 10px; background: #5a1a1a; border: 2px solid #1a0f14; }
 .o-tw.p-ledon .o-led { background: #7be05a; box-shadow: 0 0 6px 2px rgba(123,224,90,.7); animation: o-blink 1.6s steps(1) infinite; }
 html[data-style="classic"] .o-led { border-radius: 50%; }
-@media (max-width: 720px) { .o-tw.p-spools .o-spool { width: 24px; height: 24px; border-width: 3px; } .o-spool.l { left: -32px; } .o-spool.r { right: -32px; } .o-tw.p-led .o-led { top: -11px; left: 6px; } }
+@media (max-width: 720px) { .o-tw { width: min(calc(100% - 88px), 600px); --kw: clamp(16px, min(8cqh, calc((100cqw - 100px) / 10.8)), 34px); } .o-tw.p-spools .o-spool { width: 24px; height: 24px; border-width: 3px; } .o-spool.l { left: -32px; } .o-spool.r { right: -32px; } .o-tw.p-led .o-led { top: -11px; left: 6px; } }
 
 /* ============================================================
    SHINY TYPISTS
@@ -1258,3 +1260,60 @@ html[data-screen="menu"] .o-buffbar { display: none; }
   .o-wrap { gap: 4px; }
 }
 @media (max-width: 400px) { html[data-style="pixel"] .o-short { font-size: 6px; } }
+
+/* keepers: per-desk pause toggle and the Words-page strip */
+.o-desk .o-ktog { align-self: flex-start; margin-top: 2px; padding: 1px 8px; border-radius: 999px; font-size: 11px; line-height: 1.5; cursor: pointer; background: rgba(123,224,90,.18); color: #bff0a8; border: 1px solid rgba(123,224,90,.45); }
+.o-desk .o-ktog.off { background: rgba(255,255,255,.08); color: #c9b9a0; border-color: rgba(255,255,255,.25); }
+.o-desk .o-ktog:focus-visible { outline: 2px solid #ffd23a; outline-offset: 1px; }
+.o-kchip { cursor: pointer; font: inherit; }
+.o-kchip.off { opacity: .65; }
+.o-kstrip p { margin: 6px 0; }
+.o-adv summary { cursor: pointer; }
+
+/* ---- sub-tabs (Titles, Awards...): sticky pill row at the top of a pane ---- */
+.o-subtabs { position: sticky; top: -4px; z-index: 3; display: flex; gap: 6px; margin: -4px -4px 10px; padding: 6px; overflow-x: auto; scrollbar-width: none; }
+.o-subtabs::-webkit-scrollbar { display: none; }
+.o-subtabs button { flex: none; min-height: 44px; padding: 4px 16px; color: inherit; font: inherit; cursor: pointer; }
+.o-subbadge { margin-left: 6px; font-style: normal; padding: 0 6px; background: #000; color: #ffd23a; border-radius: 99px; }
+#oTitleList { scroll-margin-top: 64px; }
+.o-needs { align-items: center; }
+.o-now { color: #ffd23a; }
+html[data-style="pixel"] .o-subtabs { background: #8a6444; border-bottom: 3px solid #3a210d; }
+html[data-style="pixel"] .o-subtabs button { background: #000; border: 3px solid #3a210d; font-size: 22px; }
+html[data-style="pixel"] .o-subtabs button[aria-selected="true"] { background: var(--leaf); }
+html[data-style="classic"] .o-subtabs { background: #a2692f; border-bottom: 2px solid var(--wood-dark); }
+html[data-style="classic"] .o-subtabs button { background: rgba(0,0,0,.35); border: 2px solid var(--wood-dark); border-radius: 99px; font-size: 15px; }
+html[data-style="classic"] .o-subtabs button[aria-selected="true"] { background: var(--leaf); }
+.o-tab[hidden] { display: none !important; }
+
+/* ---------- guided tour + tips (tour.js): a pulsing ring on the target and a speech bubble, nothing blocks the game ---------- */
+.tour-ring { position: fixed; z-index: 310; pointer-events: none; border: 3px solid #ffd23a; box-shadow: 0 0 0 3px rgba(26,15,20,.75), 0 0 16px 4px rgba(255,210,58,.65); animation: tour-pulse 1.1s ease-in-out infinite; transition: left .2s, top .2s, width .2s, height .2s; }
+.tour-ring[hidden], .tour-bub[hidden] { display: none; }
+.tour-ring.still { animation: none; }
+@keyframes tour-pulse { 50% { box-shadow: 0 0 0 3px rgba(26,15,20,.75), 0 0 26px 10px rgba(255,210,58,.9); } }
+.tour-bub { position: fixed; z-index: 311; width: min(320px, calc(100vw - 16px)); display: flex; gap: 8px; align-items: flex-start; color: #3a210d; }
+.tour-bub[data-kind="tip"] { width: min(300px, calc(100vw - 16px)); }
+.tour-mk { flex: none; display: grid; place-items: center; width: 34px; min-height: 34px; font-size: 26px; line-height: 1; }
+.tour-body { flex: 1; min-width: 0; }
+.tour-txt { margin: 0 0 6px; }
+.tour-txt i { display: block; margin-top: 4px; font-style: normal; opacity: .75; }
+.tour-row { display: flex; align-items: center; gap: 6px; }
+.tour-n { margin-right: auto; opacity: .7; }
+.tour-skip, .tour-next { min-height: 40px; min-width: 52px; padding: 0 12px; cursor: pointer; font: inherit; color: inherit; }
+.tour-skip[hidden], .tour-next[hidden] { display: none; }
+html[data-style="pixel"] .tour-ring { animation-timing-function: steps(2); box-shadow: 0 0 0 4px #1a0f14; transition: none; }
+@keyframes tour-pulse-px { 50% { border-color: #fff6d6; } }
+html[data-style="pixel"] .tour-ring { animation-name: tour-pulse-px; }
+html[data-style="pixel"] .tour-bub { padding: 4px 2px; font-family: var(--font-px); font-size: 10px; line-height: 1.7; border: 9px solid transparent; border-image: var(--frame-paper-s) 4 / 9px stretch; background: #fff6d6 padding-box; }
+html[data-style="pixel"] .tour-n { font-size: 9px; }
+html[data-style="pixel"] .tour-skip, html[data-style="pixel"] .tour-next { font-size: 10px; background: #e8d6a0; border: 3px solid #1a0f14; box-shadow: inset 0 -3px 0 rgba(0,0,0,.2); }
+html[data-style="pixel"] .tour-next { background: #7be05a; }
+html[data-style="classic"] .tour-ring { border-radius: 14px; }
+html[data-style="classic"] .tour-bub { padding: 10px 12px; font-size: 14.5px; line-height: 1.35; font-weight: 600; background: #fff6d6; border: 3px solid #8a5a2b; border-radius: 18px; box-shadow: 0 8px 22px rgba(0,0,0,.45); }
+html[data-style="classic"] .tour-bub::after { content: ''; position: absolute; left: var(--tail, 50%); width: 16px; height: 16px; margin-left: -8px; background: #fff6d6; border: 3px solid #8a5a2b; transform: rotate(45deg); display: none; }
+html[data-style="classic"] .tour-bub[data-side="below"]::after { display: block; top: -10px; border-right: 0; border-bottom: 0; }
+html[data-style="classic"] .tour-bub[data-side="above"]::after { display: block; bottom: -10px; border-left: 0; border-top: 0; }
+html[data-style="classic"] .tour-skip, html[data-style="classic"] .tour-next { border-radius: 999px; border: 2px solid #8a5a2b; background: #f2dfa6; font-weight: 700; }
+html[data-style="classic"] .tour-next { background: #7cc34a; color: #1d3a12; transition: transform .2s var(--bounce); }
+html[data-style="classic"] .tour-next:active { transform: scale(.94); }
+@media (prefers-reduced-motion: reduce) { .tour-ring { animation: none; transition: none; } }

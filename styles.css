@@ -242,3 +242,16 @@ body.night .hero-motes i { background: #c8ff7a; box-shadow: 0 0 6px 2px rgba(200
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .hero-rays i, .hero-motes, .letter, .menu-actions .banana-btn::before, .hl-dot { animation: none !important; }
 }
+
+/* ---------- settings popover ---------- */
+.gear-bars { display: grid; gap: 4px; }
+.gear-bars b { display: block; width: 20px; height: 4px; background: #fff; box-shadow: 0 2px 0 rgba(0,0,0,.45); }
+.set-pop { position: fixed; top: 64px; right: 10px; z-index: 300; width: 250px; max-width: calc(100vw - 20px); padding: 12px; display: grid; gap: 10px; background: var(--ink) padding-box; border: 12px solid transparent; border-image: var(--frame-dark-s) 4 / 12px stretch; font-family: var(--font-px); color: #fff; }
+.set-pop[hidden] { display: none; }
+.set-row[hidden] { display: none; }
+.set-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.set-lab { font-size: 10px; }
+.set-seg { display: flex; }
+.set-seg button, .set-btn { font-family: var(--font-px); font-size: 10px; color: #fff; background: #3a2a30; border: 3px solid var(--ink); padding: 6px 8px; cursor: pointer; }
+.set-seg button[aria-pressed="true"], .set-btn[aria-pressed="true"] { background: var(--banana); color: #3a210d; }
+.set-btn:hover, .set-seg button:hover { filter: brightness(1.15); }

@@ -29,18 +29,33 @@
     ['floor', 'type', 'Typewriter Ops', 'The floor', 'Floor'], ['training', 'monkey', 'Primate Resources', 'Hire & train', 'Train'],
     ['lab', 'coconut', 'Coconut R&D', 'Word lab', 'Words'], ['press', 'log', 'Vine Infrastructure', 'Titles & rights', 'Titles'],
     ['shop', 'banana', 'Banana Logistics', 'Spend bananas', 'Shop'],
-    ['security', 'palm', 'Canopy Security', 'Word keepers', 'Keepers', 1], ['studios', 'reel', 'IMI Studios', 'Media divisions', 'Media', 1],
-    ['muses', 'quill', 'Muse Salon', 'Literary patrons', 'Muses', 1], ['records', 'trophy2', 'Hall of Records', 'Stats & awards', 'Awards', 1]
+    ['studios', 'reel', 'IMI Studios', 'Media divisions', 'Media', 1],
+    ['muses', 'quill', 'Muse Salon', 'Literary patrons', 'Muses', 1], ['records', 'trophy2', 'Hall of Records', 'Stats & awards', 'Awards', 1],
+    ['legacy', 'trophy1', 'Legacy', 'Second printing', 'Legacy', 1]
   ];
+  /* progressive reveal: a tab is visible unless it has a gate that says otherwise */
+  const TAB_GATES = {
+    lab: () => totalPaws() > 0 || S.stats.letters >= 60 || S.stats.words > 0 || Object.keys(S.written).length > 0,
+    press: () => S.stats.words > 0 || Object.keys(S.written).length > 0 || readyList().length > 0,
+    shop: () => bananas.get() > 0 || (S.run.earned || 0) > 0 || Object.keys(S.written).length > 0,
+    studios: () => soldCount() >= 3 || S.divTotal > 0 || DIVS.some(D => divCount(D) > 0),
+    muses: () => soldCount() >= 3 || Object.keys(S.muses.owned).length > 0,
+    records: () => Object.keys(S.written).length > 0 || S.printing > 0,
+    legacy: () => S.printing > 0 || S.legacy.total > 0 || (S.run.earned || 0) >= 100000 };
+  const tabVisible = id => !TAB_GATES[id] || !!TAB_GATES[id]();
   const bandOf = n => (n <= 3 ? 0 : n <= 5 ? 1 : n <= 7 ? 2 : n <= 9 ? 3 : n <= 11 ? 4 : 5);
   /* ---- economy knobs (see tools/balance.mjs) ---- */
   const TUNE = window.__TUNE || {};                  // balance harness overrides; empty on the real site
-  const PAW_GROW = TUNE.PAW_GROW || 1.9;            // each extra typist costs this much more than the last
-  const PAW_BASE = TUNE.PAW_BASE || [3, 9, 27, 81, 243, 729];            // seconds per letter for one typist on each desk
-  const PAW_COST = TUNE.PAW_COST || [25, 35, 50, 70, 100, 140];      // letters for the first extra typist on each desk
+  const PAW_GROW = TUNE.PAW_GROW || 1.55;            // each extra typist costs this much more than the last
+  const PAW_BASE = TUNE.PAW_BASE || [1.5, 9, 27, 81, 243, 729];            // seconds per letter for one typist on each desk
+  const PAW_COST = TUNE.PAW_COST || [200, 35, 50, 70, 100, 140];      // letters for the first extra typist on each desk
+  const PAW_DESK_STEP = TUNE.PAW_DESK_STEP != null ? TUNE.PAW_DESK_STEP : 0.35;   // later machines charge this much more per desk index for every typist hire
+  const KEEPER_PERIOD = TUNE.KEEPER_PERIOD || [0.6, 1.2, 2, 3, 4, 5];     // seconds per banked word per desk, free keepers
+  const AUTH_PAY = TUNE.AUTH_PAY || [0.15, 0.4, 0.35, 0.2, 0.2, 0.2];                       // runtime multiplier on the pay of authored readers, by band
+  const KID_PAY = TUNE.KID_PAY || 0.1;                                          // runtime multiplier on the baked-in pay of kids' titles
   const TITLE_SCALE = TUNE.TITLE_SCALE || [1, 1.3, 1.7, 2.2, 3, 4];     // pitched titles get bigger with the band
-  const PITCH_PAY = TUNE.PITCH_PAY || [100, 1260, 15600, 195600, 2.442e6, 3.06e7];   // rights for a standard pitched title, by band
-  const SHOP = { keeper: 1000, hold: 500, metro: 3000, dbl: 2000, contracts: 10000, agent: 40000, analyst: 150000 };
+  const PITCH_PAY = TUNE.PITCH_PAY || [40, 504, 5000, 39120, 4.885e5, 6.12e6];   // rights for a standard pitched title, by band
+  const SHOP = { hold: 500, metro: 3000, dbl: 2000, contracts: 10000, agent: 40000, analyst: 150000, ...(TUNE.SHOP || {}) };
   const FREQ = { E: 12, T: 9, A: 8, O: 8, I: 7, N: 7, S: 6, H: 6, R: 6, D: 4, L: 4, C: 3, U: 3, M: 3, W: 2, F: 2, G: 2, Y: 2, P: 2, B: 1.5, V: 1, K: 1, J: .3, X: .3, Q: .2, Z: .2 };
   const POP_COLORS = ['#ff5d73', '#ffd23a', '#7be05a', '#4cc9f0', '#c39bff', '#ff9ec0'];
   const EXTRA_WORDS = `up if me we be no so or as at by my ox an am us
@@ -109,10 +124,13 @@
   const buildRecipe = r => {
     const need = {}; let max = 0, total = 0;
     for (const w of tokens(r.text)) { const W = w.toUpperCase(); need[W] = (need[W] || 0) + 1; max = Math.max(max, w.length); total++; }
-    return { ...r, need, total, band: bandOf(max) };
+    return { ...r, pay: r.kid ? Math.round(r.pay * KID_PAY) : Math.round(r.pay * AUTH_PAY[bandOf(max)]), need, total, band: bandOf(max) };
   };
   const RECIPES = window.READERS.map(buildRecipe);
-  const BOOKS = RECIPES.length;                                  // the authored readers; pitched titles come on top
+  const KIDS = RECIPES.filter(r => r.kid);                       // kids' books, in difficulty order (readers-kids.js)
+  const BOOKS = RECIPES.length - KIDS.length;                    // the authored readers; kids' books and pitched titles come on top
+  const KID_LIST = TUNE.KID_LIST || 8;                           // kids' titles open on the reading list at once
+  const KID_ROY = TUNE.KID_ROY || 0.5;                           // kids' titles pay this share of normal royalties
   const RBY = Object.fromEntries(RECIPES.map(r => [r.id, r]));
   const VOCAB = new Set(EXTRA_WORDS.map(w => w.toUpperCase()).filter(w => w.length >= 2 && w.length <= 13));
   RECIPES.forEach(r => Object.keys(r.need).forEach(w => VOCAB.add(w)));
@@ -128,15 +146,18 @@
   const newDesk = i => ({
     owned: i === 0, paws: 0, crew: [], mk: 0, letters: {}, tray: [],
     up: { fing: 0, rapid: 0, vowel: 0, ink: 0, practice: 0, stock: 0, ribbon: 0 },
-    keeper: { owned: false, on: true, def: 0, targets: {}, focus: null }
+    keeper: { owned: i === 0, on: true, def: 0, targets: {} }
   });
-  const fresh = () => ({ printing: 0, legacy: { stars: 0, total: 0, ups: {} }, editions: {}, run: { earned: 0 }, challenge: null, chDone: {}, muses: { owned: {}, seated: [null, null, null] }, garden: { beds: [null, null] }, divs: { songs: 0, tv: 0, radio: 0, sketch: 0, film: 0 }, divTotal: 0, pitches: [], offers: [], market: { v: [1, 1, 1, 1, 1, 1], m: [0, 0, 0, 0, 0, 0], hist: [[1], [1], [1], [1], [1], [1]] }, agent: false, analyst: false, lamp: 0, lastSeen: 0, awards: {}, stats: { pitched: 0, pitchSold: 0, awayMax: 0, letters: 0, manual: 0, words: 0, lump: 0, rotten: 0, secs: 0, storm: 0, night: 0, byLetter: {} }, deals: {}, royTotal: 0, gold: 0, best: 0, hold: false, metro: false, dbl: false, contracts: false, sel: 0, written: {}, bank: {}, log: [], desks: DESKS.map((_, i) => newDesk(i)) });
+  const fresh = () => ({ focus: null, autoFocus: true, printing: 0, legacy: { stars: 0, total: 0, ups: {} }, editions: {}, run: { earned: 0 }, challenge: null, chDone: {}, muses: { owned: {}, seated: [null, null, null] }, garden: { beds: [null, null] }, divs: { songs: 0, tv: 0, radio: 0, sketch: 0, film: 0 }, divTotal: 0, pitches: [], offers: [], market: { v: [1, 1, 1, 1, 1, 1], m: [0, 0, 0, 0, 0, 0], hist: [[1], [1], [1], [1], [1], [1]] }, agent: false, analyst: false, lamp: 0, lastSeen: 0, awards: {}, stats: { pitched: 0, pitchSold: 0, awayMax: 0, letters: 0, manual: 0, words: 0, lump: 0, rotten: 0, secs: 0, storm: 0, night: 0, byLetter: {} }, deals: {}, royTotal: 0, gold: 0, best: 0, hold: false, metro: false, dbl: false, contracts: false, sel: 0, written: {}, bank: {}, log: [], desks: DESKS.map((_, i) => newDesk(i)) });
   let S = (() => {
     try {
       const saved = JSON.parse(localStorage.getItem(KEY));
       if (!saved) return fresh();
       const f = fresh(); Object.assign(f, saved);
       f.desks = DESKS.map((_, i) => { const d = newDesk(i), s = (saved.desks || [])[i] || {}; return { ...d, ...s, up: { ...d.up, ...s.up }, keeper: { ...d.keeper, ...s.keeper } }; });
+      const old = (saved.desks || []).map(x => x && x.keeper && x.keeper.focus).find(id => id && !(saved.written || {})[id]);   // pre-shared-goal saves: per-desk focus
+      if (saved.focus === undefined) { f.focus = old || null; f.autoFocus = !old; }
+      f.desks.forEach(d => { if (d.owned) d.keeper.owned = true; delete d.keeper.focus; });
       return f;
     } catch { return fresh(); }
   })();
@@ -145,7 +166,7 @@
   if (!S.garden || !Array.isArray(S.garden.beds)) S.garden = { beds: [null, null] };
   const save = () => { S.lastSeen = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { /* storage blocked */ } };
   const rt = DESKS.map(() => ({ timers: [], sheet: '', col: 0, n: 0 }));    // runtime only
-  const ui = { nextCh: '', seed: 'E', hot: [false, false, false, false, false, false], buyN: 1, unseen: 0, pulled: null, dropped: {}, mcd: {}, readySet: null, fresh: null, lastBanked: null, bankedAt: 0, trayN: 0, tab: 'floor', libq: '', libf: 'open', archq: '', archf: 'all', read: null, bankq: '', ovr: '', ovrn: 3 };
+  const ui = { nextCh: '', seed: 'E', hot: [false, false, false, false, false, false], buyN: 1, unseen: 0, pulled: null, dropped: {}, mcd: {}, readySet: null, fresh: null, lastBanked: null, bankedAt: 0, trayN: 0, tab: 'floor', libq: '', libf: 'open', archq: '', archf: 'all', read: null, sub: {}, libLimit: 24, archFailed: 0, bankq: '', ovr: '', ovrn: 3 };
   let dirty = true, holding = false, holdAcc = 0, popSlot = 0, lastBananas = bananas.get();
 
   /* ================= the crew: every typist is a named monkey with a trait, a level and maybe a hat ================= */
@@ -219,7 +240,7 @@
   const anyBuff = () => Object.keys(buffs).some(k => performance.now() < buffs[k]);
 
   /* ---- royalties: every title on the shelf keeps paying, a little, forever ---- */
-  const ROY_BASE = TUNE.ROY_BASE || 0.00003;
+  const ROY_BASE = TUNE.ROY_BASE || 0.00001;
   const DEALS = [
     { id: 'reprints', name: 'Reprints', desc: 'Every title on your shelf earns 50% more royalties.', cost: 2500, need: 1, mult: 1.5 },
     { id: 'tour', name: 'Book tour', desc: 'Royalties x1.5. The monkeys sign autographs (badly).', cost: 15000, need: 3, mult: 1.5 },
@@ -229,10 +250,21 @@
   ];
   const awardCount = () => Object.keys(S.awards).length;
   const awardMult = () => 1 + .01 * awardCount();
-  const authoredSold = () => Object.keys(S.written).filter(id => RBY[id] && !RBY[id].gen).length;
-  const soldCount = () => Object.keys(S.written).filter(id => RBY[id]).length;
+  const authoredSold = () => Object.keys(S.written).filter(id => RBY[id] && !RBY[id].gen && !RBY[id].kid).length;
+  const kidsSold = () => Object.keys(S.written).filter(id => RBY[id] && RBY[id].kid).length;
+  const soldCount = () => Object.keys(S.written).filter(id => RBY[id] && !RBY[id].kid).length;   // progression gate: kids' books never count
+  /* the kids' reading list: the next KID_LIST unsold kids' titles; only those (plus authored and pitched titles) are in play */
+  let listC = null, listT = 0, readyC = null, readyT = 0;
+  const kidsListed = () => {
+    const now = performance.now();
+    if (!listC || now - listT > 1000) { listC = new Set(); listT = now; for (const r of KIDS) { if (S.written[r.id]) continue; listC.add(r.id); if (listC.size >= KID_LIST) break; } }
+    return listC;
+  };
+  const inPlay = r => !r.kid || kidsListed().has(r.id);
+  const readyList = () => { const now = performance.now(); if (!readyC || now - readyT > 250) { readyC = RECIPES.filter(canWrite); readyT = now; } return readyC; };
+  const dropCaches = () => { listC = null; readyC = null; };
   const dealMult = () => DEALS.reduce((m, d) => (S.deals[d.id] ? m * (d.mult || 1) : m), 1) * (S.deals.clubs ? 1 + .03 * soldCount() : 1);
-  const bookRoy = r => r.pay * ROY_BASE * dealMult() * awardMult() * legacyMult() * (museOn('austen') ? 1.25 : 1);
+  const bookRoy = r => r.pay * (r.kid ? KID_ROY : 1) * ROY_BASE * dealMult() * awardMult() * legacyMult() * (museOn('austen') ? 1.25 : 1);
   const royBase = () => Object.keys(S.written).reduce((a, id) => a + (RBY[id] ? bookRoy(RBY[id]) : 0), 0);
   const royRate = () => royBase() * passive();
   const fmtRate = n => (n < 10 ? n.toFixed(1) : fmtBig(n));
@@ -255,8 +287,25 @@
     if (--d.letters[ch] <= 0) delete d.letters[ch];
     const i = d.tray.lastIndexOf(ch); if (i >= 0) d.tray.splice(i, 1);
   };
-  const focusRecipe = d => { const k = d.keeper; return k.owned && k.focus && !S.written[k.focus] ? RBY[k.focus] : null; };
-  const mark = () => { dirty = true; };
+  /* one goal for every keeper; the argument is kept so call sites read the same */
+  const focusRecipe = () => (S.focus && !S.written[S.focus] ? RBY[S.focus] || null : null);
+  /* auto focus picks the best return for the crews' time: missing letters, weighted by how slowly that desk's typists work, per banana of rights */
+  function autoEffort(r) {
+    let t = 0;
+    for (const w in r.need) { const n = r.need[w] - stock(w); if (n > 0) { const b = bandOf(w.length); t += n * w.length * PAW_BASE[b] / Math.max(1, S.desks[b].paws); } }
+    return t;
+  }
+  function pickAutoFocus() {
+    if (!S.autoFocus || focusRecipe()) return;
+    let best = null, bm = Infinity;
+    for (const r of RECIPES) {
+      if (S.written[r.id] || !inPlay(r) || !Object.keys(r.need).every(w => S.desks[bandOf(w.length)].owned)) continue;
+      const miss = autoEffort(r) / r.pay;
+      if (miss < bm || (miss === bm && best && r.pay < best.pay)) { best = r; bm = miss; }
+    }
+    const was = S.focus; S.focus = best ? best.id : null; if (S.focus !== was) IMI.emit('focus', { id: S.focus });
+  }
+  const mark = () => { dirty = true; dropCaches(); };
   const vib = p => { try { if (navigator.userActivation && !navigator.userActivation.hasBeenActive) return; navigator.vibrate && navigator.vibrate(p); } catch { /* unsupported */ } };
   const progress = r => { let have = 0; for (const w in r.need) have += Math.min(stock(w), r.need[w]); return have; };
   /* rolling numbers: cnt() renders a number that animates toward its new value (and counts up from zero when a tab opens) */
@@ -332,7 +381,7 @@
     const ch = roll(d, i, auto, ty);
     addLetter(d, ch);
     if (ty) { grantXp(d, p, 1); if (ty.trait === 'lucky' && rand() < .05) addLetter(d, roll(d, i, true, ty)); }
-    const st = S.stats; st.letters++; if (!auto) st.manual++; st.byLetter[ch] = (st.byLetter[ch] || 0) + 1;
+    const st = S.stats; st.letters++; if (!auto) { st.manual++; IMI.emit('tap', { letters: st.letters }); } st.byLetter[ch] = (st.byLetter[ch] || 0) + 1;
     if (stormy()) st.storm++; if (document.body.classList.contains('night')) st.night++;
     if (!auto && buffOn('golden')) addLetter(d, roll(d, i, false));
     if (auto && d.up.ribbon && d.keeper.owned && rand() < [0, .1, .2, .3][d.up.ribbon]) {
@@ -508,13 +557,17 @@
   function pitchHTML() {
     if (!S.offers || !S.offers.length) S.offers = newOffers();
     const act = pitchActive(), full = act >= PITCH_MAX, cost = repitchCost();
-    return `<div class="o-card o-pitch"><div class="o-row"><h3>Pitch desk</h3><span class="o-dim">${act}/${PITCH_MAX} pitched titles waiting</span></div>
-      <p class="o-dim">Agents pitch endless parodies built from words your machines can type. Commission one to add it to your list. Each pitched title you sell makes the next ones pay 2% more.</p>
+    const mine = RECIPES.filter(r => r.gen && !S.written[r.id]);
+    return `<div class="o-card o-pitch"><p class="o-dim">Agents pitch endless parody titles built from words your typewriters can type. Commission one, then bank its words and write it to sell the rights. Each pitched title you sell makes the next ones pay 2% more.</p></div>
+      <div class="o-card o-pitch"><div class="o-row"><h3>Your commissions</h3><span class="o-dim">${act}/${PITCH_MAX} commissions open</span></div>
+      ${mine.length ? `<div class="o-grid">${mine.map(bookCard).join('')}</div>` : '<p class="o-dim">No commissions yet. Pick a pitch below; it will show up here, and in Titles under the Pitched filter.</p>'}</div>
+      <div class="o-card o-pitch"><div class="o-row"><h3>New pitches</h3></div>
       <div class="o-grid">${S.offers.map((p, i) => {
-        const r = buildRecipe({ ...p, gen: true });
+        const r = buildRecipe({ ...p, gen: true }), lock = lockedDesk(r);
         return `<div class="o-card sub"><div class="o-row"><h3>${esc(p.title)}</h3><span class="o-tag b${r.band}">${DESKS[r.band].lo}–${DESKS[r.band].hi}</span></div>
           <p class="o-dim">${r.total} words · rights ${price(p.pay)}</p><p class="o-pitchtext">${esc(p.text.split('. ')[0])}…</p>
-          <button type="button" class="o-btn sm gold" data-act="commission" data-i="${i}" ${full ? 'disabled' : ''}>${full ? 'Sell some titles first' : 'Commission'}</button></div>`;
+          ${lock !== undefined ? `<p class="o-warn">Needs ${DESKS[lock].name}</p>` : ''}
+          <button type="button" class="o-btn sm gold" data-act="commission" data-i="${i}" ${full ? 'disabled' : ''}>${full ? 'Sell some titles first' : lock !== undefined ? 'Commission anyway' : 'Commission'}</button></div>`;
       }).join('')}</div>
       <div class="o-row o-left"><button type="button" class="o-btn sm" data-act="repitch" ${bananas.get() < cost ? 'disabled' : ''}>New pitches · ${price(cost)}</button></div></div>`;
   }
@@ -555,7 +608,7 @@
   const divCap = D => (divOrder[D.id] ? divOrder[D.id].length : 600);
   const divFactor = D => { const n = Math.min(divCount(D), divCap(D)), p = divPrefix[D.id]; return p ? p[n] : n; };
   const divUnlocked = D => soldCount() >= D.need;
-  const divUnit = D => D.base * (TUNE.DIV_BASE || 1) * D.mult();
+  const divUnit = D => D.base * (TUNE.DIV_BASE || 0.35) * D.mult();
   const divBase = () => DIVS.reduce((a, D) => a + (divCount(D) ? divUnit(D) * divFactor(D) : 0), 0) * (museOn('twain') ? 1.2 : 1) * legacyMult();
   const passive = () => (buffOn('rush') ? 7 : 1) * (buffOn('critic') ? .5 : 1);
   const divRate = () => divBase() * passive();
@@ -783,7 +836,7 @@
     el.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
     el.querySelector('[data-cancel]').focus();
   }
-  function printHTML() {
+  function renderLegacy() {
     const earned = S.run.earned || 0, gain = starsNow(), L = S.legacy;
     const chips = [['', 'No constraint']].concat(CHALLENGES.map(c => [c.id, c.name + (S.chDone[c.id] ? ' ✓' : '')]))
       .map(([id, name]) => `<button type="button" data-act="chpick" data-id="${id}" aria-pressed="${(ui.nextCh || '') === id}">${esc(name)}</button>`).join('');
@@ -794,16 +847,25 @@
       return `<div class="o-card"><div class="o-row"><h3>${u.name}</h3><span class="o-lvl">${lv}/${u.max}</span></div>${pips(lv, u.max)}<p>${u.desc}</p>
         ${lv >= u.max ? '<span class="o-lvl">MAXED</span>' : `<button type="button" class="o-btn gold" data-act="legbuy" data-id="${u.id}" ${L.stars < cost ? 'disabled' : ''}>${cost} star${cost > 1 ? 's' : ''}</button>`}</div>`;
     }).join('');
-    return `<div class="o-card o-print"><div class="o-row"><h3>Second Printing</h3><span class="o-lvl">Printing ${S.printing + 1}</span></div>
-        <p>Retire the room and start a new printing. Your bookshelf stays as earlier editions, every title can be sold again for <b>+${35 * (S.printing + 1)}%</b> more (this printing: +${35 * S.printing}%), and each Legacy star adds <b>2%</b> to all banana income.</p>
-        <p>This run has earned <b>${fmtBig(earned)}</b> bananas, worth <b>${gain}</b> Legacy star${gain === 1 ? '' : 's'} if you print now.${gain >= 1 ? '' : ' (The first star needs 500K.)'} The next star arrives at ${fmtBig(nextStarAt())}.</p>
+    const tabs = [['press', 'Press'], ['challenges', 'Challenges'], ['upgrades', 'Upgrades', L.stars ? L.stars : 0]];
+    if (!tabs.some(t => t[0] === ui.sub.legacy)) ui.sub.legacy = 'press';
+    const sub = ui.sub.legacy, done = CHALLENGES.filter(c => S.chDone[c.id]);
+    let body;
+    if (sub === 'press') body = `<div class="o-card o-print"><div class="o-row"><h3>Second Printing</h3><span class="o-lvl">Printing ${S.printing + 1}</span></div>
+        <p>Keep your shelf as earlier editions: every title sells again for <b>+${35 * (S.printing + 1)}%</b> more (now +${35 * S.printing}%).</p>
+        <p>Each Legacy star adds <b>2%</b> to all banana income.</p>
+        <p>You restart machines, typists and bananas.</p>
+        <p>This run has earned <b>${fmtBig(earned)}</b> bananas: <b>${gain}</b> Legacy star${gain === 1 ? '' : 's'} if you print now.${gain >= 1 ? '' : ' (The first star needs 500K.)'} The next star arrives at ${fmtBig(nextStarAt())}.</p>
         <p class="o-dim">Legacy: <b>${L.stars}</b> unspent of ${L.total} earned (+${2 * L.total}% income).</p>
-        <h3 class="o-h">Challenge for the next printing (optional)</h3>
+        <button type="button" class="o-btn gold" data-act="printask" ${gain >= 1 ? '' : 'disabled'}>Go to press</button></div>`;
+    else if (sub === 'challenges') body = `<h3 class="o-h">Challenge for the next printing (optional)</h3>
         <div class="o-filters"><span class="o-seg">${chips}</span></div>
         ${picked ? `<p>${picked.desc} Reward: <b>+${picked.stars} stars</b> and a perk: ${picked.perk}${S.chDone[picked.id] ? ' <span class="o-dim">(already earned; replaying pays nothing)</span>' : ''}</p>` : '<p class="o-dim">Constraints make a run harder in a literary way. Each is worth stars and a permanent perk the first time you finish it.</p>'}
-        <button type="button" class="o-btn gold" data-act="printask" ${gain >= 1 ? '' : 'disabled'}>Go to press</button></div>
-      ${active}
-      <h3 class="o-h">Legacy</h3><div class="o-grid">${legCards}</div>`;
+        ${active}
+        ${done.length ? `<h3 class="o-h">Completed perks</h3><div class="o-grid">${done.map(c => `<div class="o-card"><h3>${c.name} ✓</h3><p>${c.perk}</p></div>`).join('')}</div>` : ''}`;
+    else body = `<p class="o-dim">Legacy stars unspent: <b>${L.stars}</b></p><div class="o-grid">${legCards}</div>`;
+    morph($('#o-legacy'), subTabs('legacy', tabs) + body);
+    hydrate($('#o-legacy'));
   }
 
   /* ================= restorations ================= */
@@ -858,7 +920,7 @@
       const bars = h.slice(-24).map(x => `<i style="height:${Math.round(Math.max(6, Math.min(100, (x - .4) / 1.7 * 100)))}%"></i>`).join('');
       const nx = S.analyst ? marketNext(b) : null, fc = nx === null ? '' : `<span class="o-dim o-fc">soon: ${nx > v + .01 ? 'rising' : nx < v - .01 ? 'falling' : 'steady'}</span>`;
       const tag = v >= 1.5 ? '<span class="o-mtag hot">HOT</span>' : v <= .8 ? '<span class="o-mtag cold">COLD</span>' : '';
-      const any = RECIPES.some(r => r.band === b), left = any ? RECIPES.filter(r => r.band === b && !S.written[r.id]).length : 1;
+      const any = RECIPES.some(r => r.band === b), left = any ? RECIPES.filter(r => r.band === b && !S.written[r.id] && inPlay(r)).length : 1;
       return `<div class="o-mrow${left ? '' : ' done'}" style="--bc:${D.color}"><span class="o-mname"><b>${D.name.split(' ')[0]}</b><small>${D.lo}–${D.hi} letters${any ? (left ? '' : ' · all sold') : ' · pitch to unlock'}</small></span><span class="o-spark" aria-hidden="true">${bars}</span><span class="o-mval"><i class="o-arr ${dir}"></i>x${v.toFixed(2)}</span><span class="o-mextra">${tag}${fc}</span></div>`;
     }).join('');
     return `<div class="o-card o-market"><div class="o-row"><h3>Rights market</h3><span class="o-dim">sales pay base x demand</span></div>${rows}
@@ -884,7 +946,10 @@
     AW('s4', 0, 'Back List', 'Sell 4 titles', () => soldCount() >= 4),
     AW('s8', 1, 'Prolific', 'Sell 8 titles', () => soldCount() >= 8),
     AW('s12', 1, 'Bestselling Author', 'Sell 12 titles', () => soldCount() >= 12),
-    AW('s16', 2, 'The Complete Works', 'Sell every title', () => authoredSold() >= BOOKS),
+    AW('s16', 2, 'The Complete Works', 'Sell every authored title', () => authoredSold() >= BOOKS),
+    AW('k10', 0, 'Story Time', 'Sell 10 kids’ books', () => kidsSold() >= 10),
+    AW('k50', 1, 'Reading Corner', 'Sell 50 kids’ books', () => kidsSold() >= 50),
+    AW('k300', 2, 'Library Card', 'Sell all ' + KIDS.length + ' kids’ books', () => KIDS.length > 0 && kidsSold() >= KIDS.length),
     AW('d1', 0, 'In the Pink', 'Install Hibiscus Ribbon', () => S.desks[1].owned),
     AW('d2', 1, 'Making Waves', 'Install Lagoon Sprint', () => S.desks[2].owned),
     AW('d3', 2, 'Sweet as Honey', 'Install Honeycomb Ledger', () => S.desks[3].owned),
@@ -901,7 +966,7 @@
     AW('b10k', 0, 'Banana Stand', 'Hold 10,000 bananas', () => bananas.get() >= 1e4),
     AW('b1m', 1, 'Banana Republic', 'Hold 1 million bananas', () => bananas.get() >= 1e6),
     AW('b1b', 2, 'Banana Empire', 'Hold 1 billion bananas', () => bananas.get() >= 1e9),
-    AW('keep', 0, 'Hired Help', 'Hire a word keeper', () => S.desks.some(d => d.keeper.owned)),
+    AW('keep', 0, 'Auto Clerk', 'Have a keeper bank 25 words', () => S.stats.words >= 25),
     AW('hold', 0, 'Heavy Hitter', 'Buy Hold to type', () => S.hold),
     AW('away1', 0, 'Welcome Back', 'Return after an hour away', () => (S.stats.awayMax || 0) >= 3600),
     AW('lamp3', 1, 'Night Light', 'Fully upgrade the Night Lamp', () => S.lamp >= 3),
@@ -942,7 +1007,7 @@
     el.innerHTML = `${ico('trophy' + a.tier, 40)}<span><small>${a.tier === 2 ? 'GOLD AWARD' : 'AWARD UNLOCKED'}</small><b>${esc(a.name)}</b><em>${esc(a.desc)} · +1% income</em></span>`;
     hydrate(el); box.appendChild(el);
     while (box.children.length > 3) box.firstElementChild.remove();
-    el.addEventListener('click', () => { el.remove(); setTab('records'); });
+    el.addEventListener('click', () => { el.remove(); ui.sub.records = 'awards'; setTab('records'); });
     const r = el.getBoundingClientRect(); setTimeout(() => { if (!el.isConnected) return; IMI.burst(r.left + 30, r.top + r.height / 2, ['star', 'spark'], 8); }, 380);
     setTimeout(() => { if (IMI.reduceMotion) return el.remove(); el.classList.add('out'); el.addEventListener('animationend', () => el.remove(), { once: true }); }, 4200);
   }
@@ -967,18 +1032,21 @@
     const mins = Math.floor(st.secs / 60), played = mins >= 60 ? `${Math.floor(mins / 60)}h ${mins % 60}m` : `${mins}m ${Math.floor(st.secs % 60)}s`;
     const row = (k, v) => `<div class="o-row"><span>${k}</span><b>${v}</b></div>`;
     const sorted = [...AWARDS].sort((a, b) => (!!S.awards[b.id] - !!S.awards[a.id]));
-    morph($('#o-records'), `
-      <p class="o-lede">The Hall of Records keeps score. Every award adds <b>1%</b> to all banana income (royalties and rights sales). You have <b>${cnt('r-aw', awardCount())}/${AWARDS.length}</b>, worth <b>+${cnt('r-aw2', awardCount())}%</b>.</p>
-      ${printHTML()}
+    const tabs = [['awards', 'Awards'], ['stats', 'Stats'], ['log', 'Log']];
+    if (!tabs.some(t => t[0] === ui.sub.records)) ui.sub.records = 'awards';
+    const sub = ui.sub.records;
+    tabs[0].push(sub !== 'awards' && ui.unseen ? ui.unseen : 0);
+    if (sub === 'awards') ui.unseen = 0;
+    const awardsHTML = `<p class="o-lede"><b>${cnt('r-aw', awardCount())}/${AWARDS.length}</b> awards, <b>+${cnt('r-aw2', awardCount())}%</b> income (each adds 1%).</p>
+      <div class="o-awards">${sorted.map((a, n) => { const on = !!S.awards[a.id]; return `<div class="o-award t${a.tier}${on ? '' : ' locked'}" style="--n:${n}">${ico(on ? 'trophy' + a.tier : 'trophy0', 36)}<span><b>${esc(a.name)}</b><small>${esc(a.desc)}</small></span></div>`; }).join('')}</div>`;
+    const logHTML = `<ol class="o-log">${S.log.map(t => `<li>${esc(t)}</li>`).join('') || '<li class="o-dim">Nothing yet. Go type something.</li>'}</ol>`;
+    const statsHTML = `
       <div class="o-grid">
         <div class="o-card"><h3>Typing</h3>${row('Letters typed', cnt('r-let', st.letters))}${row('By hand', cnt('r-man', st.manual))}${row('By typists', cnt('r-aut', st.letters - st.manual))}${row('Favourite letter', top ? `${top[0]} (${fmt(top[1])})` : '-')}${row('Best tap streak', 'x' + cnt('r-best', S.best))}${row('Words banked', cnt('r-wds', st.words))}${row('Letters harvested', cnt('r-hv', st.harvested || 0))}</div>
         <div class="o-card"><h3>Publishing</h3>${row('Titles sold', `${authoredSold()}/${BOOKS}${S.stats.pitchSold ? ' + ' + S.stats.pitchSold + ' pitched' : ''}`)}${row('Rights sales', cnt('r-lump', st.lump, true))}${row('Royalties earned', cnt('r-roy', S.royTotal, true))}${row('Royalties now', fmtRate(royRate()) + '/s')}${row('Deals signed', `${DEALS.filter(x => S.deals[x.id]).length}/${DEALS.length}`)}${row('Division income', fmtRate(divRate()) + '/s')}${row('Manuscripts released', cnt('r-man2', totalReleased()))}${row('Printings completed', S.printing)}${row('Legacy stars', `${S.legacy.stars} (${S.legacy.total} earned)`)}${row('Best sale price', 'x' + (st.bestMult || 1).toFixed(2))}</div>
         <div class="o-card"><h3>Luck &amp; time</h3>${row('Golden bananas caught', cnt('r-gold', S.gold))}${row('Rotten bananas touched', cnt('r-rot', st.rotten))}${row('Typed in storms', cnt('r-storm', st.storm))}${row('Typed at night', cnt('r-night', st.night))}${row('Time on the floor', played)}</div>
-      </div>
-      <h3 class="o-h">Field log</h3>
-      <ol class="o-log">${S.log.map(t => `<li>${esc(t)}</li>`).join('') || '<li class="o-dim">Nothing yet. Go type something.</li>'}</ol>
-      <h3 class="o-h">Awards</h3>
-      <div class="o-awards">${sorted.map((a, n) => { const on = !!S.awards[a.id]; return `<div class="o-award t${a.tier}${on ? '' : ' locked'}" style="--n:${n}">${ico(on ? 'trophy' + a.tier : 'trophy0', 36)}<span><b>${esc(a.name)}</b><small>${esc(a.desc)}</small></span></div>`; }).join('')}</div>`);
+      </div>`;
+    morph($('#o-records'), subTabs('records', tabs) + (sub === 'awards' ? awardsHTML : sub === 'stats' ? statsHTML : logHTML));
     hydrate($('#o-records'));
   }
 
@@ -1010,7 +1078,7 @@
     else if (typeof Weather !== 'undefined' && Weather.state > 0) out.push('Rain delays typing. Monkeys in leaf hats report improved morale.');
     if (document.body.classList.contains('night')) out.push('Night shift begins. Fireflies file for overtime.');
     if (royBase() > 0) out.push(`Royalties reach ${fmtRate(royRate())} bananas per second. Accountants dizzy.`);
-    if (S.desks.some(d => d.keeper.owned)) out.push('Word keepers keep words. Experts call this “keeping”.');
+    out.push('Word keepers keep words. Experts call this “keeping”.');
     if (S.hold) out.push('New study: holding a key is also a kind of typing.');
     const bankN = Object.values(S.bank).reduce((a, b) => a + b, 0); if (bankN > 30) out.push(`The word bank holds ${bankN} words. Several are lonely.`);
     if (S.best >= 50) out.push(`Tap champion reaches x${S.best}. Thumbs have filed for appeal.`);
@@ -1028,7 +1096,7 @@
     if (S.desks[5].owned) out.push('Moonflower Grand arrives. Nobody dares to type a short word on it.');
     if (awardCount() >= 5) out.push(`The trophy shelf holds ${awardCount()} awards and has begun to wobble.`);
     if (authoredSold() >= BOOKS) out.push('THE COMPLETE WORKS are complete. Monkeys request a longer shelf.');
-    S.desks.forEach(d => { const f = focusRecipe(d); if (f) out.push(`Typists heard whispering words from “${f.title}”.`); });
+    { const f = focusRecipe(); if (f) out.push(`Typists heard whispering words from “${f.title}”.`); }
     return out;
   }
   function nextHeadline() {
@@ -1115,7 +1183,7 @@
           S.stats.letters += n; rep.letters += n;
           if (d.crew.length) { const each = n / d.crew.length; for (let q = 0; q < d.crew.length; q++) grantXp(d, q, each, true); }
         }
-        if (d.keeper.owned && d.keeper.on) keeperBulk(d, i, Math.max(6, Math.ceil(dt / .4)));
+        if (d.keeper.owned && d.keeper.on) keeperBulk(d, i, Math.max(2, Math.ceil(dt * eff * (museOn('hemi') ? 2 : 1) / KEEPER_PERIOD[i])));
       });
     }
     S.desks.forEach((d, i) => {                                   // rebuild the tray from what is left in the drawers
@@ -1129,7 +1197,7 @@
     if (rep.roy > 0) { S.royTotal += rep.roy; bananas.add(rep.roy); }
     rep.div = Math.floor(divBase() * sec * eff); if (rep.div > 0) { S.divTotal += rep.div; bananas.add(rep.div); }
     S.stats.awayMax = Math.max(S.stats.awayMax || 0, awaySec);
-    rep.ready = RECIPES.filter(canWrite).length;
+    rep.ready = readyList().length;
     return rep;
   }
   function showWelcome(rep) {
@@ -1193,7 +1261,7 @@
       bananas.earn(prize, at); IMI.burst(at[0], at[1], ['banana', 'spark', 'star'], 16);
       if (big) { const now = performance.now(); buffs.frenzy = now + 30000; buffs.golden = now + 30000; cheer(2400, 'PARTY!'); }
       logIt(`Opened the day ${ds.streak} banana crate: ${fmtBig(prize)} bananas.`); newsPush(`A banana crate arrives on day ${ds.streak} of the streak. Loyalty is rewarded, mostly with fruit.`);
-      mark(); save();
+      mark(); save(); IMI.emit('daily', { streak: ds.streak });
     };
     chest.addEventListener('click', open);
     btn.addEventListener('click', () => (opened ? (btn.textContent === 'Collect' && collect()) : open()));
@@ -1219,8 +1287,8 @@
   const roulette = list => { let r = rand() * list.reduce((a, [, w]) => a + w, 0); for (const [id, w] of list) { r -= w; if (r <= 0) return id; } return list[0][0]; };
   function museGift(n) {
     const top = S.desks.reduce((m, d, i) => (d.owned ? i : m), 0);
-    const focused = S.desks.filter(d => d.owned).map(focusRecipe).filter(Boolean);
-    const pool = focused.length ? focused : RECIPES.filter(r => !S.written[r.id] && r.band <= top);
+    const focused = focusRecipe() ? [focusRecipe()] : [];
+    const pool = focused.length ? focused : RECIPES.filter(r => !S.written[r.id] && inPlay(r) && r.band <= top);
     const needs = [];
     for (const r of pool) for (const w in r.need) for (let k = stock(w); k < r.need[w]; k++) needs.push(w);
     const got = [];
@@ -1239,7 +1307,7 @@
     floatText(msg, x, y - 20, good ? '#ffd23a' : '#ff8a70', true);
     logIt(good ? `Caught a golden banana: ${msg.toLowerCase()}.` : `Touched a rotten banana: ${msg.toLowerCase()}.`);
     shock(x, y, good ? '#ffd23a' : '#9bd16a', good);
-    if (good) { S.gold++; flash('#ffe98a'); IMI.sfx.ding(); IMI.burst(x, y, ['banana', 'spark', 'star'], 16); vib([15, 30, 15]); cheer(1200, 'OOH!'); }
+    if (good) { S.gold++; IMI.emit('gold', { n: S.gold }); flash('#ffe98a'); IMI.sfx.ding(); IMI.burst(x, y, ['banana', 'spark', 'star'], 16); vib([15, 30, 15]); cheer(1200, 'OOH!'); }
     else { S.stats.rotten++; IMI.sfx.shake(); IMI.burst(x, y, ['drop', 'leaf'], 10); vib(60); }
     newsPush(good ? 'GOLDEN BANANA caught. Witnesses say it was “extremely shiny”.' : 'Rotten banana touched. Witnesses recoil; one files a complaint.');
     mark(); save();
@@ -1266,7 +1334,7 @@
       e.stopPropagation(); const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
       end(); goldEffect(roulette(rotten ? ROT_FX : GOLD_FX), x, y);
     });
-    IMI.sfx.tick();
+    IMI.sfx.tick(); if (!rotten) IMI.emit('goldspawn');
     if (!rotten && ui.tab === 'floor' && typists.length) { const t = typists[Math.floor(rand() * typists.length)]; say(t, 'GOLD!'); t.hop = 12; }
   }
   /* the header toys: core.js owns the buttons and their recharge, these are what they do */
@@ -1277,11 +1345,13 @@
     floatText(`+${n} letters`, at[0], at[1] + 50, '#7be05a', true); shock(at[0], at[1], '#7be05a'); mark();
     return `COCONUT CRACKED! +${n} letters for ${DESKS[S.sel].name}.`;
   }
-  IMI.ops = { spawnGold, royRate, simulateAway, genPitch, newOffers, perk };
+  /* a cheap read-only view for the tutorial */
+  const snap = () => ({ typed: S.stats.letters, letters: totalLetters(cur()), words: S.stats.words, paws: totalPaws(), sold: Object.keys(S.written).length, bananas: bananas.get(), ready: readyList().length, tab: ui.tab, sub: ui.sub, desk: S.sel, owned: S.desks.filter(d => d.owned).length, deskPrice: DESKS[1].price, gold: S.gold, printing: S.printing, stars: starsNow(), hireCost: PAW_COST[0], hot: S.market.v.some((v, b) => S.desks[b] && S.desks[b].owned && marketMult(b) >= 1.4), pitch: !!firstPitch(), museSlots: museSlots() });
+  IMI.ops = { snap, spawnGold, royRate, simulateAway, genPitch, newOffers, perk, reset: () => ACTIONS.reset() };
   /* Balance harness hook (tools/balance.html): lets a bot drive the real game logic. Not used by the site itself. */
   Object.defineProperty(IMI.ops, 'dev', { configurable: true, get: () => ({
-    S: () => S, holdRate, ui, tick, press, genPitch, newOffers, buyUp, buy, writeTitle, bankWord, keeperStep, canWrite, RECIPES, RBY, DESKS, UPS, upPlan, upLock, DIVS, divPlan, releaseDiv, DEALS, SHOP, LAMP, MUSES, MK_BASE, mkCost,
-    GARDEN_COSTS, MILES, focusNeeds, focusRecipe, stock, totalLetters, soldCount, royBase, divBase, salePay, marketMult, checkAwards, starsNow, museSlots, registerPitch, pitchActive, PITCH_MAX, buffs, makeCopies,
+    S: () => S, holdRate, ui, tick, press, genPitch, newOffers, buyUp, buy, writeTitle, bankWord, keeperStep, canWrite, RECIPES, RBY, DESKS, KEEPER_PERIOD, UPS, upPlan, upLock, DIVS, divPlan, releaseDiv, DEALS, SHOP, LAMP, MUSES, MK_BASE, mkCost,
+    GARDEN_COSTS, MILES, focusNeeds, focusRecipe, stock, totalLetters, soldCount, kidsSold, kidsListed, KIDS, royBase, divBase, salePay, marketMult, checkAwards, starsNow, museSlots, registerPitch, pitchActive, PITCH_MAX, buffs, makeCopies,
     plant, harvest, gardenTime, gardenYield, BAND_WORDS, target, ensureCrew, doPrint, awayCap, awayEff, LEG, legLvl, ROY_BASE, RATE, comboHit: () => comboHit(), setSel: i => { S.sel = i; }
    }) });
 
@@ -1290,7 +1360,7 @@
     const c = lcount(w);
     for (const k in c) if ((d.letters[k] || 0) < c[k]) return false;
     for (const k in c) for (let n = 0; n < c[k]; n++) takeLetter(d, k);
-    S.stats.words++; S.bank[w] = stock(w) + 1; ui.lastBanked = w; ui.bankedAt = performance.now(); mark(); return true;
+    S.stats.words++; S.bank[w] = stock(w) + 1; ui.lastBanked = w; ui.bankedAt = performance.now(); mark(); IMI.emit('bank', { word: w }); return true;
   }
   function keeperStep(d, i) {
     const k = d.keeper; if (!k.owned || !k.on) return;
@@ -1312,7 +1382,7 @@
     const t = $('#oTray'); if (!t) return; const b = t.getBoundingClientRect();
     floatText('+' + w, b.left + 20 + rand() * Math.max(10, b.width - 80), b.top); if (typists.length) kick(false);
   }
-  const canWrite = r => !S.written[r.id] && Object.keys(r.need).every(w => stock(w) >= r.need[w]);
+  const canWrite = r => !S.written[r.id] && inPlay(r) && Object.keys(r.need).every(w => stock(w) >= r.need[w]);
   /* the title's word chips lift off the card and pour into the sell button, like pages into a binding */
   function gatherWords(btn) {
     const card = btn.closest('.o-card'); if (!card || IMI.reduceMotion) return;
@@ -1330,8 +1400,9 @@
     if (fromEl) gatherWords(fromEl);
     for (const w in r.need) { S.bank[w] -= r.need[w]; if (S.bank[w] <= 0) delete S.bank[w]; }
     const mk = marketMult(r.band), pay = salePay(r); S.stats.lump += pay; S.stats.bestMult = Math.max(S.stats.bestMult || 0, mk);
-    S.written[id] = true; if (r.gen) S.stats.pitchSold = (S.stats.pitchSold || 0) + 1;
-    S.desks.forEach(d => { if (d.keeper.focus === id) d.keeper.focus = null; });
+    dropCaches(); S.written[id] = true; if (r.gen) S.stats.pitchSold = (S.stats.pitchSold || 0) + 1;
+    if (S.focus === id) S.focus = null;
+    pickAutoFocus();
     const at = fromEl ? IMI.centerOf(fromEl) : undefined;
     bananas.earn(pay, at);
     if (at) { IMI.burst(at[0], at[1], ['banana', 'spark', 'leaf'], 14); shock(at[0], at[1], '#ffd23a', true); }
@@ -1347,6 +1418,7 @@
     else if (n === 1) IMI.banner(PX ? 'FIRST PRINTING!' : 'First Printing!');
     else if (n % 4 === 0) IMI.banner(PX ? 'BESTSELLER!' : 'Bestseller!');
     mark(); save();
+    IMI.emit('sold', { id, pay });
   }
 
   /* ================= training upgrades (spend this desk's letters) ================= */
@@ -1357,20 +1429,20 @@
     { k: 'rapid',    name: 'Rapid touch', base: 75, grow: 1.7, max: 8, desc: 'Held typing here gains +2 letters per second per level.', needs: 'hold' },
     { k: 'vowel',    name: 'Vowel rhythm', base: 30, tier: 1, desc: 'After a consonant, a vowel comes up 45%, 65%, then 80% of the time.' },
     { k: 'ink',      name: 'Fresh ink', base: 40, tier: 1, desc: 'Leans 25%, 45%, then 65% toward the letter that finishes a word you have never banked.' },
-    { k: 'practice', name: 'Recipe practice', base: 100, tier: 1, keeper: 1, desc: 'Typists chase the focused title harder: 75%, 85%, then 95% (base 65%).' },
-    { k: 'stock',    name: 'Stock-aware ink', base: 80, tier: 1, keeper: 1, desc: 'Leans 20%, 40%, then 60% toward words below the keeper’s targets, duplicates included.' },
-    { k: 'ribbon',   name: 'Spare ribbon', base: 150, tier: 1, keeper: 1, desc: 'Each typist press has a 10%, 20%, then 30% chance to swap a surplus letter for a missing ingredient.' }
+    { k: 'practice', name: 'Recipe practice', base: 100, tier: 1, desc: 'Typists chase the focused title harder: 75%, 85%, then 95% (base 65%).' },
+    { k: 'stock',    name: 'Stock-aware ink', base: 80, tier: 1, desc: 'Leans 20%, 40%, then 60% toward words below the keeper’s targets, duplicates included.' },
+    { k: 'ribbon',   name: 'Spare ribbon', base: 150, tier: 1, desc: 'Each typist press has a 10%, 20%, then 30% chance to swap a surplus letter for a missing ingredient.' }
   ];
   const upLevel = (u, d, i) => (u.k === 'paw' ? Math.max(0, d.paws - (i ? 1 : 0)) : d.up[u.k]);
   const upMax = u => (u.k === 'paw' ? u.max : u.tier ? 3 : u.max);
-  const upCost = (u, d, i) => { const l = upLevel(u, d, i), bs = u.k === 'paw' ? PAW_COST[i] : u.base; return Math.round(u.tier ? bs * TIER[l] : bs * Math.pow((u.k === 'paw' ? PAW_GROW : u.grow || 1.7), l)); };
-  const upLock = (u, d) => (u.needs === 'hold' && !S.hold ? 'Needs Hold to type (Banana Logistics)' : u.keeper && !d.keeper.owned ? 'Needs this desk’s word keeper' : '');
+  const upCost = (u, d, i) => { const l = upLevel(u, d, i), bs = u.k === 'paw' ? PAW_COST[i] * (1 + PAW_DESK_STEP * i) : u.base; return Math.round(u.tier ? bs * TIER[l] : bs * Math.pow((u.k === 'paw' ? PAW_GROW : u.grow || 1.7), l)); };
+  const upLock = (u, d) => (u.needs === 'hold' && !S.hold ? 'Needs Hold to type (Banana Logistics)' : '');
   /* how many levels a purchase of `want` covers and what it costs (Max stops where your letters run out) */
   function upPlan(u, d, i, want) {
     const max = upMax(u), have = totalLetters(d); let lv = u.k === 'paw' ? d.paws : d.up[u.k], n = 0, cost = 0;
     while (n < want && lv + n < max) {
       const l = u.k === 'paw' ? Math.max(0, lv + n - (i ? 1 : 0)) : lv + n;
-      const bs = u.k === 'paw' ? PAW_COST[i] : u.base, c = Math.round(u.tier ? bs * TIER[l] : bs * Math.pow((u.k === 'paw' ? PAW_GROW : u.grow || 1.7), l));
+      const bs = u.k === 'paw' ? PAW_COST[i] * (1 + PAW_DESK_STEP * i) : u.base, c = Math.round(u.tier ? bs * TIER[l] : bs * Math.pow((u.k === 'paw' ? PAW_GROW : u.grow || 1.7), l));
       if (want === Infinity && n > 0 && cost + c > have) break;
       cost += c; n++;
     }
@@ -1385,6 +1457,7 @@
     while (left-- > 0) { const top = Object.keys(d.letters).sort((a, b) => d.letters[b] - d.letters[a])[0]; takeLetter(d, top); }
     if (u.k === 'paw') { d.paws += plan.n; ensureCrew(d); } else d.up[u.k] += plan.n;
     IMI.sfx.ding(); mark(); save();
+    if (u.k === 'paw') IMI.emit('hire', { n: plan.n, desk: i });
   }
 
   /* ================= shop (spend bananas) ================= */
@@ -1394,11 +1467,8 @@
       const d = S.desks[i], p = DESKS[i].price;
       if (chal('haiku') && i >= 2) return;
       if (d.owned || !S.desks[i - 1]?.owned || !bananas.spend(p)) return;
-      d.owned = true; d.paws = 1; ensureCrew(d); S.sel = i; ui.dropIn = true; cheer(2000, 'NEW!'); newsPush(`${DESKS[i].name} installed. The monkeys argue over who touches it first.`); IMI.banner(PX ? 'NEW TYPEWRITER!' : 'New Typewriter!'); buildStage();
+      d.owned = true; d.keeper.owned = true; d.paws = 1; ensureCrew(d); pickAutoFocus(); S.sel = i; ui.dropIn = true; cheer(2000, 'NEW!'); newsPush(`${DESKS[i].name} installed. The monkeys argue over who touches it first.`); IMI.banner(PX ? 'NEW TYPEWRITER!' : 'New Typewriter!'); buildStage(); IMI.emit('desk', { i });
       logIt(`${DESKS[i].name} installed on the canopy. It types ${DESKS[i].lo}–${DESKS[i].hi} letter words.`);
-    } else if (what === 'keeper') {
-      const d = S.desks[i]; if (!d.owned || d.keeper.owned || !bananas.spend(SHOP.keeper)) return;
-      d.keeper.owned = true; logIt(`A word keeper took over the ${DESKS[i].name} stockroom.`);
     } else if (what === 'plot') {
       const nx = GARDEN_COSTS[S.garden.beds.length - 2]; if (!nx || !bananas.spend(nx)) return;
       S.garden.beds.push(null); logIt('Cleared another plot in the Coconut R&D garden.');
@@ -1474,6 +1544,7 @@
     const i = S.sel, D = DESKS[i];
     const pane = $('#o-floor');
     pane.innerHTML = `
+      <div class="o-stagewrap">
       <div class="o-stage" id="oStage" data-desk="${D.id}" tabindex="0" role="button" aria-label="${esc(D.name)} typewriter. Tap, click, or press Space to type a letter.">
         <div class="o-scene" aria-hidden="true">
           <div class="o-wall"></div><div class="o-prop"></div>
@@ -1485,7 +1556,6 @@
           <div class="o-drips">${Array.from({ length: 6 }, (_, k) => `<i style="left:${8 + k * 16 + rand() * 8}%;--d:${1.1 + rand() * .9}s;--dl:${-rand() * 2}s"></i>`).join('')}</div>
           <div class="o-flies">${Array.from({ length: 7 }, () => `<i style="left:${5 + rand() * 90}%;top:${10 + rand() * 50}%;--d:${5 + rand() * 5}s;--dl:${-rand() * 8}s"></i>`).join('')}</div>
         </div>
-        <div class="o-combo" id="oCombo" aria-hidden="true"><span id="oComboN"></span><i class="o-meter"><i id="oMeter"></i></i></div>
         <div class="o-hud"><div class="o-stats" id="oStats"></div><div class="o-focus" id="oFocus"></div></div>
         <div class="o-dangle" id="oDangle" aria-hidden="true"></div>
         <div class="o-tw mk${cur().mk || 0} ${partsOf(cur())}" id="oTw">
@@ -1497,6 +1567,10 @@
               <div class="o-krow"><b class="o-key o-space" data-k=" "></b></div></div>
           </div>
         </div>
+      </div>
+      <div class="o-fx">
+        <div class="o-combo" id="oCombo" aria-hidden="true"><span id="oComboN"></span><i class="o-meter"><i id="oMeter"></i></i></div>
+      </div>
       </div>
       <div class="o-info">
         <div class="o-tray" id="oTray" aria-label="Recent letters"></div>
@@ -1652,15 +1726,18 @@
 
   /* ---- the bookshelf: one spine per title you have sold, ghost slots for the rest ---- */
   const hashOf = str => { let h = 0; for (const c of str) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
+  const SHELF_MAX = 120;
   function shelfHTML() {
-    const ids = [...new Set([...Object.keys(S.editions || {}), ...Object.keys(S.written)])].filter(id => RBY[id]);
+    const all = [...new Set([...Object.keys(S.editions || {}), ...Object.keys(S.written)])].filter(id => RBY[id]);
+    const ids = all.length > SHELF_MAX ? [...all.filter(id => !RBY[id].kid), ...all.filter(id => RBY[id].kid)].slice(0, SHELF_MAX) : all;   // authored spines first; the kids' shelf is capped
+    const more = all.length - ids.length;
     const books = ids.map(id => {
       const r = RBY[id], h = hashOf(id), w = Math.round(24 + Math.min(r.total, 40) * .5);
       const ht = 78 + r.band * 12 + h % 14, hue = [150, 345, 215, 40, 275, 210][r.band] + (h % 30) - 15;
       const drop = ui.fresh === id && !ui.dropped[id]; if (drop) ui.dropped[id] = true;
       return `<button type="button" class="o-spine b${r.band}${drop ? ' drop' : ''}${ui.pulled === id ? ' pulled' : ''}${S.written[id] ? '' : ' old'}" data-act="pull" data-id="${id}" style="--bw:${w}px;--bh:${ht}px;--hue:${hue};--tilt:${(h % 5) - 2}deg;--sd:${(h % 50) / 10}s" title="${esc(r.title)}" aria-label="${esc(r.title)}"><span>${esc(r.title)}</span></button>`;
     }).join('');
-    const ghosts = Array.from({ length: Math.max(0, BOOKS - ids.filter(id => !RBY[id].gen).length) }, () => '<i class="o-slot"></i>').join('');
+    const ghosts = Array.from({ length: Math.min(24, Math.max(0, BOOKS - ids.filter(id => !RBY[id].gen && !RBY[id].kid).length)) }, () => '<i class="o-slot"></i>').join('') + (more ? `<span class="o-chip">+${more} more</span>` : '');
     const plate = ui.pulled && (S.written[ui.pulled] || (S.editions || {})[ui.pulled]) ? (() => { const r = RBY[ui.pulled]; return `<div class="o-plate"><div class="o-row"><h3>${esc(r.title)}</h3><span class="o-tag b${r.band}">${DESKS[r.band].lo}–${DESKS[r.band].hi}</span></div><p class="o-dim">${r.total} words · rights sold for ${price(r.pay)} · ${S.written[ui.pulled] ? `pays <b>${fmtRate(bookRoy(r))}/s</b> in royalties` : '<b>out of print</b>: sell it again in this printing'}${(S.editions || {})[ui.pulled] ? ` · ${(S.editions || {})[ui.pulled]} earlier edition${(S.editions || {})[ui.pulled] > 1 ? 's' : ''}` : ''}</p><div class="o-read">${esc(r.text)}</div></div>`; })() : '';
     return `<div class="o-shelfrow">${books}${ghosts}</div>${plate}`;
   }
@@ -1691,6 +1768,7 @@
     const d = cur(), i = S.sel, have = totalLetters(d), want = buyWant();
     morph($('#o-training'), `
       <p class="o-lede">Primate Resources hires and trains the monkeys on <b>${esc(DESKS[i].name)}</b>. Training costs <b>letters from this desk</b> (the biggest piles go first). You hold ${fmt(have)}.</p>
+      <div class="o-row o-left"><span class="o-dim">Keeper</span>${keeperSeg(i)}</div>
       <div class="o-row o-left"><span class="o-dim">Buy</span><span class="o-seg">${[1, 10, 100, 'max'].map(n => `<button type="button" data-act="buyn" data-n="${n}" aria-pressed="${String(ui.buyN) === String(n)}">${n === 'max' ? 'Max' : 'x' + n}</button>`).join('')}</span></div>
       <div class="o-grid">${UPS.map(u => {
         const lvl = u.k === 'paw' ? d.paws : d.up[u.k], max = upMax(u), lock = upLock(u, d), done = lvl >= max, plan = upPlan(u, d, i, want);
@@ -1710,6 +1788,13 @@
     hydrate($('#o-training'));
   }
 
+  function keeperStrip() {
+    const f = focusRecipe();
+    return `<div class="o-card o-kstrip" id="oKeepers"><div class="o-row"><h3>Keepers’ goal</h3><span class="o-seg"><button type="button" data-act="autofocus" aria-pressed="${S.autoFocus}">Auto</button><button type="button" data-act="go" data-tab="press" aria-pressed="${!S.autoFocus}">Manual</button></span></div>
+      ${f ? `<p><b>${esc(f.title)}</b> <span class="o-dim">${progress(f)}/${f.total} words</span></p><div class="o-progrow">${bar(progress(f), f.total)}</div>` : '<p class="o-dim">No goal yet.</p>'}
+      <div class="o-row o-left"><button type="button" class="o-btn sm" data-act="go" data-tab="press">Change</button></div>
+      <div class="o-chips">${DESKS.map((X, n) => S.desks[n].owned ? `<button type="button" class="o-chip o-kchip${S.desks[n].keeper.on ? '' : ' off'}" data-act="ktoggle" data-i="${n}" title="${KPAUSE}">${X.name.split(' ')[0]}: ${S.desks[n].keeper.on ? 'Collecting' : 'Paused'}</button>` : '').join('')}</div></div>`;
+  }
   function renderLab(force) {
     const pane = $('#o-lab'); if (!force && pane.contains(document.activeElement) && document.activeElement.matches('input')) return;
     const d = cur(), i = S.sel, D = DESKS[i], f = focusRecipe(d);
@@ -1719,6 +1804,7 @@
     words.sort((a, b) => ((stock(a.w) === 0) !== (stock(b.w) === 0) ? (stock(a.w) === 0 ? -1 : 1) : (needed[b.w] ? 1 : 0) - (needed[a.w] ? 1 : 0) || a.w.localeCompare(b.w)));
     const ownedBank = Object.keys(S.bank).sort((a, b) => a.length - b.length || a.localeCompare(b));
     morph(pane, `
+      ${keeperStrip()}
       <p class="o-lede">Coconut R&amp;D turns <b>${esc(D.name)}</b> letters into words. Any letters on this desk can combine; letters never move between desks, but finished words go to the shared bank.</p>
       ${gardenHTML()}
       <div class="o-card"><h3>Letters</h3>
@@ -1728,73 +1814,77 @@
         <div class="o-words">${words.slice(0, 60).map(({ w, n }) => `<button type="button" class="o-word${!stock(w) ? ' new' : ''}${needed[w] && stock(w) < needed[w] ? ' need' : ''}" data-act="bankword" data-w="${w}" ${n > 0 ? '' : 'disabled'}><span>${w}</span><i>${n > 0 ? 'x' + n : ''}${stock(w) ? ' · ' + stock(w) + ' banked' : ''}</i></button>`).join('') || '<p class="o-dim">No words can be made from these letters yet.</p>'}</div>
         <p class="o-dim">Green: never banked. Gold: needed by this desk’s focused title.</p></div>
       <div class="o-card"><h3>Shared word bank</h3>
-        <div class="o-chips">${ownedBank.map(w => `<span class="o-chip b${bandOf(w.length)}${w === ui.lastBanked && performance.now() - ui.bankedAt < 800 ? ' pop' : ''}">${w} x${S.bank[w]}</span>`).join('') || '<span class="o-dim">Empty. Bank a word above.</span>'}</div></div>`);
-    const inp = $('#oBankQ'); if (!inp._wired) inp._wired = 1, inp.addEventListener('input', () => { ui.bankq = inp.value; renderLab(true); const n = $('#oBankQ'); n.focus(); n.setSelectionRange(n.value.length, n.value.length); });
-  }
-
-  function renderSecurity(force) {
-    const pane = $('#o-security'); if (!force && pane.contains(document.activeElement) && document.activeElement.matches('input')) return;
-    const d = cur(), D = DESKS[S.sel], k = d.keeper, f = focusRecipe(d), ovr = Object.entries(k.targets);
-    morph(pane, `
-      <p class="o-lede">Canopy Security keeps a word keeper on each desk. A keeper turns its desk’s letters into shared word stock while you are away, up to the targets you set.</p>
-      <div class="o-grid">
-        <div class="o-card"><h3>${esc(D.name)} keeper</h3>${!k.owned ? `<p>A watchful clerk who banks words from this desk’s letters.</p>
-          <button type="button" class="o-btn gold" data-act="buy" data-what="keeper" data-i="${S.sel}" ${bananas.get() < SHOP.keeper ? 'disabled' : ''}>Hire · ${price(SHOP.keeper)}</button>` : `
-          <div class="o-row"><span>State</span><span class="o-seg"><button type="button" data-act="kon" aria-pressed="${k.on}">Collecting</button><button type="button" data-act="koff" aria-pressed="${!k.on}">Paused</button></span></div>
-          <div class="o-row"><label for="oKdef">Default stack target (0–9999, 0 skips)</label><input class="o-num" id="oKdef" type="number" min="0" max="9999" value="${k.def}" data-in="kdef"></div>
-          <p class="o-dim">Lowering a target keeps stock. Banking by hand can exceed it.</p>`}</div>
-        ${k.owned ? `<div class="o-card"><h3>Title focus</h3><p>${f ? `Working on <b>${esc(f.title)}</b>. The keeper banks its words first and reserves incomplete ingredients; typists lean toward its letters.` : 'No title selected. Pick one from Vine Infrastructure.'}</p>
-          ${f ? '<button type="button" class="o-btn" data-act="unfocus">Clear focus</button>' : `<button type="button" class="o-btn" data-act="go" data-tab="press">Choose a title</button>`}</div>
-        <div class="o-card"><h3>Per-word targets</h3>
-          <div class="o-chips">${ovr.map(([w, t]) => `<span class="o-chip">${w} → ${t} <button type="button" class="o-x" data-act="ovrdel" data-w="${w}" aria-label="Remove override for ${w}">x</button></span>`).join('') || '<span class="o-dim">No overrides.</span>'}</div>
-          <div class="o-row o-left"><input class="o-num wide" id="oOvrW" placeholder="word" value="${esc(ui.ovr)}" autocomplete="off" data-in="ovrw" aria-label="Word"><input class="o-num" id="oOvrN" type="number" min="0" max="9999" value="${ui.ovrn}" data-in="ovrn" aria-label="Target"><button type="button" class="o-btn" data-act="ovrset">Set</button></div></div>` : ''}
-      </div>
-      <div class="o-card"><h3>All keepers</h3><div class="o-chips">${DESKS.map((X, n) => { const o = S.desks[n]; return `<span class="o-chip">${X.name}: ${!o.owned ? 'no machine' : !o.keeper.owned ? 'no keeper' : o.keeper.on ? 'collecting' : 'paused'}${o.keeper.owned && focusRecipe(o) ? ' · ' + esc(focusRecipe(o).title) : ''}</span>`; }).join('')}</div></div>`);
+        <div class="o-chips">${ownedBank.map(w => `<span class="o-chip b${bandOf(w.length)}${w === ui.lastBanked && performance.now() - ui.bankedAt < 800 ? ' pop' : ''}">${w} x${S.bank[w]}</span>`).join('') || '<span class="o-dim">Empty. Bank a word above.</span>'}</div></div>
+      <details class="o-card o-adv"><summary><h3 style="display:inline">Advanced stock targets</h3></summary>
+        <div class="o-row"><label for="oKdef">${esc(D.name)} default stack target (0–9999, 0 skips)</label><input class="o-num" id="oKdef" type="number" min="0" max="9999" value="${d.keeper.def}" data-in="kdef"></div>
+        <div class="o-chips">${Object.entries(d.keeper.targets).map(([w, t]) => `<span class="o-chip">${w} → ${t} <button type="button" class="o-x" data-act="ovrdel" data-w="${w}" aria-label="Remove override for ${w}">x</button></span>`).join('') || '<span class="o-dim">No per-word targets.</span>'}</div>
+        <div class="o-row o-left"><input class="o-num wide" id="oOvrW" placeholder="word" value="${esc(ui.ovr)}" autocomplete="off" data-in="ovrw" aria-label="Word"><input class="o-num" id="oOvrN" type="number" min="0" max="9999" value="${ui.ovrn}" data-in="ovrn" aria-label="Target"><button type="button" class="o-btn" data-act="ovrset">Set</button></div>
+        <p class="o-dim">Keepers only bank what the goal needs unless you set targets. Lowering a target keeps stock.</p></details>`);
     hydrate(pane);
+    const inp = $('#oBankQ'); if (!inp._wired) inp._wired = 1, inp.addEventListener('input', () => { ui.bankq = inp.value; renderLab(true); const n = $('#oBankQ'); n.focus(); n.setSelectionRange(n.value.length, n.value.length); });
   }
 
   const chipsFor = r => Object.entries(r.need).sort((a, b) => a[0].length - b[0].length || a[0].localeCompare(b[0]))
     .map(([w, n]) => `<span class="o-chip b${bandOf(w.length)}${stock(w) >= n ? ' ok' : ''}">${w} ${Math.min(stock(w), n)}/${n}</span>`).join('');
-  function renderPress(force) {
-    const pane = $('#o-press'); if (!force && pane.contains(document.activeElement) && document.activeElement.matches('input')) return;
-    const q = ui.libq.trim().toLowerCase();
-    const list = RECIPES.filter(r => (!q || r.title.toLowerCase().includes(q)) &&
-      (ui.libf === 'all' || (ui.libf === 'written' ? S.written[r.id] : ui.libf === 'ready' ? canWrite(r) : !S.written[r.id])));
-    const written = Object.keys(S.written).length;
-    morph(pane, `
-      <p class="o-lede">Vine Infrastructure carries finished titles to the Jungle Press. Write a title and its rights are sold <b>once</b>, for good. ${written}/${BOOKS} written${S.stats.pitchSold ? ` (+${S.stats.pitchSold} pitched)` : ''}. Each recipe is the exact word count of the short edition.</p>
- ${marketHTML()}
-      ${pitchHTML()}
-      <div class="o-card o-shelf"><div class="o-row"><h3>Your bookshelf</h3><span class="o-dim">${written} sold · royalties ${fmtRate(royRate())}/s. Tap a spine to read it.</span></div>${shelfHTML()}</div>
-      <div class="o-card"><div class="o-row"><h3>Trophy shelf</h3><span class="o-dim">${awardCount()}/${AWARDS.length} · +${awardCount()}% income</span></div>${trophyHTML()}<button type="button" class="o-btn sm" data-act="go" data-tab="records">Hall of Records</button></div>
-      <input class="o-search" id="oLibQ" placeholder="Search titles…" value="${esc(ui.libq)}" autocomplete="off" aria-label="Search titles">
-      <div class="o-filters"><span class="o-seg">${[['all', 'All'], ['open', 'To write'], ['ready', 'Ready'], ['written', 'Written']].map(([k, n]) => `<button type="button" data-act="libf" data-f="${k}" aria-pressed="${ui.libf === k}">${n}</button>`).join('')}</span></div>
-      <div class="o-grid">${list.map(r => {
-        const done = S.written[r.id], ready = canWrite(r), d = cur(), foc = DESKS.filter((_, i) => focusRecipe(S.desks[i])?.id === r.id).map(x => x.name);
-        return `<div class="o-card o-book${done ? ' done' : ''}${ui.fresh === r.id ? ' fresh' : ''}${ready ? ' ready' : ''}"><div class="o-row"><h3>${esc(r.title)}${r.gen ? ' <small class="o-pit">pitch</small>' : ''}</h3><span class="o-tag b${r.band}">${DESKS[r.band].lo}–${DESKS[r.band].hi}</span></div>
-          <p class="o-dim">${r.total} words · rights ${price(done ? r.pay : salePay(r))}${!done && marketMult(r.band) !== 1 ? ` <span class="o-dim">(x${marketMult(r.band).toFixed(2)})</span>` : ''}${foc.length ? ' · focus: ' + foc.join(', ') : ''}</p>
+  const subTabs = (dept, items) => `<div class="o-subtabs" role="tablist">${items.map(([id, label, badge]) => `<button type="button" role="tab" data-act="sub" data-dept="${dept}" data-sub="${id}" aria-selected="${(ui.sub[dept] || items[0][0]) === id}">${label}${badge ? `<i class="o-subbadge">${badge}</i>` : ''}</button>`).join('')}</div>`;
+  const firstPitch = () => !(S.stats.pitched || 0) && soldCount() >= 1 && pitchActive() < PITCH_MAX;
+  const needDesks = r => [...new Set(Object.keys(r.need).map(w => bandOf(w.length)))].sort((a, b) => a - b);
+  const lockedDesk = r => needDesks(r).find(b => !S.desks[b].owned);
+  function bookCard(r) {
+        const done = S.written[r.id], ready = canWrite(r), foc = S.focus === r.id, lock = lockedDesk(r);
+    return `<div class="o-card o-book${done ? ' done' : ''}${ui.fresh === r.id ? ' fresh' : ''}${ready ? ' ready' : ''}"><div class="o-row"><h3>${esc(r.title)}${r.gen && !done ? ' <small class="o-pit">COMMISSIONED</small>' : ''}</h3><span class="o-tag b${r.band}">${DESKS[r.band].lo}–${DESKS[r.band].hi}</span></div>
+          <p class="o-dim">${r.total} words · rights ${price(done ? r.pay : salePay(r))}${!done && marketMult(r.band) !== 1 ? ` <span class="o-dim">(x${marketMult(r.band).toFixed(2)})</span>` : ''}${foc ? ' <span class="o-tag o-now">NOW WRITING</span>' : ''}</p>
           <div class="o-progrow">${bar(done ? r.total : progress(r), r.total)}<span class="o-dim">${done ? r.total : progress(r)}/${r.total}</span></div>
           <div class="o-chips">${chipsFor(r)}</div>
+          ${done ? '' : `<div class="o-chips o-needs"><span class="o-dim">Needs</span>${needDesks(r).map(b => `<span class="o-chip b${b}${S.desks[b].owned ? ' ok' : ''}">${DESKS[b].name.split(' ')[0]}</span>`).join('')}${lock !== undefined ? `<span class="o-warn">Needs ${DESKS[lock].name}</span>` : ''}</div>`}
           ${done ? `<i class="o-stamp${ui.fresh === r.id ? ' slam' : ''}">SOLD!</i>` : ''}
           ${ui.read === r.id ? `<div class="o-read">${esc(r.text)}</div>` : ''}
           <div class="o-row"><button type="button" class="o-btn sm" data-act="read" data-id="${r.id}">${ui.read === r.id ? 'Close' : 'Read'}</button>
-            ${done ? '<span class="o-lvl">WRITTEN &amp; SOLD</span>' : `<button type="button" class="o-btn sm" data-act="focus" data-id="${r.id}" ${d.keeper.owned && d.keeper.focus !== r.id ? '' : 'disabled'} title="${d.keeper.owned ? '' : 'Needs a word keeper on the selected desk'}">${d.keeper.focus === r.id ? 'Focused' : 'Focus'}</button>
+            ${done ? '<span class="o-lvl">WRITTEN &amp; SOLD</span>' : `<button type="button" class="o-btn sm" data-act="focus" data-id="${r.id}" ${foc || lock !== undefined ? 'disabled' : ''}>${foc ? 'Focused' : 'Focus'}</button>
             <button type="button" class="o-btn sm gold" data-act="write" data-id="${r.id}" ${ready ? '' : 'disabled'}>${ready && marketMult(r.band) >= 1.4 ? 'Sell now!' : 'Write &amp; sell'}</button>`}</div></div>`;
-      }).join('') || '<p class="o-dim">No titles match.</p>'}</div>
-      <div class="o-card o-archive"><h3>The Archive</h3>
+  }
+  function pressList() {
+    const q = ui.libq.trim().toLowerCase();
+    const list = RECIPES.filter(r => inPlay(r) || S.written[r.id]).filter(r => (!q || r.title.toLowerCase().includes(q)) &&
+      (ui.libf === 'all' || (ui.libf === 'written' ? S.written[r.id] : ui.libf === 'ready' ? canWrite(r) : ui.libf === 'pitched' ? r.gen && !S.written[r.id] : !S.written[r.id])));
+    const key = r => [canWrite(r) ? 0 : 1, S.focus === r.id ? 0 : 1, r.total - progress(r)];
+    list.sort((a, b) => { const x = key(a), y = key(b); return x[0] - y[0] || x[1] - y[1] || x[2] - y[2]; });
+    const shown = list.slice(0, ui.libLimit);
+    return `<input class="o-search" id="oLibQ" placeholder="Search titles…" value="${esc(ui.libq)}" autocomplete="off" aria-label="Search titles">
+      <div class="o-filters"><span class="o-seg">${[['open', 'To write'], ['ready', 'Ready'], ['pitched', 'Pitched'], ['written', 'Written'], ['all', 'All']].map(([k, n]) => `<button type="button" data-act="libf" data-f="${k}" aria-pressed="${ui.libf === k}">${n}</button>`).join('')}</span></div>
+      <div class="o-grid">${shown.map(bookCard).join('') || '<p class="o-dim">No titles match.</p>'}</div>
+      ${list.length > shown.length ? `<div class="o-row"><button type="button" class="o-btn sm" data-act="libmore">Show more (${list.length - shown.length})</button></div>` : ''}`;
+  }
+  function renderPress(force) {
+    const pane = $('#o-press'); if (!force && pane.contains(document.activeElement) && document.activeElement.matches('input')) return;
+    const sold = soldCount(), ready = readyList().length;
+    const tabs = [['titles', 'Titles', ready || ''], ...(sold >= 1 ? [['pitches', 'Pitches', firstPitch() ? '!' : ''], ['market', 'Market']] : []), ...(sold >= 3 ? [['archive', 'Archive']] : [])];
+    if (!tabs.some(t => t[0] === ui.sub.press)) ui.sub.press = 'titles';
+    const sub = ui.sub.press;
+    let body = '';
+    if (sub === 'titles') {
+      const fr = focusRecipe(), written = Object.keys(S.written).length;
+      body = `<div class="o-card o-goalbar" id="oGoal"><div class="o-row">${fr ? `<span>Now writing: <b>${esc(fr.title)}</b></span><span class="o-dim">${progress(fr)}/${fr.total} words</span>` : '<span>Pick a title below</span>'}</div>${fr ? bar(progress(fr), fr.total) : ''}
+          <div class="o-row o-left"><button type="button" class="o-btn sm" data-act="golist">Change</button><span class="o-seg"><button type="button" data-act="autotoggle" aria-pressed="${S.autoFocus}">Auto</button></span></div></div>
+        <div class="o-card o-shelf"><div class="o-row"><h3>Your bookshelf</h3><span class="o-dim">${written} sold · royalties ${fmtRate(royRate())}/s</span></div>${sold ? '<p class="o-dim">Tap a spine to read it.</p>' : '<p class="o-dim">Sell a title to put it here.</p>'}${shelfHTML()}</div>
+        <div id="oTitleList">${pressList()}</div>${KIDS.length ? `<p class="o-dim o-kidsline">Kids' reading list: ${kidsSold()} of ${KIDS.length} written</p>` : ''}`;
+    } else if (sub === 'pitches') body = pitchHTML();
+    else if (sub === 'market') body = `<p class="o-lede">Publishers pay more or less depending on demand. Sell when your title’s band is HOT. Weather and night change demand.</p>${marketHTML()}`;
+    else body = `<div class="o-card o-archive"><h3>The Archive</h3>
         <p class="o-dim" id="oArchNote" data-own>Loading the stacks…</p>
         <input class="o-search" id="oArchQ" placeholder="Search the complete manuscripts…" value="${esc(ui.archq)}" autocomplete="off" aria-label="Search the archive">
-        <div class="o-filters" id="oArchF" data-own></div><div class="o-grid" id="oArchRes" data-own></div></div>`);
-    if (!$('#oLibQ')._wired) $('#oLibQ')._wired = 1, $('#oLibQ').addEventListener('input', e => { ui.libq = e.target.value; renderPress(true); const n = $('#oLibQ'); n.focus(); n.setSelectionRange(n.value.length, n.value.length); });
-    if (!$('#oArchQ')._wired) $('#oArchQ')._wired = 1, $('#oArchQ').addEventListener('input', e => { ui.archq = e.target.value; renderArchive(); });
-    hydrate(pane); renderArchive();
+        <div class="o-filters" id="oArchF" data-own></div><div class="o-grid" id="oArchRes" data-own></div></div>`;
+    morph(pane, subTabs('press', tabs) + body);
+    const lq = $('#oLibQ'); if (lq && !lq._wired) lq._wired = 1, lq.addEventListener('input', e => { ui.libq = e.target.value; ui.libLimit = 24; renderPress(true); const n = $('#oLibQ'); n.focus(); n.setSelectionRange(n.value.length, n.value.length); });
+    const aq = $('#oArchQ'); if (aq && !aq._wired) aq._wired = 1, aq.addEventListener('input', e => { ui.archq = e.target.value; renderArchive(); });
+    hydrate(pane); if (sub === 'archive') renderArchive();
   }
 
   /* ---- archive: the 3,573 full manuscripts, locked until longer machines exist ---- */
   let archive = null, archiveLoading = false;
   const SHELVES = [['all', 'All'], ['stories', 'Stories'], ['songs', 'Songs'], ['tv-shows', 'TV'], ['radio-plays', 'Radio'], ['sketches', 'Sketches'], ['films', 'Films']];
   function loadArchive() {
-    if (archive || archiveLoading) return; archiveLoading = true;
+    if (archive || archiveLoading || Date.now() - ui.archFailed < 30000) return; archiveLoading = true;
     Promise.all(['library/books.json', 'library/archives.json'].map(u => fetch(u).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })))
       .then(([books, arch]) => {
         archive = [...books.map(b => ({ shelf: 'stories', title: b.parody, sub: 'A parody of “' + b.original + '”', words: b.words })),
@@ -1802,7 +1892,7 @@
         buildDivOrder(); mark();
         if (ui.tab === 'press') renderArchive();
       })
-      .catch(() => { archiveLoading = false; const n = $('#oArchNote'); if (n) n.textContent = 'The stacks are locked. Run node sync-library.mjs and serve the site over http.'; });
+      .catch(() => { archiveLoading = false; ui.archFailed = Date.now(); const n = $('#oArchNote'); if (n) n.textContent = 'The stacks are locked. Run node sync-library.mjs and serve the site over http.'; });
   }
   function renderArchive() {
     const note = $('#oArchNote'), res = $('#oArchRes'); if (!note || !res) return;
@@ -1832,12 +1922,11 @@
     const item = (name, desc, cost, owned, lock, act, i) => `<div class="o-card"><div class="o-row"><h3>${name}</h3>${owned ? '<span class="o-lvl">OWNED</span>' : price(cost)}</div><p>${desc}</p>${lock && !owned ? `<p class="o-warn">${lock}</p>` : ''}
       ${owned ? '' : `<button type="button" class="o-btn gold" data-act="buy" data-what="${act}" ${i != null ? `data-i="${i}"` : ''} ${lock || have < cost ? 'disabled' : ''}>Buy</button>`}</div>`;
     morph($('#o-shop'), `
-      <p class="o-lede">Banana Logistics spends the bananas the Jungle Press pays you. Typewriters, keepers and room-wide upgrades are bought here.</p>
+      <p class="o-lede">Banana Logistics spends the bananas the Jungle Press pays you. Typewriters and room-wide upgrades are bought here.</p>
       <h3 class="o-h">Typewriters</h3><div class="o-grid">${DESKS.slice(1).map((D, n) => {
         const i = n + 1, d = S.desks[i];
         return item(D.name, `Specialises in ${D.lo}–${D.hi} letter words (${D.style} lettering). Starts with one typist.`, D.price, d.owned, chal('haiku') && i >= 2 ? 'Blocked by the Haiku Run' : !S.desks[i - 1].owned ? 'Buy ' + DESKS[i - 1].name + ' first' : '', 'desk', i);
       }).join('')}</div>
-      <h3 class="o-h">Word keepers</h3><div class="o-grid">${DESKS.map((D, i) => S.desks[i].owned ? item(D.name + ' keeper', 'Banks words from this desk’s letters on its own, up to your targets.', SHOP.keeper, S.desks[i].keeper.owned, '', 'keeper', i) : '').join('')}</div>
       <h3 class="o-h">Publishing deals <span class="o-dim">(royalties ${fmtRate(royBase())}/s now)</span></h3><div class="o-grid">${DEALS.map(x => item(x.name, x.desc, x.cost, !!S.deals[x.id], soldCount() < x.need ? `Needs ${x.need} sold title${x.need > 1 ? 's' : ''}` : '', 'deal', x.id)).join('')}</div>
       <h3 class="o-h">Restorations</h3><div class="o-grid">${DESKS.map((D, i) => S.desks[i].owned ? mkCard(i, have) : '').join('')}</div>
       <h3 class="o-h">Garden</h3><div class="o-grid">${gardenCard(have)}</div>
@@ -1852,27 +1941,29 @@
         ${item('Writing contracts', 'Adds 25% to future title rights income.', SHOP.contracts, S.contracts, blue ? '' : 'Unlocks with Lagoon Sprint', 'contracts')}
         ${lampCard(have)}
       </div>
-      <p class="o-row o-left"><button type="button" class="o-btn sm" data-act="reset">Reset Typewriter Ops</button><span class="o-dim">Clears the floor, not your bananas.</span></p>`);
+      `);
     hydrate($('#o-shop'));
   }
 
-  const RENDER = { training: renderTraining, lab: renderLab, security: renderSecurity, press: renderPress, studios: renderStudios, muses: renderMuses, shop: renderShop, records: renderRecords };
+  const RENDER = { training: renderTraining, lab: renderLab, press: renderPress, studios: renderStudios, muses: renderMuses, shop: renderShop, records: renderRecords, legacy: renderLegacy };
+  const KPAUSE = 'Paused keepers stop turning letters into words, so letters pile up for hiring and training.';
+  const keeperSeg = i => `<span class="o-seg" title="${KPAUSE}"><button type="button" data-act="ktoggle" data-i="${i}" aria-pressed="${S.desks[i].keeper.on}">Collecting</button><button type="button" data-act="ktoggle" data-i="${i}" aria-pressed="${!S.desks[i].keeper.on}">Paused</button></span>`;
   const dn = D => { const [a, ...r] = D.name.split(' '); return `<b>${a}<em class="o-rest"> ${r.join(' ')}</em></b>`; };
   /* little dots on the department tabs when something there is worth doing */
   function badgeFor(k) {
     const d = cur(), i = S.sel;
     if (k === 'training') return UPS.some(u => { const lvl = u.k === 'paw' ? d.paws : d.up[u.k]; return d.owned && lvl < upMax(u) && !upLock(u, d) && totalLetters(d) >= upCost(u, d, i); }) ? '!' : '';
     if (k === 'lab') return d.owned && BAND_WORDS[i].some(w => !stock(w) && canMake(d, w)) ? '!' : '';
-    if (k === 'security') return !d.keeper.owned && bananas.get() >= SHOP.keeper ? '!' : '';
     if (k === 'lab' && S.garden.beds.some(b => b && Date.now() >= b.ready)) return '!';
     if (k === 'muses') { const slots = museSlots(); return slots && S.muses.seated.slice(0, slots).some(x => !x) && MUSES.some(m => S.muses.owned[m.id] && !S.muses.seated.includes(m.id)) ? '!' : (slots && MUSES.some(m => !S.muses.owned[m.id] && bananas.get() >= m.cost) ? '!' : ''); }
     if (k === 'studios') return DIVS.some(D => divUnlocked(D) && divCount(D) < divCap(D) && bananas.get() >= divPlan(D, 1).cost) ? '!' : '';
     if (k === 'records') return ui.unseen ? String(ui.unseen) : '';
-    if (k === 'press') { const n = RECIPES.filter(canWrite).length, hot = RECIPES.some(r => canWrite(r) && marketMult(r.band) >= 1.5); return n ? n + (hot ? '!' : '') : ''; }
+    if (k === 'legacy') return starsNow() >= 1 || LEG.some(u => legLvl(u.id) < u.max && S.legacy.stars >= u.costs[legLvl(u.id)]) ? '!' : '';
+    if (k === 'press') { const rl = readyList(), n = rl.length, hot = rl.some(r => marketMult(r.band) >= 1.5); return n ? n + (hot ? '!' : '') : firstPitch() ? '!' : ''; }
     if (k === 'shop') {
       const have = bananas.get(), blue = S.desks[2].owned;
       const next = S.desks.findIndex(x => !x.owned);
-      const can = (next > 0 && S.desks[next - 1].owned && have >= DESKS[next].price) || S.desks.some(x => x.owned && !x.keeper.owned && have >= SHOP.keeper) ||
+      const can = (next > 0 && S.desks[next - 1].owned && have >= DESKS[next].price) ||
         (!S.hold && have >= SHOP.hold) || (blue && !S.metro && have >= SHOP.metro) || (blue && S.hold && !S.dbl && have >= SHOP.dbl) || (blue && !S.contracts && have >= SHOP.contracts);
       const plots = GARDEN_COSTS[S.garden.beds.length - 2] && have >= GARDEN_COSTS[S.garden.beds.length - 2];
       const mks = plots || S.desks.some((d, i) => d.owned && d.mk < 2 && have >= mkCost(i));
@@ -1914,29 +2005,34 @@
     const firstLocked = S.desks.findIndex(x => !x.owned);
     morph($('#oDesks'), DESKS.map((D, i) => {
       const d = S.desks[i]; if (firstLocked >= 0 && i > firstLocked) return '';
+      if (!d.owned && !Object.keys(S.written).length) return '';     // locked machines are a spoiler until the first sale
       if (!d.owned) { const pc = Math.min(100, Math.floor(100 * bananas.get() / D.price)); return `<button type="button" class="o-desk locked${pc >= 100 ? ' can' : ''}" style="--tw:${D.color}" data-act="go" data-tab="shop">${dn(D)}<span class="o-d1">${D.lo}–${D.hi} letters</span><span class="o-d2">${price(D.price)}</span><span class="o-dbar" aria-hidden="true"><i style="width:${pc}%"></i></span></button>`; }
-      const ar = autoRate(d); return `<button type="button" class="o-desk" style="--tw:${D.color}" data-act="sel" data-i="${i}" aria-pressed="${i === S.sel}">${ar > 0 ? `<i class="o-dact" style="--spd:${Math.max(.12, Math.min(2, 1 / ar)).toFixed(2)}s" aria-hidden="true"></i>` : ''}${dn(D)}<span class="o-d1">${D.lo}–${D.hi} letters · ${totalLetters(d)} held</span><span class="o-d2">${d.paws} typists · ${autoRate(d).toFixed(2)}/s</span><span class="o-d3">${totalLetters(d)} held</span></button>`;
+      const ar = autoRate(d); return `<button type="button" class="o-desk" style="--tw:${D.color}" data-act="sel" data-i="${i}" aria-pressed="${i === S.sel}">${ar > 0 ? `<i class="o-dact" style="--spd:${Math.max(.12, Math.min(2, 1 / ar)).toFixed(2)}s" aria-hidden="true"></i>` : ''}${dn(D)}<span class="o-d1">${D.lo}–${D.hi} letters · ${totalLetters(d)} held</span><span class="o-d2">${d.paws} typists · ${autoRate(d).toFixed(2)}/s</span><span class="o-d3">${totalLetters(d)} held</span><span class="o-ktog${d.keeper.on ? '' : ' off'}" role="button" tabindex="0" data-act="ktoggle" data-i="${i}" title="${KPAUSE}" aria-label="Keeper ${d.keeper.on ? 'collecting' : 'paused'}: click to toggle">${d.keeper.on ? 'Keeper on' : 'Keeper paused'}</span></button>`;
     }).join(''));
     hydrate($('#oDesks'));
     const badge = (b, bd) => { if (bd) b.dataset.badge = bd; else delete b.dataset.badge; };
-    $$('.o-tab[data-tab]').forEach(b => { b.setAttribute('aria-selected', String(b.dataset.tab === ui.tab)); badge(b, b.dataset.tab === ui.tab ? '' : badgeFor(b.dataset.tab)); });
-    const hidden = TABS.filter(t => t[5] && t[0] !== ui.tab), more = $('#oMore');     // phones tuck some departments behind "More"; it wears their badges
+    $$('.o-tab[data-tab]').forEach(b => { b.setAttribute('aria-selected', String(b.dataset.tab === ui.tab)); b.hidden = !tabVisible(b.dataset.tab); badge(b, b.hidden || b.dataset.tab === ui.tab ? '' : badgeFor(b.dataset.tab)); });
+    const hidden = TABS.filter(t => t[5] && t[0] !== ui.tab && tabVisible(t[0])), more = $('#oMore');     // phones tuck some departments behind "More"; it wears their badges
     more.setAttribute('aria-selected', String(!!TABS.find(t => t[5] && t[0] === ui.tab)));
     badge(more, hidden.some(t => badgeFor(t[0])) ? '!' : '');
+    more.hidden = !TABS.some(t => t[5] && tabVisible(t[0]));              // nothing tucked away yet: no More button
     $$('.o-pane').forEach(p => { p.hidden = p.id !== 'o-' + ui.tab; });
     const D = DESKS[S.sel];
     const wrap = $('.o-wrap');                                       // on .o-wrap itself: its own defaults would otherwise shadow these
     wrap.dataset.tab = ui.tab;
     wrap.style.setProperty('--tw', D.color); wrap.style.setProperty('--tw-font', D.font); wrap.style.setProperty('--tw-fs', D.fs || '');
   }
+  let lastLetters = -1;
   function render() {
     if (window.__OPS_HEADLESS) return;
     if (IMI.screen() !== 'game') return renderMenu();                // nothing below is on screen from the title menu
-    const ready = RECIPES.filter(canWrite).map(r => r.id);
-    if (ui.readySet) { const fresh = ready.filter(id => !ui.readySet.includes(id)); if (fresh.length) { cheer(1100, 'READY!'); IMI.sfx.ding(); } }
+    const ready = readyList().map(r => r.id);
+    if (ui.readySet) { const fresh = ready.filter(id => !ui.readySet.includes(id)); if (fresh.length) { cheer(1100, 'READY!'); IMI.sfx.ding(); IMI.emit('ready', { ids: fresh }); } }
     ui.readySet = ready;
     renderChrome();
     if (ui.tab === 'floor') renderFloorInfo(); else RENDER[ui.tab]();
+    const lt = totalLetters(cur()); if (lt !== lastLetters) { lastLetters = lt; IMI.emit('letters', { total: lt, typed: S.stats.letters }); }
+    IMI.emit('render');
   }
 
   /* ================= wiring ================= */
@@ -1956,7 +2052,8 @@
   function setTab(t) {
     const changed = ui.tab !== t, order = TABS.map(x => x[0]), dir = Math.sign(order.indexOf(t) - order.indexOf(ui.tab)); ui.tab = t;
     $('#o-' + t).style.setProperty('--edir', dir); setMore(false);
-    if (t === 'records') ui.unseen = 0; if (t === 'floor') buildStage(); ui.cntZero = changed; render(); ui.cntZero = false;
+    if (t === 'floor') buildStage(); ui.cntZero = changed; render(); ui.cntZero = false;
+    IMI.emit('tab', { tab: t });
     if (changed) { const p = $('#o-' + t); p.classList.remove('enter'); void p.offsetWidth; p.classList.add('enter'); p.addEventListener('animationend', () => p.classList.remove('enter'), { once: true }); IMI.sfx.tick(); }
   }
   const setMore = open => { $('#oTabs').classList.toggle('open', open); $('#oMore').setAttribute('aria-expanded', String(open)); };
@@ -1988,7 +2085,12 @@
     commission: el => {
       const i = +el.dataset.i, p = S.offers[i]; if (!p || pitchActive() >= PITCH_MAX) return;
       S.pitches.push(p); registerPitch(p); S.stats.pitched = (S.stats.pitched || 0) + 1; S.offers[i] = genPitch(buildRecipe({ ...p, text: p.text }).band);
+      ui.fresh = p.id; setTimeout(() => { if (ui.fresh === p.id) ui.fresh = null; mark(); }, 2200);
+      pickAutoFocus();
+      const at = IMI.centerOf(el); floatText('+1 COMMISSION', at[0], at[1] - 20, '#ffd23a', true);
+      IMI.say(`Commissioned “${p.title}”. Find it under Pitches > Your commissions.`);
       IMI.sfx.ding(); logIt(`Commissioned a new title: “${p.title}”.`); newsPush(`Agents confirm a new pitch: “${p.title}”. Monkeys hurry to the typewriters.`); mark(); save();
+      setTimeout(() => { const c = document.querySelector('#o-press .o-book.fresh'); if (c) c.scrollIntoView({ behavior: IMI.reduceMotion ? 'auto' : 'smooth', block: 'nearest' }); }, 60);
     },
     repitch: () => { const c = repitchCost(); if (!bananas.spend(c)) return; S.offers = newOffers(); IMI.sfx.tick(); mark(); save(); },
     release: el => releaseDiv(el.dataset.id),
@@ -2018,8 +2120,10 @@
     bankword: el => { const at = IMI.centerOf(el); if (bankWord(cur(), el.dataset.w)) { IMI.sfx.key(); vib(8); shock(at[0], at[1], '#7be05a'); floatText('+' + el.dataset.w, at[0], at[1] - 10); } },
     buy: el => { const at = IMI.centerOf(el), before = bananas.get(); buy(el.dataset.what, el.dataset.i); if (bananas.get() < before) { IMI.burst(at[0], at[1], ['banana', 'spark', 'star'], 12); vib(25); } },
     write: el => writeTitle(el.dataset.id, el),
-    focus: el => { cur().keeper.focus = el.dataset.id; mark(); save(); },
-    unfocus: () => { cur().keeper.focus = null; mark(); save(); },
+    focus: el => { const r = RBY[el.dataset.id]; if (!r || lockedDesk(r) !== undefined) return; S.focus = el.dataset.id; S.autoFocus = false; mark(); save(); IMI.emit('focus', { id: S.focus }); },
+    unfocus: () => { S.focus = null; S.autoFocus = true; pickAutoFocus(); mark(); save(); },
+    autofocus: () => { S.autoFocus = true; S.focus = null; pickAutoFocus(); mark(); save(); },
+    ktoggle: el => { const k = S.desks[+el.dataset.i].keeper; k.on = !k.on; IMI.sfx.tick(); mark(); save(); },
     kon: () => { cur().keeper.on = true; mark(); save(); },
     koff: () => { cur().keeper.on = false; mark(); save(); },
     ovrset: () => {
@@ -2028,9 +2132,13 @@
       cur().keeper.targets[w] = Math.max(0, Math.min(9999, ui.ovrn | 0)); ui.ovr = ''; mark(); save();
     },
     ovrdel: el => { delete cur().keeper.targets[el.dataset.w]; mark(); save(); },
-    libf: el => { ui.libf = el.dataset.f; mark(); },
+    libf: el => { ui.libf = el.dataset.f; ui.libLimit = 24; mark(); },
+    libmore: () => { ui.libLimit += 24; mark(); },
+    sub: el => { ui.sub[el.dataset.dept] = el.dataset.sub; IMI.sfx.tick(); mark(); IMI.emit('tab', { tab: el.dataset.dept, sub: el.dataset.sub }); const p = $('#o-' + el.dataset.dept); if (p) p.scrollTop = 0; },
+    golist: () => { const n = $('#oTitleList'); if (n) n.scrollIntoView({ behavior: IMI.reduceMotion ? 'auto' : 'smooth', block: 'start' }); },
+    autotoggle: () => { if (S.autoFocus) S.autoFocus = false; else { S.autoFocus = true; S.focus = null; pickAutoFocus(); } IMI.sfx.tick(); mark(); save(); },
     archf: el => { ui.archf = el.dataset.f; renderArchive(); },
-    pull: el => { ui.pulled = ui.pulled === el.dataset.id ? null : el.dataset.id; IMI.sfx.tick(); if (ui.tab !== 'press') setTab('press'); else mark(); },
+    pull: el => { ui.pulled = ui.pulled === el.dataset.id ? null : el.dataset.id; ui.sub.press = 'titles'; IMI.sfx.tick(); if (ui.tab !== 'press') setTab('press'); else mark(); },
     read: el => { ui.read = ui.read === el.dataset.id ? null : el.dataset.id; mark(); },
     reset: () => { if (confirm('Reset Typewriter Ops? Your bananas are kept.')) { S = fresh(); save(); buildStage(); mark(); } }
   };
@@ -2055,7 +2163,7 @@
   bananas.watch(b => { if (b !== lastBananas) { if (b > lastBananas) S.run.earned = (S.run.earned || 0) + (b - lastBananas); lastBananas = b; mark(); } });
 
   /* ================= main loop ================= */
-  let coinClock = 0, chalClock = 0, gardenClock = 0, marketClock = 0, awardClock = 0, royAcc = 0, royClock = 0, royFloat = 2.4, goldIn = 25 + rand() * 25, buffWas = false, last = performance.now(), keeperT = 0, saveT = 0, renderT = 0;
+  let coinClock = 0, chalClock = 0, gardenClock = 0, marketClock = 0, awardClock = 0, royAcc = 0, royClock = 0, royFloat = 2.4, goldIn = 25 + rand() * 25, buffWas = false, last = performance.now(), keeperT = [], focusClock = 0, saveT = 0, renderT = 0;
   function tick() {
     const now = performance.now(), dt = Math.min(0.25, (now - last) / 1000); last = now;
     S.desks.forEach(ensureCrew);
@@ -2069,7 +2177,8 @@
     });
     const stH = $('#oStage'); if (stH) stH.classList.toggle('holding', !!(holding && S.hold));
     if (holding && S.hold) { holdAcc += holdRate(cur()) * dt; let g = 0; while (holdAcc >= 1 && g++ < 12) { holdAcc -= 1; press(S.sel, false); } } else holdAcc = 0;
-    keeperT += dt; if (keeperT >= 0.4) { keeperT = 0; S.desks.forEach((d, i) => { if (d.owned) { keeperStep(d, i); if (museOn('hemi')) keeperStep(d, i); } }); }
+    focusClock += dt; if (focusClock >= 1) { focusClock = 0; if (!S.focus && S.autoFocus) pickAutoFocus(); }
+    S.desks.forEach((d, i) => { if (!d.owned) return; keeperT[i] = (keeperT[i] || 0) + dt * (museOn('hemi') ? 2 : 1); let g = 0; while (keeperT[i] >= KEEPER_PERIOD[i] && g++ < 4) { keeperT[i] -= KEEPER_PERIOD[i]; keeperStep(d, i); } if (g >= 4) keeperT[i] = 0; });
     if (S.challenge) { chalClock += dt; if (chalClock >= 1) { chalClock = 0; checkChallenge(); dirty = true; } }
     const buffNow = anyBuff(); if (buffNow || buffWas) dirty = true; buffWas = buffNow;
     marketClock += dt; if (marketClock >= 6) { marketClock = 0; marketStep(); }
@@ -2087,7 +2196,7 @@
   document.addEventListener('visibilitychange', () => { if (document.hidden) save(); else { last = performance.now(); welcomeBack(30); setTimeout(dailyLater, 1200); } });
   if (typeof Weather !== 'undefined') Weather.on('change', () => { paintWindow(); mark(); });
 
-  S.desks.forEach(ensureCrew); if (totalReleased() > 0) loadArchive(); checkAwards(true); buildStage(); render(); startNews(); welcomeBack(60); setTimeout(dailyLater, 1800);
+  pickAutoFocus(); S.desks.forEach(ensureCrew); if (totalReleased() > 0) loadArchive(); checkAwards(true); buildStage(); render(); startNews(); welcomeBack(60); setTimeout(dailyLater, 1800);
   IMI.onScreen(name => { if (name === 'game') { mark(); buildStage(); startNews(); render(); } else render(); });
   setInterval(tick, 50);
   requestAnimationFrame(loop);

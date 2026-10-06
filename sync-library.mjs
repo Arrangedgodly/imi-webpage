@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const out = join(here, 'library');
-const SHELVES = ['stories', 'songs', 'tv-shows', 'radio-plays', 'sketches', 'films'];
+const SHELVES = ['stories', 'songs', 'tv-shows', 'radio-plays', 'sketches', 'films', 'kid-stories'];
 
 let src = process.argv[2];
 if (!src) {
@@ -19,7 +19,7 @@ if (!src) {
 
 rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
-for (const f of ['books.json', 'archives.json']) cpSync(join(src, f), join(out, f));
+for (const f of ['books.json', 'archives.json', 'kids.json']) cpSync(join(src, f), join(out, f));
 let n = 0;
 for (const shelf of SHELVES) {
   mkdirSync(join(out, shelf));

@@ -48,6 +48,7 @@
     if (btn) btn.addEventListener('click', swap);
   });
 
+  window.StyleSwap = { swap: () => swap(), current: cur };
   let swapping = false;
   function swap() {
     if (swapping) return; swapping = true;
