@@ -109,6 +109,10 @@ Offline progress simulates a bounded absence. Initially it covers up to two hour
 
 There is currently no account, cloud sync, or save import/export interface. Clearing site data can erase progress. A localhost copy and the hosted demo have different storage origins and do not automatically share a save.
 
+## Install it as an app
+
+The site is a progressive web app. Open the hosted game in Chrome on Android and choose **Install app** (or **Add to Home screen**): it installs with its own icon, opens full-screen without the browser's address bar, and keeps working offline. On iPhone use Share, then **Add to Home Screen**. A service worker (`sw.js`) stores the game after the first visit and always prefers the network, so a new deploy appears as soon as you are online. Installing needs https (or localhost).
+
 ## How it is built
 
 | Layer | Technology | Responsibility |
@@ -139,6 +143,8 @@ On Windows, use the installed Python command, such as `py -m http.server 8123`. 
 Use HTTP rather than opening the HTML as a `file://` URL, because the Library loads JSON and Markdown through fetch. The committed Library is ready to read without running the synchronization script. There are no `npm run dev`, `npm run build`, or `npm test` scripts in this repository.
 
 ### Development utilities
+
+`tools/make-icons.mjs` renders `icons/favicon.svg` and `icons/maskable.svg` into the PNGs, `favicon.ico` and manifest icons. Run it after changing the monkey art. When you add or rename a game file, add it to the `SHELL` list in `sw.js` so it is stored for offline play (bump `VERSION` to force every device to refresh its stored copy).
 
 The repository includes balance tools that use `puppeteer-core`, a separately running HTTP server, and a local Chrome executable. They run the real game logic under seeded randomness and a virtual clock. See [BALANCE.md](BALANCE.md) for their setup and scope.
 

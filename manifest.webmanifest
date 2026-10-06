@@ -1,0 +1,22 @@
+{
+  "id": "./",
+  "name": "Infinite Monkey Industries",
+  "short_name": "Monkey Ops",
+  "description": "Typewriter Ops: hang monkeys from vines, bank words, write and sell titles.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a2a1c",
+  "theme_color": "#0a2a1c",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Play", "url": "./index.html#play", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Library", "url": "./library.html", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

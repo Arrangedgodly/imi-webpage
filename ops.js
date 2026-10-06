@@ -2078,6 +2078,9 @@
   document.addEventListener('pointerdown', e => { if (rail.classList.contains('open') && !e.target.closest('#rail, .set-pop')) setRail(false); });
   rail.addEventListener('click', e => { if (rail.classList.contains('open') && e.target.closest('.o-tab, #menuBtn, #settingsBtn')) setRail(false); }, true);   // capture: the settings button stops propagation
   rail.addEventListener('click', e => { const tab = e.target.closest('.o-tab'); if (tab) setTab(tab.dataset.tab); });
+  const dockQ = matchMedia('(min-width: 900px)');                // wide screens: the rail stays open as a sidebar
+  const dock = () => { rail.classList.toggle('docked', dockQ.matches); if (dockQ.matches) setRail(false); };
+  dockQ.addEventListener('change', dock); dock();
   addEventListener('keydown', e => { if (e.key === 'Escape' && rail.classList.contains('open')) { e.stopImmediatePropagation(); setRail(false); railBtn.focus(); } }, true);
   const tap = () => { press(S.sel, false); };
   root.addEventListener('pointerdown', e => {
