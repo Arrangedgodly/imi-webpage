@@ -487,7 +487,7 @@
     for (let k = 0; k < n; k++) setTimeout(() => {
       const src = srcs[Math.floor(rand() * srcs.length)], r = src.getBoundingClientRect(), x = r.left + r.width * (src.id === 'oStage' ? .2 + rand() * .6 : .5), y = r.top + 8;
       if (src.classList.contains('o-spine')) src.animate([{ translate: '0 0' }, { translate: '0 -7px' }, { translate: '0 0' }], { duration: 260, easing: PX ? 'steps(3)' : 'ease-out' });
-      let c; if (PX) c = PXA.el('banana', 1); else { c = document.createElement('div'); c.textContent = '🍌'; }
+      let c; if (PX) c = PXA.el('banana', 1); else c = IMI.bananaEl(1.6);
       c.classList.add('o-coin'); c.style.left = x + 'px'; c.style.top = y + 'px'; document.body.appendChild(c);
       const mx = (x + hx) / 2 + (rand() - .5) * 140, my = Math.min(y, hy) - 60 - rand() * 70;
       c.animate([
@@ -519,7 +519,8 @@
   }
   function shake(strength) {
     const w = $('.o-panel'); if (!w || IMI.reduceMotion) return;
-    w.classList.remove('o-shake', 'o-shake2'); void w.offsetWidth; w.classList.add(strength > 1 ? 'o-shake2' : 'o-shake');
+    const T = [[.25, -4, 2], [.5, 4, -2], [.75, -2, 0]], B = [[.12, -9, 4], [.25, 8, -5], [.4, -6, 3], [.55, 5, -2], [.75, -2, 1]];     // Web Animations restart without the forced reflow of the whole panel the class trick cost
+    w.animate([{ translate: '0 0' }, ...(strength > 1 ? B : T).map(([offset, x, y]) => ({ translate: `${x}px ${y}px`, offset })), { translate: '0 0' }], { duration: strength > 1 ? 420 : 260, easing: PX ? 'steps(1)' : 'ease' });
   }
 
   /* ================= endless titles: the pitch desk ================= */

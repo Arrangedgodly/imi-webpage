@@ -322,7 +322,7 @@ window.Core = (() => {
     window.IMI = {
       on, off, emit,
       edition: art.edition, reduceMotion, sfx, centerOf, fmt, say, banner, heroSay: art.heroSay,
-      fx, setFx,
+      fx, setFx, bananaEl: art.bananaEl,
       burst: (x, y, names, n = 12) => art.burst(x, y, names, fx.low ? Math.max(2, Math.ceil(n / 3)) : n),     // Low: a third of the particles
       fall: (x, y, name, life) => { if (fx.low && Math.random() < .5) return; art.fall(x, y, name, life); },
       bananas: { get: () => score, add: n => { score += n; paintScore(false); }, spend, earn, watch: f => watchers.push(f) },

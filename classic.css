@@ -39,7 +39,7 @@ body {
 .foliage-r { right: 48px; transform: scaleX(-1); transform-origin: 100% 100%; animation: frond-sway-r 7s ease-in-out infinite alternate; }
 @keyframes frond-sway { from { transform: rotate(-2deg); } to { transform: rotate(3deg) scale(1.03); } }
 @keyframes frond-sway-r { from { transform: scaleX(-1) rotate(-3deg); } to { transform: scaleX(-1) rotate(2deg) scale(1.03); } }
-.fr { transform-box: fill-box; transform-origin: 0 100%; animation: frond-flap 4s ease-in-out infinite alternate; }
+.fr { transform-box: fill-box; transform-origin: 0 100%; animation: frond-flap 4s ease-in-out infinite alternate; animation-play-state: var(--fr-play, running); }   /* the fronds are drawn through <use>, whose copies only see inherited properties, so the play state comes from a custom property on .foliage */
 .f2 { animation-delay: -1.3s; } .f3 { animation-delay: -2.4s; }
 @keyframes frond-flap { from { transform: rotate(-2.5deg); } to { transform: rotate(2.5deg); } }
 
@@ -296,4 +296,7 @@ body.night .hero-motes i { background: #c8ff7a; box-shadow: 0 0 8px 3px rgba(200
 .set-seg button[aria-pressed="true"], .set-btn[aria-pressed="true"] { background: var(--banana); color: #3a210d; }
 
 /* perf: the corner foliage (animated SVG with a drop-shadow filter) repaints every frame; behind the game panels it is only scenery */
-html[data-screen="game"] .foliage, html[data-screen="game"] .fr { animation: none; }
+html[data-screen="game"] .foliage, html[data-fx="low"] .foliage { animation: none; --fr-play: paused; }
+html[data-screen="game"] .fr, html[data-fx="low"] .fr { animation: none; }   /* the originals in the hidden <symbol>; the copies are paused by --fr-play above */
+
+.pfx { position: fixed; pointer-events: none; z-index: 100; }   /* banana-rain particles (core.js); the pixel edition already had this */

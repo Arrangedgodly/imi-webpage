@@ -46,12 +46,25 @@
   /* =====================  PARTICLES  ===================== */
   const GLYPH = { leaf: '🍃', banana: '🍌', spark: '✨', star: '⭐', drop: '💧', coco: '🥥', paw: '🐾', leaf2: '🌿', 'coco-s': '🥥' };
   const glyph = k => GLYPH[k] || k;
+  /* Emoji text is slow to lay out (every particle needs emoji font fallback and shaping, and bursts make dozens a second), so each glyph is drawn to a bitmap once
+     and particles are plain image boxes, the same cost as the pixel edition's sprites. */
+  const bitmaps = {};
+  function glyphUrl(g) {
+    if (bitmaps[g]) return bitmaps[g];
+    const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d');
+    x.font = '52px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(g, 32, 36);
+    return (bitmaps[g] = `url(${c.toDataURL()})`);
+  }
+  function sprite(g, size) {
+    const p = document.createElement('i');
+    Object.assign(p.style, { display: 'inline-block', width: size + 'px', height: size + 'px', backgroundImage: glyphUrl(g), backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' });
+    return p;
+  }
   function burst(x, y, names, n = 12) {
     if (reduceMotion) return;
     for (let i = 0; i < n; i++) {
-      const p = document.createElement('span');
-      p.textContent = glyph(names[i % names.length]);
-      Object.assign(p.style, { position: 'fixed', left: x + 'px', top: y + 'px', fontSize: rand(16, 30) + 'px', pointerEvents: 'none', zIndex: 100 });
+      const p = sprite(glyph(names[i % names.length]), rand(16, 30));
+      Object.assign(p.style, { position: 'fixed', left: x + 'px', top: y + 'px', pointerEvents: 'none', zIndex: 100 });
       document.body.appendChild(p);
       const ang = rand(0, Math.PI * 2), dist = rand(60, 150), dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist - 40;
       p.animate([
@@ -63,8 +76,8 @@
   }
   function fall(x, y, name, life = 1200, size = 20) {
     if (reduceMotion) return;
-    const p = document.createElement('span'); p.textContent = glyph(name);
-    Object.assign(p.style, { position: 'fixed', left: x + 'px', top: y + 'px', fontSize: size + 'px', pointerEvents: 'none', zIndex: 90 });
+    const p = sprite(glyph(name), size);
+    Object.assign(p.style, { position: 'fixed', left: x + 'px', top: y + 'px', pointerEvents: 'none', zIndex: 90 });
     document.body.appendChild(p);
     const dx = rand(-30, 30);
     p.animate([{ transform: 'translate(-50%,-50%) rotate(0) scale(1)', opacity: .9 }, { transform: `translate(calc(-50% + ${dx}px), calc(-50% + 70px)) rotate(${rand(-200, 200)}deg) scale(.6)`, opacity: 0 }], { duration: life, easing: 'ease-in' }).onfinish = () => p.remove();
@@ -162,7 +175,7 @@
   /* =====================  BOOT  ===================== */
   const IMI = Core.boot({
     edition: 'classic', burst, fall: (x, y, name, life) => fall(x, y, name, life, 20), heroSay, toys, ease: 'cubic-bezier(.5,0,.3,1)',
-    bananaEl: mult => { const b = document.createElement('span'); b.textContent = '🍌'; b.style.fontSize = 14 * mult + 'px'; return b; },
+    bananaEl: mult => { const b = sprite('🍌', Math.round(14 * mult * 1.25)); b.style.verticalAlign = 'middle'; return b; },
     bannerText: t => '🍌 ' + t + ' 🍌',
     paintSound: (btn, on) => { btn.firstChild.textContent = on ? '🔊' : '🔇'; },
   });

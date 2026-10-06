@@ -788,11 +788,6 @@ html[data-style="classic"] .o-shock { border-radius: 50%; animation-timing-funct
 .o-flash { position: fixed; inset: 0; z-index: 398; pointer-events: none; background: var(--fc); animation: o-flash .4s forwards; }
 @keyframes o-flash { from { opacity: .5; } to { opacity: 0; } }
 html[data-style="pixel"] .o-flash { animation-timing-function: steps(4); }
-.o-panel.o-shake { animation: o-shake .26s; }
-.o-panel.o-shake2 { animation: o-shake2 .42s; }
-@keyframes o-shake { 25% { translate: -4px 2px; } 50% { translate: 4px -2px; } 75% { translate: -2px 0; } }
-@keyframes o-shake2 { 12% { translate: -9px 4px; } 25% { translate: 8px -5px; } 40% { translate: -6px 3px; } 55% { translate: 5px -2px; } 75% { translate: -2px 1px; } }
-html[data-style="pixel"] .o-panel.o-shake, html[data-style="pixel"] .o-panel.o-shake2 { animation-timing-function: steps(1); }
 
 /* ---- UI shine: buttons worth pressing glint, progress fills stripe, cards get depth ---- */
 .o-btn { position: relative; overflow: hidden; }
@@ -1436,4 +1431,4 @@ html[data-fx="low"] .o-spine::before { display: none; }
 html[data-fx="low"] .o-typist canvas, html[data-fx="low"] .o-mk { filter: none !important; }
 html[data-fx="low"] .o-gold { filter: none; }
 /* the title-screen backdrop: still scenery only */
-html[data-fx="low"] :is(.stars, .fireflies span, .drifters > *, .layer-mid, .layer-near, .foliage, .fr) { animation: none !important; }
+html[data-fx="low"] :is(.stars, .fireflies span, .drifters > *, .layer-mid, .layer-near, .foliage) { animation: none !important; }
