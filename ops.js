@@ -504,8 +504,8 @@
     if (document.querySelector('.o-celebrate')) return;
     const el = document.createElement('div'); el.className = 'o-celebrate'; el.setAttribute('role', 'status');
     el.innerHTML = `<i class="o-cel-burst"></i><div class="o-cel-card"><small>${esc(sub)}</small><b>${esc(title)}</b>${extra || ''}<em>Tap to continue</em></div>`;
-    document.body.appendChild(el); IMI.sfx.triumph && IMI.sfx.triumph(); vib([30, 40, 30, 40, 90]); flash('#fff6d6');
-    const close = () => { if (!el.isConnected || el.classList.contains('out')) return; el.classList.add('out'); setTimeout(() => el.remove(), IMI.reduceMotion ? 0 : 420); };
+    document.body.appendChild(el); document.body.classList.add('celebrating'); IMI.sfx.triumph && IMI.sfx.triumph(); vib([30, 40, 30, 40, 90]); flash('#fff6d6');
+    const close = () => { if (!el.isConnected || el.classList.contains('out')) return; el.classList.add('out'); setTimeout(() => { el.remove(); document.body.classList.remove('celebrating'); }, IMI.reduceMotion ? 0 : 420); };
     el.addEventListener('click', close); setTimeout(close, 5600);
     if (!IMI.reduceMotion) for (let k = 0; k < 7; k++) setTimeout(() => {
       if (!el.isConnected) return; const x = innerWidth * (.1 + rand() * .8), y = innerHeight * (k % 2 ? .08 + rand() * .14 : .76 + rand() * .14);   // above and below the card, never over it
@@ -707,13 +707,13 @@
     const seatedCards = [0, 1, 2].map(k => {
       const id = M.seated[k], mu = MUSES.find(x => x.id === id);
       if (k >= slots) return `<div class="o-card locked"><h3>Slot ${k + 1}</h3><p class="o-dim">Locked: sell ${[3, 8, 13][k]} titles (you have ${soldCount()}).</p></div>`;
-      return mu ? `<div class="o-card o-seat on">${portrait(mu.id, true)}<div class="o-row"><h3>${mu.name}</h3><span class="o-lvl">SLOT ${k + 1}</span></div><p>${mu.desc}</p><button type="button" class="o-btn sm" data-act="museout" data-slot="${k}">Send home</button></div>`
+      return mu ? `<div class="o-card o-pcard o-seat on">${portrait(mu.id, true)}<div class="o-row"><h3>${mu.name}</h3><span class="o-lvl">SLOT ${k + 1}</span></div><p>${mu.desc}</p><button type="button" class="o-btn sm" data-act="museout" data-slot="${k}">Send home</button></div>`
         : `<div class="o-card o-seat"><h3>Slot ${k + 1}</h3><p class="o-dim">Empty. Seat a patron below.</p></div>`;
     }).join('');
     const cards = MUSES.map(mu => {
       const owned = !!M.owned[mu.id], seated = M.seated.includes(mu.id);
       const seatBtns = owned && !seated ? [0, 1, 2].filter(k => k < slots).map(k => `<button type="button" class="o-btn sm" data-act="museseat" data-id="${mu.id}" data-slot="${k}">${M.seated[k] ? 'Swap into' : 'Seat in'} slot ${k + 1}</button>`).join('') : '';
-      return `<div class="o-card o-muse">${portrait(mu.id, owned)}<div class="o-row"><h3>${mu.name}</h3>${owned ? `<span class="o-lvl">${seated ? 'SEATED' : 'INVITED'}</span>` : price(mu.cost)}</div><p>${mu.desc}</p>
+      return `<div class="o-card o-pcard o-muse">${portrait(mu.id, owned)}<div class="o-row"><h3>${mu.name}</h3>${owned ? `<span class="o-lvl">${seated ? 'SEATED' : 'INVITED'}</span>` : price(mu.cost)}</div><p>${mu.desc}</p>
         ${owned ? (seatBtns || (seated ? '' : '<p class="o-dim">Unlock a slot by selling more titles.</p>')) : `<button type="button" class="o-btn gold" data-act="museinvite" data-id="${mu.id}" ${have < mu.cost ? 'disabled' : ''}>Invite</button>`}</div>`;
     }).join('');
     morph($('#o-muses'), `
@@ -1532,7 +1532,7 @@
     const ic = y.getAttribute('data-ico');
     if (ic && x.dataset.icoDone === ic + ':' + y.getAttribute('data-sz')) return;      // already hydrated into a sprite
     for (const { name } of [...x.attributes]) if (!y.hasAttribute(name)) x.removeAttribute(name);
-    for (const { name, value } of [...y.attributes]) if (x.getAttribute(name) !== value) x.setAttribute(name, value);
+    for (const { name, value } of [...y.attributes]) { const v = name === 'class' && x.classList.contains('can') && !y.classList.contains('can') ? value + ' can' : value; if (x.getAttribute(name) !== v) x.setAttribute(name, v); }   // 'can' is set by markCan() after each render
     if (x.tagName === 'INPUT' && x !== document.activeElement && x.value !== y.value) x.value = y.value;
     if (!y.hasAttribute('data-own')) patchKids(x, y);
   }
@@ -1706,7 +1706,7 @@
     bar.classList.add('hit'); setTimeout(() => bar.classList.remove('hit'), 70);
     const car = fx.car;
     car.style.transform = `translateX(${-(r.col % 9) * 2}px)`;
-    if (r.col % 9 === 0) { car.classList.remove('ding'); void car.offsetWidth; car.classList.add('ding'); }
+    if (r.col % 9 === 0) { car.classList.remove('ding'); fx.tw.classList.remove('ding'); void car.offsetWidth; car.classList.add('ding'); fx.tw.classList.add('ding'); }   // on the machine too: its sheet and bell key off it
     kick(!auto, auto ? p : undefined);
     if (auto && n % 6 === 0 && typists.length) { const t = typists[Math.floor(rand() * typists.length)], b = t.el.getBoundingClientRect(); IMI.fall(b.left + b.width / 2, b.bottom - 10, 'leaf', 1200); }
     fx.sheet.textContent = r.sheet.slice(-48);
@@ -1754,6 +1754,8 @@
     const all = [...new Set([...Object.keys(S.editions || {}), ...Object.keys(S.written)])].filter(id => RBY[id]);
     const ids = all.length > SHELF_MAX ? [...all.filter(id => !RBY[id].kid), ...all.filter(id => RBY[id].kid)].slice(0, SHELF_MAX) : all;   // authored spines first; the kids' shelf is capped
     const more = all.length - ids.length;
+    if (ids.some(id => ui.fresh === id && !ui.dropped[id])) ui.droppingUntil = performance.now() + 1300;
+    const dropping = performance.now() < (ui.droppingUntil || 0);
     const books = ids.map(id => {
       const r = RBY[id], h = hashOf(id), w = Math.round(24 + Math.min(r.total, 40) * .5);
       const ht = 78 + r.band * 12 + h % 14, hue = [150, 345, 215, 40, 275, 210][r.band] + (h % 30) - 15;
@@ -1762,7 +1764,7 @@
     }).join('');
     const ghosts = Array.from({ length: Math.min(24, Math.max(0, BOOKS - ids.filter(id => !RBY[id].gen && !RBY[id].kid).length)) }, () => '<i class="o-slot"></i>').join('') + (more ? `<span class="o-chip">+${more} more</span>` : '');
     const plate = ui.pulled && (S.written[ui.pulled] || (S.editions || {})[ui.pulled]) ? (() => { const r = RBY[ui.pulled]; return `<div class="o-plate"><div class="o-row"><h3>${esc(r.title)}</h3><span class="o-tag b${r.band}">${DESKS[r.band].lo}–${DESKS[r.band].hi}</span></div><p class="o-dim">${r.total} words · rights sold for ${price(r.pay)} · ${S.written[ui.pulled] ? `pays <b>${fmtRate(bookRoy(r))}/s</b> in royalties` : '<b>out of print</b>: sell it again in this printing'}${(S.editions || {})[ui.pulled] ? ` · ${(S.editions || {})[ui.pulled]} earlier edition${(S.editions || {})[ui.pulled] > 1 ? 's' : ''}` : ''}</p><div class="o-read">${esc(r.text)}</div></div>`; })() : '';
-    return `<div class="o-shelfrow">${books}${ghosts}</div>${plate}`;
+    return `<div class="o-shelfrow${dropping ? ' dropping' : ''}">${books}${ghosts}</div>${plate}`;
   }
   function renderFloorInfo() {
     const d = cur(), D = DESKS[S.sel]; if (!$('#oTray')) return;
@@ -2041,6 +2043,10 @@
     wrap.dataset.tab = ui.tab;
     wrap.style.setProperty('--tw', D.color); wrap.style.setProperty('--tw-font', D.font); wrap.style.setProperty('--tw-fs', D.fs || '');
   }
+  /* cards with something you can afford get a highlight. This used to be a :has() rule, which made the browser re-check every card (and
+     every bookshelf spine) whenever anything on the page changed; a class set here costs one pass per render instead. */
+  const CAN_BTN = '.o-btn:is([data-act="up"], [data-act="buy"], [data-act="write"], [data-act="release"], [data-act="museinvite"], [data-act="legbuy"], [data-act="commission"]):not(:disabled)';
+  function markCan(pane) { if (pane) for (const c of pane.querySelectorAll('.o-card')) { const on = !!c.querySelector(CAN_BTN); if (on !== c.classList.contains('can')) c.classList.toggle('can', on); } }
   let lastLetters = -1;
   function render() {
     if (window.__OPS_HEADLESS) return;
@@ -2049,7 +2055,7 @@
     if (ui.readySet) { const fresh = ready.filter(id => !ui.readySet.includes(id)); if (fresh.length) { cheer(1100, 'READY!'); IMI.sfx.ding(); IMI.emit('ready', { ids: fresh }); } }
     ui.readySet = ready;
     renderChrome();
-    if (ui.tab === 'floor') renderFloorInfo(); else RENDER[ui.tab]();
+    if (ui.tab === 'floor') renderFloorInfo(); else { RENDER[ui.tab](); markCan($('#o-' + ui.tab)); }
     const lt = totalLetters(cur()); if (lt !== lastLetters) { lastLetters = lt; IMI.emit('letters', { total: lt, typed: S.stats.letters }); }
     IMI.emit('render');
   }
