@@ -1514,8 +1514,8 @@
      running CSS animations (shines, glints, stripes) and sprites intact. data-own marks a box another renderer fills. */
   const tpl = document.createElement('template');
   function morph(el, html) {
-    if (!el) return;
-    tpl.innerHTML = html; patchKids(el, tpl.content);
+    if (!el || el._h === html) return;                             // same markup as last time (the common case when idle): no parse, no patch
+    el._h = html; tpl.innerHTML = html; patchKids(el, tpl.content);
   }
   function patchKids(a, b) {
     const an = [...a.childNodes], bn = [...b.childNodes];
@@ -1643,7 +1643,7 @@
     if (!IMI.reduceMotion) { const nm = t.nm || (t.nm = t.el.querySelector('.o-nm')); if (nm && performance.now() > (t.nmAt || 0)) { t.nmAt = performance.now() + 230; nm.animate([{ transform: 'none' }, { transform: 'translateY(-6px) scale(1.18)', color: '#ffd23a' }, { transform: 'none' }], { duration: 220, easing: PX ? 'steps(3)' : 'ease-out' }); } }
     if (!strong && rand() < .012) say(t);
   }
-  function stepTypists(now) {
+  function stepTypists(now, draw = true) {                          // physics runs every frame; the DOM/canvas writes only when `draw` (every other frame)
     const hat = typeof Mood !== 'undefined' && Mood.hat, scared = typeof Mood !== 'undefined' && Mood.scared, crew = cur().crew, wild = buffOn('frenzy');
     for (const t of typists) {
       if (wild && !IMI.reduceMotion) { t.v += Math.sin(now / 130 + t.seed * 3) * .016; if (rand() < .03) { t.hop = 10 + rand() * 8; t.ph ^= 1; t.expr = 'screech'; t.until = now + 160; } }
@@ -1652,6 +1652,7 @@
         t.v += -t.a * .045 + Math.sin(now / 900 + t.seed) * .0011 + (scared ? Math.sin(now / 60) * .004 : 0); t.v *= .955; t.a = Math.max(-.7, Math.min(.7, t.a + t.v));
       }
       t.hop = (t.hop || 0) * .84;
+      if (!draw) continue;
       if ((crew[t.ci] || {}).shiny && now > (t.sparkAt || 0) && !IMI.reduceMotion) { t.sparkAt = now + 380 + rand() * 300; const b = t.cv ? t.cv.getBoundingClientRect() : t.el.getBoundingClientRect(); IMI.fall(b.left + b.width * (.2 + rand() * .6), b.top + b.height * (.3 + rand() * .5), 'spark', 900); }
       t.el.classList.toggle('wild', wild); const hp = t.hop.toFixed(1); if (hp !== t.hopS) { t.hopS = hp; t.el.style.setProperty('--hop', hp); }
       if (now > (t.blinkAt || 0)) { t.blinkAt = now + 2200 + rand() * 4200; t.blinkUntil = now + 150; }
@@ -1687,8 +1688,10 @@
       const t = typists[Math.floor(rand() * typists.length)], b = t.el.getBoundingClientRect(); IMI.burst(b.left + b.width / 2, b.bottom - 30, ['banana', 'spark'], 3);
     }
   }
+  let loopN = 0;
   function loop(now) {
-    if (ui.tab === 'floor' && typists.length && !IMI.reduceMotion) { cheerStep(now); stepTypists(now); }
+    loopN++;
+    if (ui.tab === 'floor' && typists.length && !IMI.reduceMotion) { cheerStep(now); stepTypists(now, (loopN & 1) === 0); }
     countStep(now);
     requestAnimationFrame(loop);
   }
@@ -1770,7 +1773,8 @@
     const d = cur(), D = DESKS[S.sel]; if (!$('#oTray')) return;
     const fresh = Math.min(3, Math.max(0, rt[S.sel].n - ui.trayN)); ui.trayN = rt[S.sel].n;
     const shown = d.tray.slice(-12);
-    $('#oTray').innerHTML = shown.map((c, k) => `<span class="o-tile${k >= shown.length - fresh ? ' new' : ''}">${c}</span>`).join('') || '<span class="o-dim">Tap to type!</span>';
+    const tray = $('#oTray'), tiles = shown.map((c, k) => `<span class="o-tile${k >= shown.length - fresh ? ' new' : ''}">${c}</span>`).join('') || '<span class="o-dim">Tap to type!</span>';
+    if (tray._h !== tiles) { tray._h = tiles; tray.innerHTML = tiles; }                 // untouched while no new letters arrive
     const fr = focusRecipe(d), ft = $('#oFocus');
     const want = fr ? focusNeeds(d, S.sel).missing : {};               // keys glow for letters the focused title still needs
     $$('.o-key[data-k]').forEach(k => k.classList.toggle('want', !!want[k.dataset.k]));
@@ -2174,7 +2178,7 @@
   };
   root.addEventListener('click', e => {
     const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
-    ACTIONS[el.dataset.act]?.(el);
+    ACTIONS[el.dataset.act]?.(el); renderT = 9;                    // a tap redraws on the next tick, whatever the render spacing is
   });
   root.addEventListener('change', e => {
     const el = e.target.closest('[data-in]');
@@ -2191,7 +2195,7 @@
   bananas.watch(b => { if (b !== lastBananas) { if (b > lastBananas) S.run.earned = (S.run.earned || 0) + (b - lastBananas); lastBananas = b; mark(); } });
 
   /* ================= main loop ================= */
-  let coinClock = 0, chalClock = 0, gardenClock = 0, marketClock = 0, awardClock = 0, royAcc = 0, royClock = 0, royFloat = 2.4, goldIn = 25 + rand() * 25, buffWas = false, last = performance.now(), keeperT = [], focusClock = 0, saveT = 0, renderT = 0;
+  let coinClock = 0, chalClock = 0, gardenClock = 0, marketClock = 0, awardClock = 0, royAcc = 0, royClock = 0, royFloat = 2.4, goldIn = 25 + rand() * 25, buffWas = false, last = performance.now(), keeperT = [], focusClock = 0, saveT = 0, renderT = 0, renderGap = .25;
   function tick() {
     const now = performance.now(), dt = Math.min(0.25, (now - last) / 1000); last = now;
     S.desks.forEach(ensureCrew);
@@ -2217,7 +2221,11 @@
     if (divCount(DIVS[4])) { premiereClock += dt; if (premiereClock >= 300) { premiereClock = 0; premiere(); } }
     royFloat -= dt; if (royFloat <= 0) { royFloat = 2.4; royPing(); }
     if (!document.hidden) { goldIn -= dt * (museOn('christie') ? 1.3 : 1) * (1 + .25 * legLvl('golden')) * (1 + .03 * S.desks.reduce((a, d) => a + d.crew.filter(t => t.trait === 'scout').length, 0)); if (goldIn <= 0) { goldIn = 55 + rand() * 80; spawnGold(); } }
-    renderT += dt; if (renderT >= 0.25 && dirty) { renderT = 0; dirty = false; render(); }
+    renderT += dt;
+    if (renderT >= renderGap && dirty) {                           // renders are spaced by how long they take, so a slow phone spends a fixed share of its time here
+      renderT = 0; dirty = false; const t0 = performance.now(); render();
+      renderGap = Math.min(1, Math.max(.25, (performance.now() - t0) * .007));
+    }
     saveT += dt; if (saveT >= 5) { saveT = 0; save(); }
   }
   window.addEventListener('beforeunload', save);

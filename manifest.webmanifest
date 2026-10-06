@@ -1,8 +1,8 @@
 {
   "id": "./",
   "name": "Infinite Monkey Industries",
-  "short_name": "Monkey Ops",
-  "description": "Typewriter Ops: hang monkeys from vines, bank words, write and sell titles.",
+  "short_name": "Infinite Monkey",
+  "description": "Infinite Monkey Industries: hang monkeys from vines, bank words, write and sell titles.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

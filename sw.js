@@ -1,7 +1,7 @@
 /* Service worker: makes the site installable and playable offline.
    Network first (so a deploy is picked up as soon as you are online), falling back to the last copy we saw.
    The game shell is stored up front; everything else (library texts, archives, fonts) is stored the first time it is used. */
-const VERSION = 'imi-v1';
+const VERSION = 'imi-v2';
 const SHELL = ['./', 'index.html', 'classic.html', 'library.html', 'styles.css', 'classic.css', 'ops.css', 'library.css',
   'core.js', 'app.js', 'classic.js', 'pixel.js', 'ops.js', 'tour.js', 'weather.js', 'mood.js', 'style-swap.js', 'readers.js', 'readers-kids.js', 'library.js', 'pwa.js',
   'manifest.webmanifest', 'favicon.ico', 'icons/favicon.svg', 'icons/icon-192.png', 'icons/icon-512.png'];
