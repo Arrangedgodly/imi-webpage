@@ -148,7 +148,7 @@ Use HTTP rather than opening the HTML as a `file://` URL, because the Library lo
 
 ### Development utilities
 
-`tools/make-icons.mjs` renders `icons/favicon.svg` and `icons/maskable.svg` into the PNGs, `favicon.ico` and manifest icons. Run it after changing the monkey art. When you add or rename a game file, add it to the `SHELL` list in `sw.js` so it is stored for offline play (bump `VERSION` to force every device to refresh its stored copy).
+`tools/make-icons.mjs` builds every icon from two masters in `icons/src/`: `app-icon-master.png` (the installed app's icon: 192/512, maskable and Apple versions) and `favicon-master.png` (the browser tab icon, a closer crop that reads at 16-48px; also `favicon.ico`). Replace a master and run the script to regenerate. The masters are not deployed (see `.assetsignore`).
 
 The repository includes balance tools that use `puppeteer-core`, a separately running HTTP server, and a local Chrome executable. They run the real game logic under seeded randomness and a virtual clock. See [BALANCE.md](BALANCE.md) for their setup and scope.
 
