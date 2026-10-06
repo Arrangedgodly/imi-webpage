@@ -208,6 +208,27 @@
     }
   }
 
+  function drawSteppedLine(ctx, x0, y0, x1, y1, col, width = 1) {
+    if (!col) return;
+    ctx.fillStyle = col;
+    let ix0 = Math.floor(x0), iy0 = Math.floor(y0);
+    const ix1 = Math.floor(x1), iy1 = Math.floor(y1);
+    const dx = Math.abs(ix1 - ix0), sx = ix0 < ix1 ? 1 : -1;
+    const dy = -Math.abs(iy1 - iy0), sy = iy0 < iy1 ? 1 : -1;
+    let err = dx + dy;
+    while (true) {
+      if (width === 1) {
+        ctx.fillRect(ix0, iy0, 1, 1);
+      } else {
+        ctx.fillRect(ix0 - Math.floor(width / 2), iy0 - Math.floor(width / 2), width, width);
+      }
+      if (ix0 === ix1 && iy0 === iy1) break;
+      const e2 = 2 * err;
+      if (e2 >= dy) { err += dy; ix0 += sx; }
+      if (e2 <= dx) { err += dx; iy0 += sy; }
+    }
+  }
+
   function drawSteppedSemicircle(ctx, cx, cy, r, col, strokeCol) {
     if (col) {
       ctx.fillStyle = col;
@@ -288,6 +309,41 @@
         }
       }
     }
+
+    steppedLine(x0, y0, x1, y1, col, width = 1) {
+      this.ctx.fillStyle = col;
+      let ix0 = Math.floor(x0), iy0 = Math.floor(y0);
+      const ix1 = Math.floor(x1), iy1 = Math.floor(y1);
+      const dx = Math.abs(ix1 - ix0), sx = ix0 < ix1 ? 1 : -1;
+      const dy = -Math.abs(iy1 - iy0), sy = iy0 < iy1 ? 1 : -1;
+      let err = dx + dy;
+
+      while (true) {
+        if (width === 1) {
+          this.ctx.fillRect(ix0, iy0, 1, 1);
+        } else {
+          this.ctx.fillRect(ix0 - Math.floor(width / 2), iy0 - Math.floor(width / 2), width, width);
+        }
+        if (ix0 === ix1 && iy0 === iy1) break;
+        const e2 = 2 * err;
+        if (e2 >= dy) { err += dy; ix0 += sx; }
+        if (e2 <= dx) { err += dx; iy0 += sy; }
+      }
+    }
+
+    steppedBezierCurve(x0, y0, cx, cy, x1, y1, col, width = 1) {
+      const steps = Math.max(16, Math.round(Math.hypot(x1 - x0, y1 - y0) * 1.5));
+      let prevX = Math.round(x0), prevY = Math.round(y0);
+      for (let i = 1; i <= steps; i++) {
+        const t = i / steps;
+        const it = 1 - t;
+        const curX = Math.round(it * it * x0 + 2 * it * t * cx + t * t * x1);
+        const curY = Math.round(it * it * y0 + 2 * it * t * cy + t * t * y1);
+        this.steppedLine(prevX, prevY, curX, curY, col, width);
+        prevX = curX;
+        prevY = curY;
+      }
+    }
   }
 
   /* ---------------------------------------------------------------
@@ -322,13 +378,19 @@
       ctx.scale(-1, 1);
     }
 
-    // Tail (Behind body, stepped pixel curved spine)
-    ctx.strokeStyle = PAL.furMid;
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.moveTo(-4 * squashX, 8 * squashY);
-    ctx.quadraticCurveTo(-15 - tailCurve * 6, 2 - tailCurve * 4, -19 + tailCurve * 4, -8 - tailCurve * 8);
-    ctx.stroke();
+    // Tail (Behind body, pure stepped pixel curved spine - no vector blur)
+    buf.steppedBezierCurve(
+      Math.round(-4 * squashX), Math.round(8 * squashY),
+      Math.round(-15 - tailCurve * 6), Math.round(2 - tailCurve * 4),
+      Math.round(-19 + tailCurve * 4), Math.round(-8 - tailCurve * 8),
+      PAL.furDarkest, 3
+    );
+    buf.steppedBezierCurve(
+      Math.round(-4 * squashX), Math.round(8 * squashY),
+      Math.round(-15 - tailCurve * 6), Math.round(2 - tailCurve * 4),
+      Math.round(-19 + tailCurve * 4), Math.round(-8 - tailCurve * 8),
+      PAL.furBase, 1
+    );
 
     // Body (Rich chocolate fur with outline and cream tummy)
     ctx.save();
@@ -443,12 +505,7 @@
 
     // Props
     if (heldItem === 'wrench') {
-      ctx.strokeStyle = PAL.ironHi;
-      ctx.lineWidth = 2.2;
-      ctx.beginPath();
-      ctx.moveTo(armR[0] - 1, armR[1] + 2);
-      ctx.lineTo(armR[0] + 9, armR[1] - 8);
-      ctx.stroke();
+      buf.steppedLine(armR[0] - 1, armR[1] + 2, armR[0] + 9, armR[1] - 8, PAL.ironHi, 2);
       buf.circle(armR[0] + 9, armR[1] - 8, 3.2, PAL.ironHi);
       buf.dot(armR[0] + 10, armR[1] - 9, PAL.ironDark);
     } else if (heldItem === 'glass') {
@@ -1406,6 +1463,7 @@
 
     render() {
       const g = this.ctx;
+      g.imageSmoothingEnabled = false;
       const snap = (v) => this.pixelSnap ? Math.round(v) : v;
 
       g.save();
@@ -1667,12 +1725,7 @@
         const x2 = cx + Math.cos(ang) * r2;
         const y2 = cy - 14 + Math.sin(ang) * r2;
 
-        g.strokeStyle = (i % 2 === 0) ? PAL.ironHi : PAL.ironMid;
-        g.lineWidth = 1;
-        g.beginPath();
-        g.moveTo(snap(x1), snap(y1));
-        g.lineTo(snap(x2), snap(y2));
-        g.stroke();
+        drawSteppedLine(g, snap(x1), snap(y1), snap(x2), snap(y2), (i % 2 === 0) ? PAL.ironHi : PAL.ironMid, 1);
 
         // Type hammer heads at tips
         g.fillStyle = PAL.ironHi;
@@ -1682,12 +1735,7 @@
       // Active Typebar Striking Platen!
       if (this.typebarProgress > 0) {
         const strikeH = 46 * this.typebarProgress;
-        g.strokeStyle = PAL.ironSpec;
-        g.lineWidth = 2;
-        g.beginPath();
-        g.moveTo(cx, cy - 10);
-        g.lineTo(cx, cy - 10 - strikeH);
-        g.stroke();
+        drawSteppedLine(g, cx, cy - 10, cx, Math.round(cy - 10 - strikeH), PAL.ironSpec, 2);
 
         g.fillStyle = PAL.brassLight;
         g.fillRect(cx - 3, cy - 12 - strikeH, 6, 4);
@@ -1762,20 +1810,9 @@
       drawSpool(cx - 86, spoolY, this.leftSpoolAngle, true);
       drawSpool(cx + 86, spoolY, this.rightSpoolAngle, false);
 
-      // Ribbon Threading Tape
-      g.strokeStyle = PAL.redBase;
-      g.lineWidth = 1.5;
-      g.beginPath();
-      g.moveTo(cx - 70, spoolY);
-      g.lineTo(cx - 6, vibY + 4);
-      g.stroke();
-
-      g.strokeStyle = PAL.inkBlack;
-      g.lineWidth = 1.5;
-      g.beginPath();
-      g.moveTo(cx + 6, vibY + 4);
-      g.lineTo(cx + 70, spoolY);
-      g.stroke();
+      // Ribbon Threading Tape (Stepped Pixel Raster Lines)
+      drawSteppedLine(g, cx - 70, spoolY, cx - 6, Math.round(vibY + 4), PAL.redBase, 2);
+      drawSteppedLine(g, cx + 6, Math.round(vibY + 4), cx + 70, spoolY, PAL.inkBlack, 2);
 
       // ==========================================
       // LAYER F: 4-ROW TIERED BEVELED KEYBOARD & SPACEBAR

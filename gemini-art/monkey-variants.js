@@ -567,6 +567,20 @@
         if (e2 <= dx) { err += dx; iy0 += sy; }
       }
     }
+
+    steppedBezierCurve(x0, y0, cx, cy, x1, y1, col, width = 1) {
+      const steps = Math.max(16, Math.round(Math.hypot(x1 - x0, y1 - y0) * 1.5));
+      let prevX = Math.round(x0), prevY = Math.round(y0);
+      for (let i = 1; i <= steps; i++) {
+        const t = i / steps;
+        const it = 1 - t;
+        const curX = Math.round(it * it * x0 + 2 * it * t * cx + t * t * x1);
+        const curY = Math.round(it * it * y0 + 2 * it * t * cy + t * t * y1);
+        this.steppedLine(prevX, prevY, curX, curY, col, width);
+        prevX = curX;
+        prevY = curY;
+      }
+    }
   }
 
   /* ===============================================================
@@ -1688,67 +1702,41 @@
   function drawTail(buf, ctx, V, P, params) {
     const { squashX = 1, squashY = 1, headbandFlutter = 0 } = params;
     const fur = V.fur;
+    const sx = Math.round(-4 * squashX);
+    const sy = Math.round(8 * squashY);
 
     if (V.tailStyle === 'stealth') {
-      // Ninja low-profile wrapped stealth tail
-      ctx.strokeStyle = fur.shadow;
-      ctx.lineWidth = 2.4;
-      ctx.beginPath();
-      ctx.moveTo(-4 * squashX, 8 * squashY);
-      ctx.quadraticCurveTo(-10, 8, -12, 12);
-      ctx.stroke();
-      ctx.strokeStyle = fur.base;
-      ctx.lineWidth = 1.4;
-      ctx.stroke();
+      buf.steppedBezierCurve(sx, sy, -10, 8, -12, 12, fur.shadow, 2);
+      buf.steppedBezierCurve(sx, sy, -10, 8, -12, 12, fur.base, 1);
       return;
     }
 
     if (V.tailStyle === 'stout') {
-      // Powerhouse heavy dockworker/chimp tail
-      ctx.strokeStyle = fur.shadow;
-      ctx.lineWidth = 3.2;
-      ctx.beginPath();
-      ctx.moveTo(-5 * squashX, 9 * squashY);
-      ctx.quadraticCurveTo(-14, 5, -16, -1);
-      ctx.stroke();
-      ctx.strokeStyle = fur.base;
-      ctx.lineWidth = 2.0;
-      ctx.stroke();
+      const stX = Math.round(-5 * squashX);
+      const stY = Math.round(9 * squashY);
+      buf.steppedBezierCurve(stX, stY, -14, 5, -16, -1, fur.shadow, 3);
+      buf.steppedBezierCurve(stX, stY, -14, 5, -16, -1, fur.base, 2);
       return;
     }
 
     if (V.tailStyle === 'inky') {
-      // Sailor curly tail with inky black blob tip
-      ctx.strokeStyle = fur.shadow;
-      ctx.lineWidth = 2.4;
-      ctx.beginPath();
-      ctx.moveTo(-4 * squashX, 7 * squashY);
-      ctx.quadraticCurveTo(-14, 2, -12, -7);
-      ctx.quadraticCurveTo(-10, -11, -7, -9);
-      ctx.stroke();
-      ctx.strokeStyle = fur.base;
-      ctx.lineWidth = 1.4;
-      ctx.stroke();
+      const inkY = Math.round(7 * squashY);
+      buf.steppedBezierCurve(sx, inkY, -14, 2, -12, -7, fur.shadow, 2);
+      buf.steppedBezierCurve(sx, inkY, -14, 2, -12, -7, fur.base, 1);
+      buf.steppedBezierCurve(-12, -7, -10, -11, -7, -9, fur.shadow, 2);
+      buf.steppedBezierCurve(-12, -7, -10, -11, -7, -9, fur.base, 1);
       buf.dot(-7, -9, P.inkBlack);
       buf.dot(-8, -9, P.inkBlack);
       return;
     }
 
     // Default agile / athletic prehensile tail
-    ctx.strokeStyle = fur.shadow;
-    ctx.lineWidth = 2.6;
-    ctx.beginPath();
-    ctx.moveTo(-4 * squashX, 8 * squashY);
-    ctx.quadraticCurveTo(-14 - headbandFlutter * 2, 2, -18 + headbandFlutter * 2, -5);
-    ctx.stroke();
-    ctx.strokeStyle = fur.base;
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
+    const endX = Math.round(-18 + headbandFlutter * 2);
+    const ctlX = Math.round(-14 - headbandFlutter * 2);
+    buf.steppedBezierCurve(sx, sy, ctlX, 2, endX, -5, fur.shadow, 3);
+    buf.steppedBezierCurve(sx, sy, ctlX, 2, endX, -5, fur.base, 1);
   }
 
-  /**
-   * Layer C & E: Legs & Bespoke Footwear
-   */
   function drawLegAndFootwear(buf, ctx, V, P, legCoords, isFront, params) {
     const { squashX = 1, squashY = 1 } = params;
     const fur = V.fur;
@@ -1976,7 +1964,8 @@
     const skin = V.skin;
 
     ctx.save();
-    ctx.rotate(bodyTilt);
+    const bTiltX = Math.round(bodyTilt * 4);
+    ctx.translate(bTiltX, 0);
 
     const tw = Math.round(11 * squashX);
     const th = Math.round(11 * squashY);
@@ -2479,8 +2468,8 @@
     const skin = V.skin;
 
     ctx.save();
-    ctx.translate(0, headY);
-    ctx.rotate(headTilt);
+    const hTiltX = Math.round(headTilt * 5);
+    ctx.translate(hTiltX, Math.round(headY));
 
     // 1. Ears
     buf.steppedCircle(-8.5, -4, 4.0, fur.shadow);
@@ -2975,10 +2964,8 @@
       headTilt: -tilt * 0.8,
       headY: -bob * 0.2,
       expr: 'wink',
-      armL: [-12, -10],
-      armR: [12, -12],
-      legL: [-5 - kick, 16 + Math.abs(kick) * 0.5],
-      legR: [5 + kick, 16 - Math.abs(kick) * 0.5],
+      armL: [Math.round(-12), Math.round(-10)], armR: [Math.round(12), Math.round(-12)],
+      legL: [Math.round(-5 - kick), Math.round(16 + Math.abs(kick) * 0.5)], legR: [Math.round(5 + kick), Math.round(16 - Math.abs(kick) * 0.5)],
       prop: 'crown'
     });
 
@@ -3261,8 +3248,7 @@
         headTilt: Math.sin(step) * 0.08,
         headY: 0,
         expr: glint ? 'inspect' : 'smile',
-        armL: [-12, 7],
-        armR: [10, -3 + Math.sin(step) * 1.6],
+        armL: [Math.round(-12), Math.round(7)], armR: [Math.round(10), Math.round(-3 + Math.sin(step) * 1.6)],
         legL,
         legR,
         glint
@@ -3320,10 +3306,8 @@
         headTilt: tap * 0.12,
         headY: 0,
         expr,
-        armL: [-7, 6],
-        armR: [12 + tap * 4, -4 - tap * 4],
-        legL: [-7, 16],
-        legR: [5, 16],
+        armL: [Math.round(-7), Math.round(6)], armR: [Math.round(12 + tap * 4), Math.round(-4 - tap * 4)],
+        legL: [Math.round(-7), Math.round(16)], legR: [Math.round(5), Math.round(16)],
         wrenchAngle,
         spark
       }));
@@ -3364,10 +3348,8 @@
         headTilt: -tug * 0.14,
         headY: 0,
         expr,
-        armL: [-9, 5 + tug * 3],
-        armR: [11 + tug * 4, -1 - tug * 4],
-        legL: [-6, 15],
-        legR: [6, 15],
+        armL: [Math.round(-9), Math.round(5 + tug * 3)], armR: [Math.round(11 + tug * 4), Math.round(-1 - tug * 4)],
+        legL: [Math.round(-6), Math.round(15)], legR: [Math.round(6), Math.round(15)],
         ribbonTug: tug
       }));
     }

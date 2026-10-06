@@ -607,6 +607,105 @@
       border-top: 1px solid var(--card-border);
       padding-top: 20px;
     }
+
+    /* Component Suite Tabs & Grid */
+    .comp-tabs-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #1a3222;
+    }
+
+    .comp-tab {
+      background: #0f1d14;
+      border: 1px solid #203626;
+      color: var(--text-dim);
+      padding: 8px 14px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .comp-tab:hover {
+      border-color: var(--accent-green);
+      color: #fff;
+    }
+
+    .comp-tab.active {
+      background: var(--accent-green);
+      color: #06110a;
+      border-color: var(--accent-green);
+      font-weight: 700;
+    }
+
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .comp-card {
+      background: #0c1810;
+      border: 1px solid #1d3323;
+      border-radius: 6px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+    }
+
+    .comp-card-preview {
+      background: #070d09;
+      border: 1px solid #1a2b1f;
+      border-radius: 4px;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 96px;
+    }
+
+    .comp-card-preview canvas {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+    }
+
+    .comp-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+
+    .comp-card-subtitle {
+      font-size: 12px;
+      color: var(--accent-green);
+      font-weight: 600;
+    }
+
+    .comp-card-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .comp-card-tag {
+      display: inline-block;
+      align-self: flex-start;
+      background: #14281a;
+      border: 1px solid #23472d;
+      color: #8edba3;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -775,7 +874,38 @@
       </div>
     </div>
 
-    <!-- 5. CONCEPT ART & VISUAL DIRECTION GALLERY -->
+    
+    <!-- 5. FULL GAME PIXEL ART UPGRADE SUITE & COMPONENT LAB -->
+    <div class="card" id="componentUpgradeSuite">
+      <div class="card-header">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; width:100%;">
+          <div>
+            <span class="card-title">🧩 Complete Game Art Upgrade Suite & Component Lab</span>
+            <div class="card-desc">
+              16-bit pixel art replacements for all remaining game modules: Literary Muses Salon, Media Studios, Botanical Letter Garden, Shop Artifacts, Hall of Records Trophies, and Library Book Spines.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <!-- Subsystem Tabs Bar -->
+        <div class="comp-tabs-bar" id="compTabsBar">
+          <button class="comp-tab active" data-tab="muses">🏛️ Muses Salon (9)</button>
+          <button class="comp-tab" data-tab="studios">🎬 Media Studios (5)</button>
+          <button class="comp-tab" data-tab="garden">🌿 Botanical Garden (6)</button>
+          <button class="comp-tab" data-tab="shop">🍌 Shop & Commodities (6)</button>
+          <button class="comp-tab" data-tab="awards">🏆 Records & Trophies (5)</button>
+          <button class="comp-tab" data-tab="library">📚 Library Book Spines (6)</button>
+          <button class="comp-tab" data-tab="weather">⛅ Weather & Celestial (4)</button>
+        </div>
+
+        <div id="compTabContent" class="comp-tab-content">
+          <!-- Dynamically populated based on active tab -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. CONCEPT ART & VISUAL DIRECTION GALLERY -->
     <div class="card">
       <div class="card-header">
         <span class="card-title">🎨 Visual Concept Gallery & Direction Studies</span>
@@ -875,6 +1005,7 @@
   <script src="monkey-variants.js"></script>
   <script src="proto-engine.js"></script>
   <script src="typewriter-styles.js"></script>
+  <script src="game-components.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const stageCanvas = document.getElementById('stageCanvas');
@@ -1330,6 +1461,165 @@
             a.click();
           });
         });
+      }
+
+
+
+      // --- WIRE UP FULL GAME COMPONENT LAB ---
+      if (window.GameComponents) {
+        const GC = window.GameComponents;
+        const compTabContent = document.getElementById('compTabContent');
+        const compTabs = document.querySelectorAll('#compTabsBar .comp-tab');
+
+        function renderCompTab(tabId) {
+          if (!compTabContent) return;
+          compTabContent.innerHTML = '';
+          const grid = document.createElement('div');
+          grid.className = 'comp-grid';
+
+          if (tabId === 'muses') {
+            GC.MUSES_DATA.forEach(m => {
+              const card = document.createElement('div');
+              card.className = 'comp-card';
+              const cv = GC.renderMusePortrait(m.id, 3);
+              const preview = document.createElement('div');
+              preview.className = 'comp-card-preview';
+              preview.appendChild(cv);
+
+              card.appendChild(preview);
+              card.innerHTML += `
+                <div class="comp-card-title">${m.name}</div>
+                <div class="comp-card-subtitle">${m.archetype}</div>
+                <div class="comp-card-tag">${m.bonuses}</div>
+                <p class="comp-card-desc">${m.bio}</p>
+              `;
+              grid.appendChild(card);
+            });
+          } else if (tabId === 'studios') {
+            GC.STUDIOS_DATA.forEach(s => {
+              const card = document.createElement('div');
+              card.className = 'comp-card';
+              const cv = GC.renderStudioHardware(s.id, 2);
+              const preview = document.createElement('div');
+              preview.className = 'comp-card-preview';
+              preview.appendChild(cv);
+
+              card.appendChild(preview);
+              card.innerHTML += `
+                <div class="comp-card-title">${s.name}</div>
+                <div class="comp-card-subtitle">Media Unit: ${s.unit}</div>
+                <div class="comp-card-tag" style="background:${s.color}22; color:${s.color}; border-color:${s.color}66;">${s.tagline}</div>
+                <p class="comp-card-desc">Produces syndicated ${s.unit} content, unlocking massive passive multipliers and premiere bonuses.</p>
+              `;
+              grid.appendChild(card);
+            });
+          } else if (tabId === 'garden') {
+            GC.GARDEN_STAGES.forEach(g => {
+              const card = document.createElement('div');
+              card.className = 'comp-card';
+              const cv = GC.renderGardenAsset(g.id, 'E', 3);
+              const preview = document.createElement('div');
+              preview.className = 'comp-card-preview';
+              preview.appendChild(cv);
+
+              card.appendChild(preview);
+              card.innerHTML += `
+                <div class="comp-card-title">${g.name}</div>
+                <div class="comp-card-subtitle">Letter Nursery Component</div>
+                <p class="comp-card-desc">${g.desc}</p>
+              `;
+              grid.appendChild(card);
+            });
+          } else if (tabId === 'shop') {
+            GC.SHOP_ITEMS_DATA.forEach(item => {
+              const card = document.createElement('div');
+              card.className = 'comp-card';
+              const cv = GC.renderShopItem(item.id, 3);
+              const preview = document.createElement('div');
+              preview.className = 'comp-card-preview';
+              preview.appendChild(cv);
+
+              card.appendChild(preview);
+              card.innerHTML += `
+                <div class="comp-card-title">${item.name}</div>
+                <div class="comp-card-subtitle">Banana Logistics Commodity</div>
+                <p class="comp-card-desc">${item.desc}</p>
+              `;
+              grid.appendChild(card);
+            });
+          } else if (tabId === 'awards') {
+            GC.AWARDS_TIERS_DATA.forEach(a => {
+              const card = document.createElement('div');
+              card.className = 'comp-card';
+              const cv = GC.renderAwardBadge(a.id, 3);
+              const preview = document.createElement('div');
+              preview.className = 'comp-card-preview';
+              preview.appendChild(cv);
+
+              card.appendChild(preview);
+              card.innerHTML += `
+                <div class="comp-card-title">${a.name}</div>
+                <div class="comp-card-subtitle">Hall of Records Honor</div>
+                <p class="comp-card-desc">Permanent achievement token displayed in the Hall of Records, bestowing global prestige multipliers.</p>
+              `;
+              grid.appendChild(card);
+            });
+          } else if (tabId === 'library') {
+            GC.BOOK_SPINES_DATA.forEach((b, idx) => {
+              const card = document.createElement('div');
+              card.className = 'comp-card';
+              const cv = GC.renderBookSpine(idx, 2);
+              const preview = document.createElement('div');
+              preview.className = 'comp-card-preview';
+              preview.appendChild(cv);
+
+              card.appendChild(preview);
+              card.innerHTML += `
+                <div class="comp-card-title">${b.name}</div>
+                <div class="comp-card-subtitle">Sample Title: "${b.title}"</div>
+                <div class="comp-card-tag" style="background:${b.color}33; color:#fff; border-color:${b.color};">Binding Height: ${b.height}px</div>
+                <p class="comp-card-desc">Tooled leather spine with embossed gold leaf ribs, book title inset, and silk bookmark tassel.</p>
+              `;
+              grid.appendChild(card);
+            });
+          } else if (tabId === 'weather') {
+            const weatherStates = [
+              { name: 'Tropical Sun (Clear Sky)', desc: 'Friendly smiling sun with stepped pixel flares. Typists enjoy standard daytime lighting.' },
+              { name: 'Drizzle Cloud (Light Rain)', desc: 'Soft cyan raindrop trails. Rainforest listeners begin tuning into Vine Radio.' },
+              { name: 'Monsoon Rainstorm', desc: 'Heavy dark rain shower. Rain-loving typists gain +30% typing speed.' },
+              { name: 'Thunderstorm with Lightning', desc: 'Dramatic storm clouds with jagged yellow lightning bolts. Typists work double-speed on lucky rolls.' }
+            ];
+            weatherStates.forEach((wState, idx) => {
+              const card = document.createElement('div');
+              card.className = 'comp-card';
+              const cv = GC.renderWeatherToy(idx, 3);
+              const preview = document.createElement('div');
+              preview.className = 'comp-card-preview';
+              preview.appendChild(cv);
+
+              card.appendChild(preview);
+              card.innerHTML += `
+                <div class="comp-card-title">${wState.name}</div>
+                <div class="comp-card-subtitle">Interactive Canopy Atmosphere</div>
+                <p class="comp-card-desc">${wState.desc}</p>
+              `;
+              grid.appendChild(card);
+            });
+          }
+
+          compTabContent.appendChild(grid);
+        }
+
+        compTabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            compTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            renderCompTab(tab.getAttribute('data-tab'));
+          });
+        });
+
+        // Initial render Muses
+        renderCompTab('muses');
       }
     });
   </script>
