@@ -235,6 +235,7 @@ window.Core = (() => {
       const cur = (window.StyleSwap && StyleSwap.current) || art.edition;
       const row = (label, body) => `<div class="set-row"><span class="set-lab">${label}</span>${body}</div>`;
       pop.innerHTML = row('Style', `<span class="set-seg"><button type="button" data-style="pixel" aria-pressed="${cur === 'pixel'}">Pixel</button><button type="button" data-style="classic" aria-pressed="${cur === 'classic'}">Classic</button></span>`)
+        + row('Effects', '<span class="set-seg" title="Low turns off looping decoration and trims particles so the game runs smoother. Auto switches to Low on weak phones or when the game cannot hold its frame rate.">' + ['auto', 'high', 'low'].map(m => `<button type="button" data-fx="${m}" aria-pressed="false">${m[0].toUpperCase() + m.slice(1)}</button>`).join('') + '</span>')
         + row('Sound', '<button type="button" class="set-btn" data-set="sound"></button>')
         + row('Tutorial', '<button type="button" class="set-btn" data-set="tour">Replay</button>').replace('class="set-row"', 'class="set-row" data-tour hidden')
         + row('Tips', '<button type="button" class="set-btn" data-set="tips"></button>').replace('class="set-row"', 'class="set-row" data-tour hidden')
@@ -246,9 +247,10 @@ window.Core = (() => {
       const close = () => { pop.hidden = true; setBtn.setAttribute('aria-expanded', 'false'); };
       const tipsOpt = $('[data-set="tips"]', pop);
       const paintTour = () => { const t = window.IMI && IMI.tour; pop.querySelectorAll('[data-tour]').forEach(r => { r.hidden = !t; }); if (t) { tipsOpt.textContent = t.tipsOn() ? 'On' : 'Off'; tipsOpt.setAttribute('aria-pressed', String(t.tipsOn())); } };   // tour.js loads after this, so look it up when the popover opens
-      setBtn.addEventListener('click', e => { e.stopPropagation(); sfx.tick(); paintTour(); pop.hidden = !pop.hidden; setBtn.setAttribute('aria-expanded', String(!pop.hidden)); });
+      setBtn.addEventListener('click', e => { e.stopPropagation(); sfx.tick(); paintTour(); paintFx(); pop.hidden = !pop.hidden; setBtn.setAttribute('aria-expanded', String(!pop.hidden)); });
       pop.addEventListener('click', e => {
         const b = e.target.closest('button'); if (!b) return;
+        if (b.dataset.fx) { setFx(b.dataset.fx); return; }
         if (b.dataset.style) { if (b.dataset.style !== cur && window.StyleSwap) { close(); StyleSwap.swap(); } return; }
         const act = b.dataset.set;
         if (act === 'sound') { audio.on = !audio.on; localStorage.setItem('imi-sound', audio.on ? 'on' : 'off'); paintSound(); if (audio.on) sfx.drum(); return; }
@@ -282,17 +284,53 @@ window.Core = (() => {
     const off = (n, f) => { bus[n] = (bus[n] || []).filter(x => x !== f); };
     const emit = (n, d) => { (bus[n] || []).slice().forEach(f => { try { f(d); } catch (e) { console.error(e); } }); };
 
+    /* ---------- effects level ----------
+       High = everything. Low = no looping decoration (CSS keys off html[data-fx="low"]), fewer particles, lighter typist drawing (ops.js reads IMI.fx.low).
+       Auto (the default) starts on Low for very weak phones, and drops to Low if the frame rate stays poor while you play; it never switches back up on its own. */
+    const FXK = 'imi-fx', FXA = 'imi-fx-auto';
+    const fx = { mode: 'auto', low: false };
+    const weakDevice = () => (navigator.deviceMemory && navigator.deviceMemory <= 2) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2);
+    function applyFx() {
+      const m = localStorage.getItem(FXK), was = fx.low; fx.mode = m === 'high' || m === 'low' ? m : 'auto';
+      fx.low = fx.mode === 'low' || (fx.mode === 'auto' && (localStorage.getItem(FXA) === '1' || !!weakDevice()));
+      html.dataset.fx = fx.low ? 'low' : 'high';
+      if (fx.low !== was) emit('fx', { low: fx.low });
+    }
+    function paintFx() {
+      document.querySelectorAll('.set-pop [data-fx]').forEach(b => { b.setAttribute('aria-pressed', String(b.dataset.fx === fx.mode)); if (b.dataset.fx === 'auto') b.textContent = fx.mode === 'auto' && fx.low ? 'Auto: Low' : 'Auto'; });
+    }
+    function setFx(mode) {
+      try { localStorage.setItem(FXK, mode); if (mode === 'auto') localStorage.removeItem(FXA); } catch { /* storage blocked */ }
+      applyFx(); paintFx(); sfx.tick();
+    }
+    function watchFrameRate() {                              // 4-second windows; two bad ones in a row switch Auto to Low
+      let last = 0, t0 = 0, n = 0, bad = 0, strikes = 0;
+      const step = now => {
+        requestAnimationFrame(step);
+        const dt = now - last; last = now;
+        if (document.hidden || !inGame() || fx.mode !== 'auto' || fx.low || dt > 1000 || dt <= 0) { n = bad = strikes = 0; t0 = now; return; }
+        n++; if (dt > 45) bad++;
+        if (now - t0 < 4000) return;
+        // a bad window: under ~5fps on average, or over a third of its frames slower than ~22fps
+        if (n < 20 || bad / n > .35) { if (++strikes >= 2) { try { localStorage.setItem(FXA, '1'); } catch { /* storage blocked */ } applyFx(); say('Smoother mode on. Change it under Settings > Effects.'); } } else strikes = 0;
+        n = bad = 0; t0 = now;
+      };
+      requestAnimationFrame(step);
+    }
+
     /* ---------- the bridge ops.js plays through ---------- */
     window.IMI = {
       on, off, emit,
       edition: art.edition, reduceMotion, sfx, centerOf, fmt, say, banner, heroSay: art.heroSay,
-      burst: art.burst, fall: art.fall,
+      fx, setFx,
+      burst: (x, y, names, n = 12) => art.burst(x, y, names, fx.low ? Math.max(2, Math.ceil(n / 3)) : n),     // Low: a third of the particles
+      fall: (x, y, name, life) => { if (fx.low && Math.random() < .5) return; art.fall(x, y, name, life); },
       bananas: { get: () => score, add: n => { score += n; paintScore(false); }, spend, earn, watch: f => watchers.push(f) },
       screen: () => html.dataset.screen,
       onScreen: f => screenFns.push(f),
       whenPlaying: f => (inGame() ? f() : queued.push(f)),     // modals wait for the game screen instead of covering the menu
     };
-    apply(true);
+    apply(true); applyFx(); watchFrameRate();
     return window.IMI;
   }
   return { boot, $, rand, pick, centerOf, restart, reduceMotion };

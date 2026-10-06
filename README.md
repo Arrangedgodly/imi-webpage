@@ -113,6 +113,10 @@ There is currently no account, cloud sync, or save import/export interface. Clea
 
 The site is a progressive web app. Open the hosted game in Chrome on Android and choose **Install app** (or **Add to Home screen**): it installs with its own icon, opens full-screen without the browser's address bar, and keeps working offline. On iPhone use Share, then **Add to Home Screen**. A service worker (`sw.js`) stores the game after the first visit and always prefers the network, so a new deploy appears as soon as you are online. Installing needs https (or localhost).
 
+## Smoother play on slow phones
+
+Settings has an **Effects** switch: **Auto**, **High** or **Low**. Low turns off the looping decoration (lamp sway, glints, shimmer, blinking hints, falling leaves), trims particles to a third, and draws the typists less often; taps, floating numbers and stamps still play. Auto, the default, starts on Low for very weak phones and switches itself to Low if the frame rate stays poor for a few seconds of play. It never switches back up by itself, and your choice is remembered. In code, `html[data-fx="low"]` drives the CSS and `IMI.fx.low` drives the game.
+
 ## How it is built
 
 | Layer | Technology | Responsibility |

@@ -454,7 +454,7 @@
   }
   /* a hot streak throws sparks up off the keyboard */
   function ember(heat) {
-    const box = fx && fx.embers; if (!box || IMI.reduceMotion) return;
+    const box = fx && fx.embers; if (!box || IMI.reduceMotion || LOW()) return;
     for (let k = 0; k < heat; k++) {
       const e = document.createElement('i'); e.className = 'o-ember';
       e.style.cssText = `left:${15 + rand() * 70}%;--dx:${(rand() - .5) * 60}px;--rise:${-90 - rand() * 120}px;--ec:${['#ffd23a', '#ff9a3a', '#ff5d73'][Math.min(2, Math.floor(rand() * (heat + 1)))]}`;
@@ -483,7 +483,7 @@
       if (!e) return false; const r = e.getBoundingClientRect(); return r.width > 0 && r.bottom > 70 && r.top < innerHeight;
     });
     if (!srcs.length) return;
-    const h = hud.getBoundingClientRect(), hx = h.left + h.width * .3, hy = h.top + h.height / 2, n = Math.min(3, 1 + Math.floor(Math.log10(amt + 1) / 2));
+    const h = hud.getBoundingClientRect(), hx = h.left + h.width * .3, hy = h.top + h.height / 2, n = LOW() ? 1 : Math.min(3, 1 + Math.floor(Math.log10(amt + 1) / 2));
     for (let k = 0; k < n; k++) setTimeout(() => {
       const src = srcs[Math.floor(rand() * srcs.length)], r = src.getBoundingClientRect(), x = r.left + r.width * (src.id === 'oStage' ? .2 + rand() * .6 : .5), y = r.top + 8;
       if (src.classList.contains('o-spine')) src.animate([{ translate: '0 0' }, { translate: '0 -7px' }, { translate: '0 0' }], { duration: 260, easing: PX ? 'steps(3)' : 'ease-out' });
@@ -1553,6 +1553,7 @@
 
   /* ================= typewriter stage ================= */
   const ROWS = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+  const LOW = () => !!(IMI.fx && IMI.fx.low);                      // Settings > Effects: Low trims decoration and particles
   let typists = [], fx = null;                                     // fx: the live stage's elements, looked up once per build instead of on every keystroke
   /* training shows on the machine itself: brass then gold keys, ribbon spools, a carriage bell, tinted vowels, a keeper light */
   const partsOf = d => { const u = d.up; return [u.fing >= 3 && 'p-brass', u.fing >= 7 && 'p-gold', u.ink && 'p-spools', u.ribbon && 'p-ribbon2', u.rapid && 'p-bell', u.vowel && 'p-vowels', d.keeper.owned && 'p-led', d.keeper.owned && d.keeper.on && 'p-ledon'].filter(Boolean).join(' '); };
@@ -1640,7 +1641,7 @@
     if (!typists.length) return;
     const t = (ci != null && typists.find(x => x.ci === ci)) || typists[Math.floor(rand() * typists.length)];
     t.v += (rand() < .5 ? -1 : 1) * (strong ? .13 : .06); t.ph ^= 1; t.expr = 'screech'; t.until = performance.now() + 170;
-    if (!IMI.reduceMotion) { const nm = t.nm || (t.nm = t.el.querySelector('.o-nm')); if (nm && performance.now() > (t.nmAt || 0)) { t.nmAt = performance.now() + 230; nm.animate([{ transform: 'none' }, { transform: 'translateY(-6px) scale(1.18)', color: '#ffd23a' }, { transform: 'none' }], { duration: 220, easing: PX ? 'steps(3)' : 'ease-out' }); } }
+    if (!IMI.reduceMotion && !LOW()) { const nm = t.nm || (t.nm = t.el.querySelector('.o-nm')); if (nm && performance.now() > (t.nmAt || 0)) { t.nmAt = performance.now() + 230; nm.animate([{ transform: 'none' }, { transform: 'translateY(-6px) scale(1.18)', color: '#ffd23a' }, { transform: 'none' }], { duration: 220, easing: PX ? 'steps(3)' : 'ease-out' }); } }
     if (!strong && rand() < .012) say(t);
   }
   function stepTypists(now, draw = true) {                          // physics runs every frame; the DOM/canvas writes only when `draw` (every other frame)
@@ -1691,7 +1692,7 @@
   let loopN = 0;
   function loop(now) {
     loopN++;
-    if (ui.tab === 'floor' && typists.length && !IMI.reduceMotion) { cheerStep(now); stepTypists(now, (loopN & 1) === 0); }
+    if (ui.tab === 'floor' && typists.length && !IMI.reduceMotion) { cheerStep(now); stepTypists(now, (loopN & (LOW() ? 3 : 1)) === 0); }
     countStep(now);
     requestAnimationFrame(loop);
   }
@@ -1701,7 +1702,7 @@
     r.col++; r.page = (r.page || 0) + 1;
     if (r.page >= 48 && now - (ui.tearAt || 0) > 1400) { r.page = 0; ui.tearAt = now; tearPage(r); }
     /* a big crew can press dozens of times a second: tapping always gets the full show, auto-typing is drawn at most ~14 times a second */
-    if (auto) { if (now - fx.richAt < 70) { kick(false, p); return; } fx.richAt = now; }
+    if (auto) { if (now - fx.richAt < (LOW() ? 160 : 70)) { kick(false, p); return; } fx.richAt = now; }
     IMI.sfx.key(1 + S.sel * .14);                                   // each machine has its own clack, higher up the range
     const key = fx.keys[ch];
     if (key) { key.classList.add('down'); setTimeout(() => key.classList.remove('down'), 90); }
@@ -1711,18 +1712,19 @@
     car.style.transform = `translateX(${-(r.col % 9) * 2}px)`;
     if (r.col % 9 === 0) { car.classList.remove('ding'); fx.tw.classList.remove('ding'); void car.offsetWidth; car.classList.add('ding'); fx.tw.classList.add('ding'); }   // on the machine too: its sheet and bell key off it
     kick(!auto, auto ? p : undefined);
-    if (auto && n % 6 === 0 && typists.length) { const t = typists[Math.floor(rand() * typists.length)], b = t.el.getBoundingClientRect(); IMI.fall(b.left + b.width / 2, b.bottom - 10, 'leaf', 1200); }
+    if (auto && !LOW() && n % 6 === 0 && typists.length) { const t = typists[Math.floor(rand() * typists.length)], b = t.el.getBoundingClientRect(); IMI.fall(b.left + b.width / 2, b.bottom - 10, 'leaf', 1200); }
     fx.sheet.textContent = r.sheet.slice(-48);
     const tw = fx.tw;
     if (!IMI.reduceMotion) {
       if (!auto) tw.animate([{ translate: '0 0' }, { translate: '0 3px', offset: .35 }, { translate: '0 0' }], { duration: 140, easing: PX ? 'steps(2)' : 'ease-out' });   // the strike thumps the machine
-      const k = auto ? (rand() < .35 ? 1 : 0) : 2 + (rand() < .5 ? 1 : 0);
+      const k = auto ? (!LOW() && rand() < .35 ? 1 : 0) : (LOW() ? 1 : 2 + (rand() < .5 ? 1 : 0));
       for (let j = 0; j < k; j++) {                                  // ink flecks spit from the platen
         const f = document.createElement('i'); f.className = 'o-fleck';
         f.style.cssText = `--fx:${(rand() - .5) * 70}px;--fy:${-10 - rand() * 34}px;--fc:${rand() < .7 ? '#1a0f14' : POP_COLORS[Math.floor(rand() * POP_COLORS.length)]}`;
         f.addEventListener('animationend', () => f.remove()); tw.appendChild(f);
       }
     }
+    if (auto && LOW()) return;                                     // Low: the crew's letters do not pop; your own taps still do
     const el = document.createElement('i'); el.className = 'o-pop'; el.textContent = ch;
     const slot = popSlot++ % 9;
     el.style.cssText = `left:${12 + slot * 9.5}%;top:${30 + (slot % 3) * 9}%;--pc:${POP_COLORS[popSlot % POP_COLORS.length]}`;
@@ -1743,7 +1745,7 @@
     const sp = $('#oSheet'); if (sp) sp.textContent = '';
   }
   function royPing() {
-    if (!['floor', 'press'].includes(ui.tab) || document.hidden || IMI.reduceMotion) return;
+    if (!['floor', 'press'].includes(ui.tab) || document.hidden || IMI.reduceMotion || LOW()) return;
     const sp = $$('.o-spine'); if (!sp.length) return;
     const el = sp[Math.floor(rand() * sp.length)], r = el.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
     const book = RBY[el.dataset.id]; if (!book) return;
@@ -2224,7 +2226,7 @@
     renderT += dt;
     if (renderT >= renderGap && dirty) {                           // renders are spaced by how long they take, so a slow phone spends a fixed share of its time here
       renderT = 0; dirty = false; const t0 = performance.now(); render();
-      renderGap = Math.min(1, Math.max(.25, (performance.now() - t0) * .007));
+      renderGap = Math.min(1, Math.max(LOW() ? .5 : .25, (performance.now() - t0) * .007));
     }
     saveT += dt; if (saveT >= 5) { saveT = 0; save(); }
   }

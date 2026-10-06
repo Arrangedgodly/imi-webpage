@@ -1419,3 +1419,21 @@ html[data-style="classic"] .rail.docked .hud { font-size: 24px; }
 .rail.docked .toys { justify-content: space-between; flex-wrap: nowrap; }
 .rail.docked .toy { width: 48px; height: 48px; }
 .rail:is(.open, .docked) .o-long { padding-right: 24px; }      /* keeps a name clear of its badge */
+
+/* ============================================================
+   LOW EFFECTS (Settings > Effects, or Auto on a weak phone). Switches off the looping decoration and the costly filters.
+   One-shot feedback (tap pops, floaters, stamps, banners) is left alone so the game still feels alive.
+   ============================================================ */
+html[data-fx="low"] :is(.o-lamp, .o-win-rain, .o-win-bolt, .o-speed, .o-flies i, .o-drips i, .o-led, .o-spool, .o-bell, .o-book.ready, .o-btn.gold, .o-btn[data-act="up"],
+  .o-tab .o-ico, .o-seat.on .o-portrait, .o-award .o-ico, .o-div.live .o-emb, .o-div.live .o-emb b, .o-desk.locked.can, .o-dact, .o-tw.mk2 .o-carriage, .o-ticker.hot .o-tkr-tag,
+  .o-crewcard.shiny, .o-stage.golden .o-body) { animation: none !important; }
+html[data-fx="low"] :is(.o-btn, .o-buff, .o-award, .o-crewcard.shiny, .o-spine, .o-tab[data-badge], .o-card.can h3, .o-scene)::after,
+html[data-fx="low"] :is(.o-btn, .o-buff, .o-award, .o-crewcard.shiny, .o-spine, .o-tab[data-badge], .o-card.can h3, .o-scene)::before { animation: none !important; }
+html[data-fx="low"] :is(.o-prog i, .o-dbar i)::after { animation: none !important; }
+html[data-fx="low"] .o-btn::after, html[data-fx="low"] .o-buff::after { display: none; }                          /* the glint has nothing to show once it stops */
+html[data-fx="low"] .o-spine::before { display: none; }
+/* filters repaint the whole sprite every time it moves: the typists lose their wet-weather tint, nothing else changes */
+html[data-fx="low"] .o-typist canvas, html[data-fx="low"] .o-mk { filter: none !important; }
+html[data-fx="low"] .o-gold { filter: none; }
+/* the title-screen backdrop: still scenery only */
+html[data-fx="low"] :is(.stars, .fireflies span, .drifters > *, .layer-mid, .layer-near, .foliage, .fr) { animation: none !important; }
