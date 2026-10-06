@@ -163,10 +163,6 @@ html[data-screen="game"] #game { display: flex; flex-direction: column; }
 @keyframes bolt-flash { 0%, 60% { opacity: 1; } 65% { opacity: 0; } 70% { opacity: 1; } 75% { opacity: 0; } 80%, 100% { opacity: 1; } }
 
 /* ---------- game header ---------- */
-.topbar {
-  position: relative; z-index: 20; flex: none; display: flex; align-items: center; gap: 12px; padding: 8px 14px; padding-top: max(8px, env(safe-area-inset-top));
-  background: linear-gradient(180deg, rgba(13,36,18,.95), rgba(13,36,18,.75)); backdrop-filter: blur(6px); border-bottom: 4px solid var(--wood-dark);
-}
 .back-btn { width: 46px; height: 46px; padding: 0 0 3px; cursor: pointer; font-family: var(--font-display); font-size: 30px; line-height: 1; color: #fff; background: linear-gradient(135deg, var(--leaf-light), var(--leaf)); border: 0; border-radius: 50%; box-shadow: 0 3px 0 #1f5a24, inset 0 -2px 0 rgba(0,0,0,.15); transition: transform .3s var(--bounce); }
 .back-btn:hover { transform: scale(1.1) rotate(-6deg); }
 .back-btn:active { transform: scale(.92); }
@@ -272,7 +268,6 @@ body.night .hero-motes i { background: #c8ff7a; box-shadow: 0 0 8px 3px rgba(200
 
 /* ---------- phones ---------- */
 @media (max-width: 720px) {
-  .topbar { gap: 8px; padding: 6px 8px; padding-top: max(6px, env(safe-area-inset-top)); border-bottom-width: 3px; }
   .back-btn, .toy { width: 38px; height: 38px; }
   .back-btn { font-size: 26px; }
   .toys { gap: 5px; }
@@ -299,3 +294,6 @@ body.night .hero-motes i { background: #c8ff7a; box-shadow: 0 0 8px 3px rgba(200
 .set-seg button, .set-btn { font: inherit; font-size: 14px; color: #fff; background: rgba(255,255,255,.1); border: 0; padding: 6px 12px; cursor: pointer; }
 .set-btn { border: 2px solid var(--wood-dark); border-radius: 999px; }
 .set-seg button[aria-pressed="true"], .set-btn[aria-pressed="true"] { background: var(--banana); color: #3a210d; }
+
+/* perf: the corner foliage (animated SVG with a drop-shadow filter) repaints every frame; behind the game panels it is only scenery */
+html[data-screen="game"] .foliage, html[data-screen="game"] .fr { animation: none; }

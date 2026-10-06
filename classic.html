@@ -73,15 +73,21 @@
 
   <!-- GAME: Typewriter Ops. Everything inside #opsRoot is built by ops.js -->
   <div class="screen game" id="game">
-    <header class="topbar">
-      <button class="back-btn" id="menuBtn" type="button" aria-label="Back to the menu" title="Menu (Esc)">‹</button>
-      <div class="hud" id="hud" title="Bananas">
-        <svg viewBox="0 0 40 40" width="26" height="26" aria-hidden="true"><use href="#banana-icon"/></svg>
-        <b id="score">0</b>
+    <aside class="rail" id="rail" aria-label="Menu">
+      <div class="rail-in" id="railIn">
+        <button class="rail-toggle" id="railToggle" type="button" aria-label="Open the menu" aria-expanded="false" aria-controls="railDrawer"><i class="rail-chev"></i></button>
+        <div class="hud" id="hud" title="Bananas">
+          <svg viewBox="0 0 40 40" width="26" height="26" aria-hidden="true"><use href="#banana-icon"/></svg>
+          <b id="score">0</b>
+        </div>
+        <nav class="o-tabs" id="oTabs" role="tablist" aria-label="Departments"></nav>
+        <div class="rail-drawer" id="railDrawer">
+          <div class="toys" id="toyDock"></div>
+          <button class="toy" id="settingsBtn" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false"><span class="toy-art">⚙️</span><em class="rail-lab">Settings</em></button>
+          <button class="back-btn" id="menuBtn" type="button" aria-label="Back to the title screen" title="Title screen (Esc)"><span class="rail-arrow">‹</span><em class="rail-lab">Title screen</em></button>
+        </div>
       </div>
-      <div class="toys" id="toyDock"></div>
-      <button class="toy" id="settingsBtn" type="button" aria-label="Settings" title="Settings" aria-haspopup="dialog" aria-expanded="false"><span class="toy-art">⚙️</span></button>
-    </header>
+    </aside>
     <div id="opsRoot"></div>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>

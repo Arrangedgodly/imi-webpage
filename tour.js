@@ -30,8 +30,8 @@
       hint: [60, 'Tap faster or hire more typists.'] },
     { id: 'shop', tab: 'shop', target: '.o-btn[data-act="buy"][data-what="desk"][data-i="1"]', text: 'Bananas! Spend them on a new typewriter.', done: s => s.owned >= 2, next: true,
       view: s => (s.bananas < s.deskPrice ? { text: `Bananas! Save up ${s.deskPrice.toLocaleString('en-US')} for a new typewriter.` } : null) },
-    { id: 'toys', tab: null, target: '#toyDock', text: 'Snack and coconut boost you; weather and night change what sells.', next: true },
-    { id: 'end', tab: null, target: '#settingsBtn', text: 'More departments appear as you grow. Replay this tour in Settings.', next: true, last: true }
+    { id: 'toys', tab: null, target: '#railToggle', text: 'The menu button holds the snack and coconut boosts, weather and night (they change what sells).', next: true },
+    { id: 'end', tab: null, target: '#railToggle', text: 'More departments appear in the side bar as you grow. Replay this tour in Settings, under the menu button.', next: true, last: true }
   ];
 
   /* ---- one-shot tips (after the tour). when(s): condition; ev: an event that raises it ---- */
@@ -63,9 +63,9 @@
   const TIP_GAP = 120000;
 
   const visible = el => !!el && !el.hidden && el.getClientRects().length > 0 && !el.closest('[hidden]');
-  const resolve = sel => {                       // 'tab:id' = that department's tab, or the More button when it is tucked away
+  const resolve = sel => {                       // 'tab:id' = that department's tab in the side rail
     if (!sel) return null;
-    if (sel.startsWith('tab:')) { const t = $(tabBtn(sel.slice(4))); return visible(t) ? t : (visible($('#oMore')) ? $('#oMore') : null); }
+    if (sel.startsWith('tab:')) { const t = $(tabBtn(sel.slice(4))); return visible(t) ? t : null; }
     const el = $(sel); return visible(el) ? el : null;
   };
   const busy = () => IMI.screen() !== 'game' || document.hidden || !!document.querySelector('.o-modal, .o-celebrate');
@@ -84,9 +84,9 @@
   const overlap = (a, b) => { const w = Math.min(a.right, b.right) - Math.max(a.left, b.left), h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top); return w > 0 && h > 0 ? w * h : 0; };
   function place(tr) {
     const vw = innerWidth, vh = innerHeight, bw = bub.offsetWidth, bh = bub.offsetHeight, m = 8, gap = 14;
-    const hd = $('.topbar'), tb = $('#oTabs');
-    const lo = hd ? hd.getBoundingClientRect().bottom + m : m, tabTop = tb && visible(tb) ? tb.getBoundingClientRect().top : vh;
-    const clampX = cx => Math.max(m, Math.min(vw - bw - m, cx - bw / 2));
+    const lo = m, tabTop = vh;                                 // the departments sit in a side rail now, so the bubble may use the full height
+    const rl = ($('#rail') ? $('#rail').getBoundingClientRect().right : 0) + m;       // keep the bubble off the side rail
+    const clampX = cx => Math.max(rl, Math.min(vw - bw - m, cx - bw / 2));
     const cx = tr ? tr.left + tr.width / 2 : vw / 2;
     const c = {
       below: tr && { x: clampX(cx), y: tr.bottom + gap, side: 'below' },

@@ -8,7 +8,8 @@
   const PX = IMI.edition === 'pixel';
   const $ = (s, r = root) => r.querySelector(s);
   const $$ = (s, r = root) => [...r.querySelectorAll(s)];
-  const fmt = n => Math.round(n).toLocaleString('en-US');
+  const NF = new Intl.NumberFormat('en-US');                   // toLocaleString builds a formatter on every call; this one is built once
+  const fmt = n => NF.format(Math.round(n));
   const fmtBig = IMI.fmt;                                       // commas below a million, then 1.23M / 4.5B / ...
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const rand = Math.random;
@@ -24,14 +25,14 @@
     { id: 'orchid', name: 'Orchid Imperial', lo: 10, hi: 11, price: 3906250, color: '#b58cf0', fs: PX ? '17px' : '', font: PX ? "'Jersey 10', monospace" : "'Bree Serif', serif", style: PX ? 'Tall pixel' : 'Serif' },
     { id: 'moon', name: 'Moonflower Grand', lo: 12, hi: 13, price: 48828125, color: '#dfe3f2', fs: PX ? '20px' : '', font: PX ? "'Micro 5', monospace" : "'Pacifico', cursive", style: 'Grand' }
   ];
-  /* [id, icon, department, what it does, short label, tucked behind "More" on phones] */
+  /* [id, icon, department, what it does, short label] */
   const TABS = [
     ['floor', 'type', 'Typewriter Ops', 'The floor', 'Floor'], ['training', 'monkey', 'Primate Resources', 'Hire & train', 'Train'],
     ['lab', 'coconut', 'Coconut R&D', 'Word lab', 'Words'], ['press', 'log', 'Vine Infrastructure', 'Titles & rights', 'Titles'],
     ['shop', 'banana', 'Banana Logistics', 'Spend bananas', 'Shop'],
-    ['studios', 'reel', 'IMI Studios', 'Media divisions', 'Media', 1],
-    ['muses', 'quill', 'Muse Salon', 'Literary patrons', 'Muses', 1], ['records', 'trophy2', 'Hall of Records', 'Stats & awards', 'Awards', 1],
-    ['legacy', 'trophy1', 'Legacy', 'Second printing', 'Legacy', 1]
+    ['studios', 'reel', 'IMI Studios', 'Media divisions', 'Media'],
+    ['muses', 'quill', 'Muse Salon', 'Literary patrons', 'Muses'], ['records', 'trophy2', 'Hall of Records', 'Stats & awards', 'Awards'],
+    ['legacy', 'trophy1', 'Legacy', 'Second printing', 'Legacy']
   ];
   /* progressive reveal: a tab is visible unless it has a gate that says otherwise */
   const TAB_GATES = {
@@ -250,9 +251,18 @@
   ];
   const awardCount = () => Object.keys(S.awards).length;
   const awardMult = () => 1 + .01 * awardCount();
-  const authoredSold = () => Object.keys(S.written).filter(id => RBY[id] && !RBY[id].gen && !RBY[id].kid).length;
-  const kidsSold = () => Object.keys(S.written).filter(id => RBY[id] && RBY[id].kid).length;
-  const soldCount = () => Object.keys(S.written).filter(id => RBY[id] && !RBY[id].kid).length;   // progression gate: kids' books never count
+  /* everything that counts the shelf reads this one pass. It runs several times per 50ms tick (typist speed, muse seats, royalties), so it is
+     cached until the shelf changes (dropCaches) or the save is swapped; before, a 260-title shelf cost ~70,000 steps per call. */
+  let soldC = null;
+  const soldStats = () => {
+    if (soldC && soldC.ref === S.written) return soldC;
+    let all = 0, kids = 0, authored = 0, pay = 0;
+    for (const id in S.written) { const r = RBY[id]; if (!r) continue; pay += r.pay * (r.kid ? KID_ROY : 1); if (r.kid) kids++; else { all++; if (!r.gen) authored++; } }
+    return (soldC = { ref: S.written, all, kids, authored, pay });
+  };
+  const authoredSold = () => soldStats().authored;
+  const kidsSold = () => soldStats().kids;
+  const soldCount = () => soldStats().all;   // progression gate: kids' books never count
   /* the kids' reading list: the next KID_LIST unsold kids' titles; only those (plus authored and pitched titles) are in play */
   let listC = null, listT = 0, readyC = null, readyT = 0;
   const kidsListed = () => {
@@ -262,10 +272,10 @@
   };
   const inPlay = r => !r.kid || kidsListed().has(r.id);
   const readyList = () => { const now = performance.now(); if (!readyC || now - readyT > 250) { readyC = RECIPES.filter(canWrite); readyT = now; } return readyC; };
-  const dropCaches = () => { listC = null; readyC = null; };
+  const dropCaches = () => { listC = null; readyC = null; soldC = null; };
   const dealMult = () => DEALS.reduce((m, d) => (S.deals[d.id] ? m * (d.mult || 1) : m), 1) * (S.deals.clubs ? 1 + .03 * soldCount() : 1);
   const bookRoy = r => r.pay * (r.kid ? KID_ROY : 1) * ROY_BASE * dealMult() * awardMult() * legacyMult() * (museOn('austen') ? 1.25 : 1);
-  const royBase = () => Object.keys(S.written).reduce((a, id) => a + (RBY[id] ? bookRoy(RBY[id]) : 0), 0);
+  const royBase = () => soldStats().pay * ROY_BASE * dealMult() * awardMult() * legacyMult() * (museOn('austen') ? 1.25 : 1);   // bookRoy summed over the shelf, with the shared factors pulled out of the loop
   const royRate = () => royBase() * passive();
   const fmtRate = n => (n < 10 ? n.toFixed(1) : fmtBig(n));
   const buffOn = k => performance.now() < buffs[k];
@@ -309,21 +319,25 @@
   const vib = p => { try { if (navigator.userActivation && !navigator.userActivation.hasBeenActive) return; navigator.vibrate && navigator.vibrate(p); } catch { /* unsupported */ } };
   const progress = r => { let have = 0; for (const w in r.need) have += Math.min(stock(w), r.need[w]); return have; };
   /* rolling numbers: cnt() renders a number that animates toward its new value (and counts up from zero when a tab opens) */
-  const shownN = {}, cntAnim = {};
+  const shownN = {}, cntAnim = {}; let cntWake = false;
   const cnt = (key, n, big) => {
+    cntWake = true;
     if (ui.cntZero && !IMI.reduceMotion) { shownN[key] = 0; delete cntAnim[key]; }
     if (!(key in shownN) || IMI.reduceMotion) shownN[key] = n;
     return `<span class="o-cnt" data-cnt="${key}" data-v="${n}"${big ? ' data-big' : ''}>${(big ? fmtBig : fmt)(shownN[key])}</span>`;
   };
   function countStep(now) {
+    if (!cntWake) return;                                          // numbers only move after a render has handed them a new value
+    let live = false;
     for (const el of document.querySelectorAll('.o-cnt')) {
       const k = el.dataset.cnt, t = +el.dataset.v; let a = cntAnim[k];
       if ((shownN[k] ?? t) === t && !a) { if (el.classList.contains('up')) el.classList.remove('up'); continue; }
       if (!a || a.to !== t) a = cntAnim[k] = { from: shownN[k] ?? t, to: t, t0: now, dur: Math.min(1100, 350 + Math.abs(t - (shownN[k] ?? t)) * 40) };
       const p = Math.min(1, (now - a.t0) / a.dur), e = 1 - Math.pow(1 - p, 3);
-      shownN[k] = p >= 1 ? t : a.from + (t - a.from) * e; if (p >= 1) delete cntAnim[k];
+      shownN[k] = p >= 1 ? t : a.from + (t - a.from) * e; if (p >= 1) delete cntAnim[k]; else live = true;
       el.textContent = (el.hasAttribute('data-big') ? fmtBig : fmt)(shownN[k]); el.classList.toggle('up', p < 1);
     }
+    cntWake = live;
   }
   const bar = (have, total) => `<span class="o-prog" role="img" aria-label="${have} of ${total} words"><i style="width:${Math.round(100 * have / total)}%"></i></span>`;
   /* floating text that rises from a point (page coordinates, so it survives re-renders) */
@@ -421,23 +435,26 @@
     const now = performance.now(); combo.n = now - combo.t < 650 ? combo.n + 1 : 1; combo.t = now;
     if (combo.n > S.best) { S.best = combo.n; }
     vib(6);
-    const el = $('#oCombo'), stage = $('#oStage'); if (!el) return;
+    if (!fx) return; const el = fx.combo, stage = fx.stage;
     const heat = combo.n >= 50 ? 3 : combo.n >= 20 ? 2 : combo.n >= 10 ? 1 : 0;
-    stage.dataset.heat = heat;
-    if (combo.n < 5) { el.className = 'o-combo'; return; }
+    if (stage.dataset.heat !== String(heat)) stage.dataset.heat = heat;
+    if (combo.n < 5) { if (el.className !== 'o-combo') el.className = 'o-combo'; return; }
     IMI.sfx.combo && IMI.sfx.combo(combo.n);
-    $('#oComboN').textContent = `x${combo.n}`; el.className = 'o-combo show' + (combo.n >= 50 ? ' hot' : combo.n >= 20 ? ' warm' : '');
-    el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
-    const meter = $('#oMeter'); meter.style.animation = 'none'; void meter.offsetWidth; meter.style.animation = '';   // the streak timer drains from full on every tap
+    fx.comboN.textContent = `x${combo.n}`; const cls = 'o-combo show' + (combo.n >= 50 ? ' hot' : combo.n >= 20 ? ' warm' : ''); if (el.className !== cls) el.className = cls;
+    if (!IMI.reduceMotion) {                                         // the number pops on every tap and the streak timer drains from full: Web Animations restart without forcing a layout
+      el.animate([{ transform: 'scale(1.8) rotate(-8deg)' }, { transform: 'none' }], { duration: 220, easing: PX ? 'steps(4)' : 'ease-out' });
+      if (fx.meterAnim) fx.meterAnim.cancel();
+      fx.meterAnim = fx.meter.animate([{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }], { duration: 900, easing: PX ? 'steps(9)' : 'linear', fill: 'forwards' });
+    }
     if (heat) ember(heat);
     const m = MILES.find(x => x.n === combo.n);
     if (m) { const b = stage.getBoundingClientRect(); award(m, b.left + b.width / 2, b.top + 150); }
-    clearTimeout(combo.timer); combo.timer = setTimeout(() => { el.className = 'o-combo'; stage.dataset.heat = 0; combo.n = 0; mark(); }, 900);
+    clearTimeout(combo.timer); combo.timer = setTimeout(() => { el.className = 'o-combo'; stage.dataset.heat = 0; combo.n = 0; if (fx && fx.meterAnim) fx.meterAnim.cancel(); mark(); }, 900);
     mark();
   }
   /* a hot streak throws sparks up off the keyboard */
   function ember(heat) {
-    const box = $('#oEmbers'); if (!box || IMI.reduceMotion) return;
+    const box = fx && fx.embers; if (!box || IMI.reduceMotion) return;
     for (let k = 0; k < heat; k++) {
       const e = document.createElement('i'); e.className = 'o-ember';
       e.style.cssText = `left:${15 + rand() * 70}%;--dx:${(rand() - .5) * 60}px;--rise:${-90 - rand() * 120}px;--ec:${['#ffd23a', '#ff9a3a', '#ff5d73'][Math.min(2, Math.floor(rand() * (heat + 1)))]}`;
@@ -673,7 +690,7 @@
     { id: 'twain', name: 'Mark Twainana', cost: 500000, desc: 'Division income +20%.' }
   ];
   const museSlots = () => (soldCount() >= 13 ? 3 : soldCount() >= 8 ? 2 : soldCount() >= 3 ? 1 : 0);
-  const museOn = id => S.muses.seated.slice(0, museSlots()).includes(id);
+  const museOn = id => { const seat = S.muses.seated, n = museSlots(); for (let i = 0; i < n; i++) if (seat[i] === id) return true; return false; };
   const museSale = band => (museOn('seuss') && band <= 1 ? 1.2 : 1) * (museOn('tolken') && band >= 3 ? 1.25 : 1);
   /* every muse sits for a portrait: a pixel monkey in their signature hat, in a gilt frame */
   const MUSE_LOOK = { seuss: [3, '#ff5d73'], poe: [0, '#3a2a5a'], dick: [7, '#f08aa4'], hemi: [6, '#5fa8f0'], christie: [2, '#b58cf0'], woolf: [8, '#78d9a0'], austen: [4, '#f2b23a'], tolken: [5, '#9a6a3a'], twain: [2, '#dfe3f2'] };
@@ -1002,7 +1019,6 @@
     if (document.querySelector('.o-celebrate, .o-modal')) return void setTimeout(() => achieve(a), 700);   // wait for the big moment to finish
     let box = document.querySelector('.o-achs');
     if (!box) { box = document.createElement('div'); box.className = 'o-achs'; box.setAttribute('aria-live', 'polite'); document.body.appendChild(box); }
-    const tb = document.querySelector('.topbar'); box.style.top = (tb ? Math.round(tb.getBoundingClientRect().bottom) : 0) + 12 + 'px';
     const el = document.createElement('button'); el.type = 'button'; el.className = `o-ach t${a.tier}`;
     el.innerHTML = `${ico('trophy' + a.tier, 40)}<span><small>${a.tier === 2 ? 'GOLD AWARD' : 'AWARD UNLOCKED'}</small><b>${esc(a.name)}</b><em>${esc(a.desc)} · +1% income</em></span>`;
     hydrate(el); box.appendChild(el);
@@ -1537,13 +1553,14 @@
 
   /* ================= typewriter stage ================= */
   const ROWS = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
-  let typists = [];
+  let typists = [], fx = null;                                     // fx: the live stage's elements, looked up once per build instead of on every keystroke
   /* training shows on the machine itself: brass then gold keys, ribbon spools, a carriage bell, tinted vowels, a keeper light */
   const partsOf = d => { const u = d.up; return [u.fing >= 3 && 'p-brass', u.fing >= 7 && 'p-gold', u.ink && 'p-spools', u.ribbon && 'p-ribbon2', u.rapid && 'p-bell', u.vowel && 'p-vowels', d.keeper.owned && 'p-led', d.keeper.owned && d.keeper.on && 'p-ledon'].filter(Boolean).join(' '); };
   function buildStage() {
     const i = S.sel, D = DESKS[i];
     const pane = $('#o-floor');
     pane.innerHTML = `
+      <button type="button" class="o-focus" id="oFocus" data-act="go" data-tab="press" title="Your keepers are working on this title. Tap to change it."></button>
       <div class="o-stagewrap">
       <div class="o-stage" id="oStage" data-desk="${D.id}" tabindex="0" role="button" aria-label="${esc(D.name)} typewriter. Tap, click, or press Space to type a letter.">
         <div class="o-scene" aria-hidden="true">
@@ -1556,7 +1573,6 @@
           <div class="o-drips">${Array.from({ length: 6 }, (_, k) => `<i style="left:${8 + k * 16 + rand() * 8}%;--d:${1.1 + rand() * .9}s;--dl:${-rand() * 2}s"></i>`).join('')}</div>
           <div class="o-flies">${Array.from({ length: 7 }, () => `<i style="left:${5 + rand() * 90}%;top:${10 + rand() * 50}%;--d:${5 + rand() * 5}s;--dl:${-rand() * 8}s"></i>`).join('')}</div>
         </div>
-        <div class="o-hud"><div class="o-stats" id="oStats"></div><div class="o-focus" id="oFocus"></div></div>
         <div class="o-dangle" id="oDangle" aria-hidden="true"></div>
         <div class="o-tw mk${cur().mk || 0} ${partsOf(cur())}" id="oTw">
           <div class="o-sheetwrap"><div class="o-sheet"><span id="oSheet"></span></div></div>
@@ -1574,9 +1590,13 @@
       </div>
       <div class="o-info">
         <div class="o-tray" id="oTray" aria-label="Recent letters"></div>
+        <div class="o-stats" id="oStats"></div>
         <div class="o-miles" id="oMiles"></div>
         <p class="o-guide" id="oGuide"></p>
       </div>`;
+    fx = { stage: $('#oStage'), tw: $('#oTw'), car: $('#oCar'), sheet: $('#oSheet'), combo: $('#oCombo'), comboN: $('#oComboN'), meter: $('#oMeter'), embers: $('#oEmbers'),
+      bars: $$('.o-bar', pane), keys: {}, pops: [], richAt: 0, meterAnim: null };
+    $$('.o-key[data-k]', pane).forEach(k => { fx.keys[k.dataset.k] = k; });
     rt[i].col = 0; typists = []; syncTypists(true);
     if (ui.dropIn) { ui.dropIn = false; const st = $('#oStage'); st.classList.add('drop'); st.addEventListener('animationend', () => st.classList.remove('drop'), { once: true }); }
     $('#oSheet').textContent = rt[i].sheet.slice(-48);
@@ -1620,7 +1640,7 @@
     if (!typists.length) return;
     const t = (ci != null && typists.find(x => x.ci === ci)) || typists[Math.floor(rand() * typists.length)];
     t.v += (rand() < .5 ? -1 : 1) * (strong ? .13 : .06); t.ph ^= 1; t.expr = 'screech'; t.until = performance.now() + 170;
-    if (!IMI.reduceMotion) { const nm = t.nm || (t.nm = t.el.querySelector('.o-nm')); if (nm && !(nm.getAnimations && nm.getAnimations().length)) nm.animate([{ transform: 'none' }, { transform: 'translateY(-6px) scale(1.18)', color: '#ffd23a' }, { transform: 'none' }], { duration: 220, easing: PX ? 'steps(3)' : 'ease-out' }); }
+    if (!IMI.reduceMotion) { const nm = t.nm || (t.nm = t.el.querySelector('.o-nm')); if (nm && performance.now() > (t.nmAt || 0)) { t.nmAt = performance.now() + 230; nm.animate([{ transform: 'none' }, { transform: 'translateY(-6px) scale(1.18)', color: '#ffd23a' }, { transform: 'none' }], { duration: 220, easing: PX ? 'steps(3)' : 'ease-out' }); } }
     if (!strong && rand() < .012) say(t);
   }
   function stepTypists(now) {
@@ -1633,14 +1653,14 @@
       }
       t.hop = (t.hop || 0) * .84;
       if ((crew[t.ci] || {}).shiny && now > (t.sparkAt || 0) && !IMI.reduceMotion) { t.sparkAt = now + 380 + rand() * 300; const b = t.cv ? t.cv.getBoundingClientRect() : t.el.getBoundingClientRect(); IMI.fall(b.left + b.width * (.2 + rand() * .6), b.top + b.height * (.3 + rand() * .5), 'spark', 900); }
-      t.el.classList.toggle('wild', wild); t.el.style.setProperty('--hop', t.hop.toFixed(1));
+      t.el.classList.toggle('wild', wild); const hp = t.hop.toFixed(1); if (hp !== t.hopS) { t.hopS = hp; t.el.style.setProperty('--hop', hp); }
       if (now > (t.blinkAt || 0)) { t.blinkAt = now + 2200 + rand() * 4200; t.blinkUntil = now + 150; }
       const ex = now < t.until ? 'screech' : scared ? 'scared' : now < t.blinkUntil ? 'blink' : 'normal';
       if (PX) {
         const f = PXA.monkeyFrame('desk', ex, t.a, false, t.ph, hc);
         if (f !== t.frame) { PXA.blit(t.cv, f); t.cv.style.marginLeft = -(f.W * PXA.S / 2) + 'px'; t.frame = f; }
       } else {
-        t.el.style.setProperty('--ang', t.a + 'rad');
+        const ag = Math.round(t.a * 250) / 250; if (ag !== t.angS) { t.angS = ag; t.el.style.setProperty('--ang', ag + 'rad'); }     // 0.004 rad steps: invisible, but the sway no longer dirties a typist every frame
         if (t.hk !== hc) { t.hk = hc; const he = t.el.querySelector('.o-hat'); if (he) he.textContent = worn ? (hatById(worn) || {}).emoji : '🍃'; }
         t.el.classList.toggle('rainy', !!hc); t.el.classList.toggle('scared', !!scared); t.el.classList.toggle('shout', ex === 'screech');
       }
@@ -1673,25 +1693,28 @@
     requestAnimationFrame(loop);
   }
   function animatePress(ch, auto, n, p) {
-    if (ui.tab !== 'floor') return;
-    const stage = $('#oStage'); if (!stage) return;
+    if (ui.tab !== 'floor' || !fx || !fx.stage.isConnected) return;
+    const now = performance.now(), r = rt[S.sel];
+    r.col++; r.page = (r.page || 0) + 1;
+    if (r.page >= 48 && now - (ui.tearAt || 0) > 1400) { r.page = 0; ui.tearAt = now; tearPage(r); }
+    /* a big crew can press dozens of times a second: tapping always gets the full show, auto-typing is drawn at most ~14 times a second */
+    if (auto) { if (now - fx.richAt < 70) { kick(false, p); return; } fx.richAt = now; }
     IMI.sfx.key(1 + S.sel * .14);                                   // each machine has its own clack, higher up the range
-    const key = $(`.o-key[data-k="${ch}"]`, stage);
+    const key = fx.keys[ch];
     if (key) { key.classList.add('down'); setTimeout(() => key.classList.remove('down'), 90); }
-    const bars = $$('.o-bar', stage), bar = bars[ch.charCodeAt(0) % bars.length];
+    const bar = fx.bars[ch.charCodeAt(0) % fx.bars.length];
     bar.classList.add('hit'); setTimeout(() => bar.classList.remove('hit'), 70);
-    const car = $('#oCar'), r = rt[S.sel]; r.col++; r.page = (r.page || 0) + 1;
-    if (r.page >= 48 && performance.now() - (ui.tearAt || 0) > 1400) { r.page = 0; ui.tearAt = performance.now(); tearPage(r); }
+    const car = fx.car;
     car.style.transform = `translateX(${-(r.col % 9) * 2}px)`;
     if (r.col % 9 === 0) { car.classList.remove('ding'); void car.offsetWidth; car.classList.add('ding'); }
     kick(!auto, auto ? p : undefined);
     if (auto && n % 6 === 0 && typists.length) { const t = typists[Math.floor(rand() * typists.length)], b = t.el.getBoundingClientRect(); IMI.fall(b.left + b.width / 2, b.bottom - 10, 'leaf', 1200); }
-    const sheet = $('#oSheet'); if (sheet) sheet.textContent = r.sheet.slice(-48);
+    fx.sheet.textContent = r.sheet.slice(-48);
+    const tw = fx.tw;
     if (!IMI.reduceMotion) {
-      const tw = $('#oTw');                                          // the strike: ink flecks spit from the platen, the machine thumps
-      if (!auto) { tw.classList.remove('thump'); void tw.offsetWidth; tw.classList.add('thump'); }
-      const n = auto ? (rand() < .35 ? 1 : 0) : 2 + (rand() < .5 ? 1 : 0);
-      for (let k = 0; k < n; k++) {
+      if (!auto) tw.animate([{ translate: '0 0' }, { translate: '0 3px', offset: .35 }, { translate: '0 0' }], { duration: 140, easing: PX ? 'steps(2)' : 'ease-out' });   // the strike thumps the machine
+      const k = auto ? (rand() < .35 ? 1 : 0) : 2 + (rand() < .5 ? 1 : 0);
+      for (let j = 0; j < k; j++) {                                  // ink flecks spit from the platen
         const f = document.createElement('i'); f.className = 'o-fleck';
         f.style.cssText = `--fx:${(rand() - .5) * 70}px;--fy:${-10 - rand() * 34}px;--fc:${rand() < .7 ? '#1a0f14' : POP_COLORS[Math.floor(rand() * POP_COLORS.length)]}`;
         f.addEventListener('animationend', () => f.remove()); tw.appendChild(f);
@@ -1700,9 +1723,9 @@
     const el = document.createElement('i'); el.className = 'o-pop'; el.textContent = ch;
     const slot = popSlot++ % 9;
     el.style.cssText = `left:${12 + slot * 9.5}%;top:${30 + (slot % 3) * 9}%;--pc:${POP_COLORS[popSlot % POP_COLORS.length]}`;
-    el.addEventListener('animationend', () => el.remove());
-    stage.appendChild(el);
-    while ($$('.o-pop', stage).length > 14) $('.o-pop', stage).remove();
+    el.addEventListener('animationend', () => { el.remove(); const k = fx.pops.indexOf(el); if (k >= 0) fx.pops.splice(k, 1); });
+    fx.stage.appendChild(el); fx.pops.push(el);
+    if (fx.pops.length > 14) fx.pops.shift().remove();
   }
   /* a full sheet rips off the platen and flutters away; a fresh one rolls in */
   function tearPage(r) {
@@ -1745,14 +1768,14 @@
     const d = cur(), D = DESKS[S.sel]; if (!$('#oTray')) return;
     const fresh = Math.min(3, Math.max(0, rt[S.sel].n - ui.trayN)); ui.trayN = rt[S.sel].n;
     const shown = d.tray.slice(-12);
-    $('#oTray').innerHTML = shown.map((c, k) => `<span class="o-tile${k >= shown.length - fresh ? ' new' : ''}">${c}</span>`).join('') || '<span class="o-dim">No letters yet. Tap the typewriter!</span>';
+    $('#oTray').innerHTML = shown.map((c, k) => `<span class="o-tile${k >= shown.length - fresh ? ' new' : ''}">${c}</span>`).join('') || '<span class="o-dim">Tap to type!</span>';
     const fr = focusRecipe(d), ft = $('#oFocus');
     const want = fr ? focusNeeds(d, S.sel).missing : {};               // keys glow for letters the focused title still needs
     $$('.o-key[data-k]').forEach(k => k.classList.toggle('want', !!want[k.dataset.k]));
-    if (ft) morph(ft, fr ? `<span>Focus: <b>${esc(fr.title)}</b></span>${bar(progress(fr), fr.total)}<span class="o-dim">${progress(fr)}/${fr.total} words banked</span>` : '');
-    morph($('#oStats'), `<span><b>${cnt('f-let' + S.sel, totalLetters(d))}</b> letters</span><span><b>${d.paws}</b> typists</span><span><b>${autoRate(d).toFixed(2)}</b>/s auto</span>` +
-      (S.hold ? `<span><b>${holdRate(d)}</b>/s held</span>` : '') + `<span class="o-dim">${D.lo}–${D.hi} letter words</span>` +
-      (stormy() ? '<span class="o-warn">Storm! The typists are clinging to their vines (half speed).</span>' : ''));
+    if (ft) morph(ft, fr ? `<span class="o-fgoal">Goal</span><b class="o-ftitle">${esc(fr.title)}</b>${bar(progress(fr), fr.total)}<span class="o-fn">${progress(fr)}/${fr.total}</span>` : '');
+    morph($('#oStats'), `<span class="o-s1"><b>${cnt('f-let' + S.sel, totalLetters(d))}</b> letters</span><span class="o-s2"><b>${d.paws}</b> typists · <b>${autoRate(d).toFixed(2)}</b>/s</span>` +
+      (S.hold ? `<span class="o-sx"><b>${holdRate(d)}</b>/s held</span>` : '') + `<span class="o-sx o-dim">${D.lo}–${D.hi} letter words</span>` +
+      (stormy() ? '<span class="o-sx o-warn">Storm! Half speed.</span>' : ''));
     const now = performance.now();
     morph($('#oMiles'), `<span class="o-dim">Tap streak goals${S.best ? ` (best x${S.best})` : ''}:</span>` + MILES.map(m => `<span class="o-mile${combo.n >= m.n ? ' hit' : ''}${now < (ui.mcd[m.n] || 0) ? ' cd' : ''}" title="${esc(m.desc)}">x${m.n} ${m.name}</span>`).join(''));
     $('#oGuide').textContent = !d.paws ? 'Nobody is typing yet. Collect a few letters by hand, then hire a first typist at Primate Resources.' : S.hold ? 'Hold a finger, the mouse, or Space on the machine to type fast. Spend letters at Primate Resources or turn them into words at Coconut R&D.'
@@ -1986,7 +2009,7 @@
     morph(buffBar, on.map(k => `<span class="o-buff ${k} ${BUFF_INFO[k][1]}">${BUFF_INFO[k][0]} ${Math.ceil((buffs[k] - now) / 1000)}s</span>`).join('') + (S.challenge ? `<span class="o-buff chal">OULIPO: ${esc(chDef(S.challenge.id).name)} ${chProgress()}</span>` : ''));
     if (buffBar.childElementCount) {                                 // float the chips over the room (under its stats), or at the top of the panel
       const st = ui.tab === 'floor' && $('#oStage');
-      buffBar.style.top = Math.round(st ? st.getBoundingClientRect().top + 44 : $('.o-panel').getBoundingClientRect().top + 8) + 'px';
+      buffBar.style.top = Math.round(st ? st.getBoundingClientRect().top + 10 : $('.o-panel').getBoundingClientRect().top + 8) + 'px';
     }
     const st = $('#oStage'); if (st) { st.classList.toggle('frenzy', buffOn('frenzy')); st.classList.toggle('golden', buffOn('golden')); }
     const r = royRate() + divRate(); hudRate.textContent = r > 0 ? `+${fmtRate(r)}/s` : ''; hudRate.hidden = r <= 0;
@@ -2007,15 +2030,11 @@
       const d = S.desks[i]; if (firstLocked >= 0 && i > firstLocked) return '';
       if (!d.owned && !Object.keys(S.written).length) return '';     // locked machines are a spoiler until the first sale
       if (!d.owned) { const pc = Math.min(100, Math.floor(100 * bananas.get() / D.price)); return `<button type="button" class="o-desk locked${pc >= 100 ? ' can' : ''}" style="--tw:${D.color}" data-act="go" data-tab="shop">${dn(D)}<span class="o-d1">${D.lo}–${D.hi} letters</span><span class="o-d2">${price(D.price)}</span><span class="o-dbar" aria-hidden="true"><i style="width:${pc}%"></i></span></button>`; }
-      const ar = autoRate(d); return `<button type="button" class="o-desk" style="--tw:${D.color}" data-act="sel" data-i="${i}" aria-pressed="${i === S.sel}">${ar > 0 ? `<i class="o-dact" style="--spd:${Math.max(.12, Math.min(2, 1 / ar)).toFixed(2)}s" aria-hidden="true"></i>` : ''}${dn(D)}<span class="o-d1">${D.lo}–${D.hi} letters · ${totalLetters(d)} held</span><span class="o-d2">${d.paws} typists · ${autoRate(d).toFixed(2)}/s</span><span class="o-d3">${totalLetters(d)} held</span><span class="o-ktog${d.keeper.on ? '' : ' off'}" role="button" tabindex="0" data-act="ktoggle" data-i="${i}" title="${KPAUSE}" aria-label="Keeper ${d.keeper.on ? 'collecting' : 'paused'}: click to toggle">${d.keeper.on ? 'Keeper on' : 'Keeper paused'}</span></button>`;
+      const ar = autoRate(d); return `<button type="button" class="o-desk" style="--tw:${D.color}" data-act="sel" data-i="${i}" aria-pressed="${i === S.sel}">${ar > 0 ? `<i class="o-dact" style="--spd:${Math.max(.12, Math.min(2, 1 / ar)).toFixed(2)}s" aria-hidden="true"></i>` : ''}${dn(D)}<span class="o-d1">${D.lo}–${D.hi} letters · ${totalLetters(d)} held</span><span class="o-d2">${d.paws} typists · ${autoRate(d).toFixed(2)}/s</span><span class="o-d3">${totalLetters(d)} held</span><span class="o-ktog${d.keeper.on ? '' : ' off'}" role="button" tabindex="0" data-act="ktoggle" data-i="${i}" title="${KPAUSE}" aria-label="Keeper ${d.keeper.on ? 'collecting' : 'paused'}: click to toggle"><i class="o-kdot"></i><span class="o-kw">Keeper</span><span class="o-kst">${d.keeper.on ? ' on' : ' paused'}</span></span></button>`;
     }).join(''));
     hydrate($('#oDesks'));
     const badge = (b, bd) => { if (bd) b.dataset.badge = bd; else delete b.dataset.badge; };
-    $$('.o-tab[data-tab]').forEach(b => { b.setAttribute('aria-selected', String(b.dataset.tab === ui.tab)); b.hidden = !tabVisible(b.dataset.tab); badge(b, b.hidden || b.dataset.tab === ui.tab ? '' : badgeFor(b.dataset.tab)); });
-    const hidden = TABS.filter(t => t[5] && t[0] !== ui.tab && tabVisible(t[0])), more = $('#oMore');     // phones tuck some departments behind "More"; it wears their badges
-    more.setAttribute('aria-selected', String(!!TABS.find(t => t[5] && t[0] === ui.tab)));
-    badge(more, hidden.some(t => badgeFor(t[0])) ? '!' : '');
-    more.hidden = !TABS.some(t => t[5] && tabVisible(t[0]));              // nothing tucked away yet: no More button
+    document.querySelectorAll('.o-tab[data-tab]').forEach(b => { b.setAttribute('aria-selected', String(b.dataset.tab === ui.tab)); b.hidden = !tabVisible(b.dataset.tab); badge(b, b.hidden || b.dataset.tab === ui.tab ? '' : badgeFor(b.dataset.tab)); });
     $$('.o-pane').forEach(p => { p.hidden = p.id !== 'o-' + ui.tab; });
     const D = DESKS[S.sel];
     const wrap = $('.o-wrap');                                       // on .o-wrap itself: its own defaults would otherwise shadow these
@@ -2036,28 +2055,30 @@
   }
 
   /* ================= wiring ================= */
-  const tabBtn = ([k, ic, name, sub, short]) => `<button type="button" role="tab" class="o-tab" data-tab="${k}" aria-label="${name}" title="${name}: ${sub}"><span class="o-tabico">${ico(ic)}</span><em class="o-short">${short}</em></button>`;
+  const tabBtn = ([k, ic, name, sub, short]) => `<button type="button" role="tab" class="o-tab" data-tab="${k}" aria-label="${name}" title="${name}: ${sub}"><span class="o-tabico">${ico(ic)}</span><em class="o-short">${short}</em><em class="o-long">${name}</em></button>`;
   root.innerHTML = `<div class="o-wrap" data-tab="floor">
     <div class="o-ticker" id="oTicker" role="marquee" aria-label="News" title="Tap for the next headline"><b class="o-tkr-tag">NEWS</b><div class="o-tkr-view"><span class="o-tkr-text" id="oTkrText"></span></div></div>
     <div class="o-desks" id="oDesks"></div>
     <div class="o-panel">${TABS.map(([k]) => `<section class="o-pane" id="o-${k}" role="tabpanel" ${k === 'floor' ? '' : 'hidden'}></section>`).join('')}</div>
-    <nav class="o-tabs" id="oTabs" role="tablist" aria-label="Departments">
-      ${TABS.filter(t => !t[5]).map(tabBtn).join('')}
-      <button type="button" class="o-tab o-morebtn" id="oMore" aria-expanded="false" aria-label="More departments" title="More departments"><span class="o-tabico"><i class="o-dots"><b></b><b></b><b></b></i></span><em class="o-short">More</em></button>
-      <div class="o-moresheet">${TABS.filter(t => t[5]).map(tabBtn).join('')}</div>
-    </nav>
   </div>`;
-  hydrate(root);
+  document.getElementById('oTabs').innerHTML = TABS.map(tabBtn).join('');                  // the departments live in the side rail (index.html / classic.html)
+  hydrate(root); hydrate(document.getElementById('oTabs'));
 
   function setTab(t) {
     const changed = ui.tab !== t, order = TABS.map(x => x[0]), dir = Math.sign(order.indexOf(t) - order.indexOf(ui.tab)); ui.tab = t;
-    $('#o-' + t).style.setProperty('--edir', dir); setMore(false);
+    $('#o-' + t).style.setProperty('--edir', dir);
     if (t === 'floor') buildStage(); ui.cntZero = changed; render(); ui.cntZero = false;
     IMI.emit('tab', { tab: t });
     if (changed) { const p = $('#o-' + t); p.classList.remove('enter'); void p.offsetWidth; p.classList.add('enter'); p.addEventListener('animationend', () => p.classList.remove('enter'), { once: true }); IMI.sfx.tick(); }
   }
-  const setMore = open => { $('#oTabs').classList.toggle('open', open); $('#oMore').setAttribute('aria-expanded', String(open)); };
-  document.addEventListener('pointerdown', e => { if (!e.target.closest('#oTabs')) setMore(false); });
+  /* the side rail: icons only until the menu button opens it into a labelled drawer (toys, settings, title screen) */
+  const rail = document.getElementById('rail'), railBtn = document.getElementById('railToggle');
+  const setRail = open => { rail.classList.toggle('open', open); railBtn.setAttribute('aria-expanded', String(open)); railBtn.setAttribute('aria-label', open ? 'Close the menu' : 'Open the menu'); };
+  railBtn.addEventListener('click', () => { IMI.sfx.tick(); setRail(!rail.classList.contains('open')); });
+  document.addEventListener('pointerdown', e => { if (rail.classList.contains('open') && !e.target.closest('#rail, .set-pop')) setRail(false); });
+  rail.addEventListener('click', e => { if (rail.classList.contains('open') && e.target.closest('.o-tab, #menuBtn, #settingsBtn')) setRail(false); }, true);   // capture: the settings button stops propagation
+  rail.addEventListener('click', e => { const tab = e.target.closest('.o-tab'); if (tab) setTab(tab.dataset.tab); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && rail.classList.contains('open')) { e.stopImmediatePropagation(); setRail(false); railBtn.focus(); } }, true);
   const tap = () => { press(S.sel, false); };
   root.addEventListener('pointerdown', e => {
     if (!e.target.closest('#oStage')) return;
@@ -2072,7 +2093,7 @@
 
   const ACTIONS = {
     go: el => setTab(el.dataset.tab),
-    sel: el => { const to = +el.dataset.i, from = S.sel; S.sel = to; if (ui.tab === 'floor') swapStage(to === from ? 0 : to > from ? 1 : -1); mark(); save(); },
+    sel: el => { const to = +el.dataset.i, from = S.sel; S.sel = to; el.scrollIntoView({ inline: 'nearest', block: 'nearest' }); if (ui.tab === 'floor') swapStage(to === from ? 0 : to > from ? 1 : -1); mark(); save(); },
     hat: el => {
       const t = cur().crew[+el.dataset.p]; if (!t) return;
       const open = [0, ...HATS.filter(hatOpen).map(h => h.id)], at = open.indexOf(t.hat || 0);
@@ -2143,8 +2164,6 @@
     reset: () => { if (confirm('Reset Typewriter Ops? Your bananas are kept.')) { S = fresh(); save(); buildStage(); mark(); } }
   };
   root.addEventListener('click', e => {
-    const tab = e.target.closest('.o-tab');
-    if (tab) return tab.id === 'oMore' ? (IMI.sfx.tick(), setMore(!$('#oTabs').classList.contains('open'))) : setTab(tab.dataset.tab);
     const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
     ACTIONS[el.dataset.act]?.(el);
   });

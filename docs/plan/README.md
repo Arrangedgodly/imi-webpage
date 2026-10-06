@@ -35,12 +35,12 @@ A browser idle/clicker game, "Typewriter Ops": monkeys type letters, letters bec
 
 | File | Role |
 |---|---|
-| `index.html` / `classic.html` | Page shells (menu + game header + `#opsRoot`). Pixel loads `pixel.js`, `app.js`; classic loads `classic.js` |
-| `core.js` | Shared shell: synth sound `sfx`, banana counter (`IMI.bananas`), screens, header **toys** (snack banana, coconut, weather, night), builds `window.IMI` |
+| `index.html` / `classic.html` | Page shells (menu + game side rail + `#opsRoot`). Pixel loads `pixel.js`, `app.js`; classic loads `classic.js` |
+| `core.js` | Shared shell: synth sound `sfx`, banana counter (`IMI.bananas`), screens, side-rail **toys** (snack banana, coconut, weather, night), builds `window.IMI` |
 | `app.js` / `classic.js` | Per-edition art layer: particles, toy visuals, menu monkey. Pass an `art` object to `Core.boot` |
 | `ops.js` (~2100 lines) | **The game.** State, economy, all department panels, news ticker, offline progress, awards, prestige. Everything is in one IIFE |
 | `ops.css` (~1260 lines) | Game styling for both editions: shared layout first, then `html[data-style="pixel"]` and `html[data-style="classic"]` blocks |
-| `styles.css` / `classic.css` | Shell styling (menu, header, toys) per edition |
+| `styles.css` / `classic.css` | Shell styling (menu, toys); the side rail's layout lives in `ops.css` per edition |
 | `readers.js` | `window.READERS`: the 16 authored short titles (`id, title, pay, text`). The text's exact word counts are the recipe |
 | `weather.js`, `mood.js` | Shared weather simulation and monkey mood events |
 | `pixel.js` | Procedural pixel-art sprite engine (`PXA`) |

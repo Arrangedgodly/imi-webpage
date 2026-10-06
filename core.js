@@ -11,11 +11,18 @@ window.Core = (() => {
   const pick = a => a[Math.floor(Math.random() * a.length)];
   const centerOf = el => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
   const restart = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+  const NF = new Intl.NumberFormat('en-US');                 // built once: toLocaleString builds a formatter on every call
   const ABBR = [[1e15, 'Qa'], [1e12, 'T'], [1e9, 'B'], [1e6, 'M']];
   const fmt = n => {                                       // commas below a million, then 1.23M / 4.5B / ...
-    n = Math.round(n); if (n < 1e6) return n.toLocaleString('en-US');
+    n = Math.round(n); if (n < 1e6) return NF.format(n);
     for (const [v, s] of ABBR) if (n >= v) { const x = n / v; return (x >= 100 ? x.toFixed(0) : x >= 10 ? x.toFixed(1) : x.toFixed(2)).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') + s; }
-    return n.toLocaleString('en-US');
+    return NF.format(n);
+  };
+
+  const fmtHud = n => {                                    // the side-rail counter is 5 characters wide: 9,999 then 12.3K / 123K / 1.23M
+    n = Math.round(n); if (n < 1e4) return NF.format(n);
+    for (const [v, s] of [[1e15, 'Qa'], [1e12, 'T'], [1e9, 'B'], [1e6, 'M'], [1e3, 'K']]) if (n >= v) { const x = n / v; return (x >= 100 ? x.toFixed(0) : x >= 10 ? x.toFixed(1) : x.toFixed(2)).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') + s; }
+    return String(n);
   };
 
   /* =====================  SOUND (synthesized, no assets)  ===================== */
@@ -33,15 +40,24 @@ window.Core = (() => {
     g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     o.connect(g).connect(c.destination); o.start(t); o.stop(t + dur + 0.02);
   }
+  const noiseBufs = new Map();                              // a decaying burst of noise is the same every time, so each length is built once and replayed
+  function noiseBuf(c, dur) {
+    const key = dur + '@' + c.sampleRate; let buf = noiseBufs.get(key);
+    if (!buf) {
+      const len = Math.floor(c.sampleRate * dur); buf = c.createBuffer(1, len, c.sampleRate); const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
+      noiseBufs.set(key, buf);
+    }
+    return buf;
+  }
   function noise(dur, { vol = 0.2, freq = 1800, delay = 0 } = {}) {
     if (!audio.on) return; const c = ac(); if (!c) return;
-    const len = Math.floor(c.sampleRate * dur), buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
-    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
     const s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain(), t = c.currentTime + delay;
-    s.buffer = buf; f.type = 'bandpass'; f.frequency.value = freq; g.gain.value = vol;
+    s.buffer = noiseBuf(c, dur); f.type = 'bandpass'; f.frequency.value = freq; g.gain.value = vol;
     s.connect(f).connect(g).connect(c.destination); s.start(t);
   }
   /* pixel gets chiptune squares, classic gets rounder triangles */
+  let lastKey = 0;                                          // a big crew types dozens of times a second: no more than one clack per 35ms
   function makeSfx(px) {
     const lead = px ? 'square' : 'triangle';
     return {
@@ -55,7 +71,7 @@ window.Core = (() => {
       day()     { tone(523, .14, { type: lead, vol: .06 }); tone(659, .14, { type: lead, delay: .1, vol: .06 }); tone(784, .26, { type: lead, delay: .2, vol: .06 }); },
       night()   { tone(784, .16, { type: lead, vol: .06 }); tone(587, .16, { type: lead, delay: .12, vol: .06 }); tone(392, .36, { type: lead, delay: .24, vol: .06 }); },
       tick()    { tone(1200, .03, { type: 'square', vol: .03 }); },
-      key(p = 1) { noise(.03, { freq: 2600 * p, vol: .1 }); tone((170 + Math.random() * 60) * p, .04, { type: 'square', f1: 70 * p, vol: .04 }); },
+      key(p = 1) { const t = performance.now(); if (t - lastKey < 35) return; lastKey = t; noise(.03, { freq: 2600 * p, vol: .1 }); tone((170 + Math.random() * 60) * p, .04, { type: 'square', f1: 70 * p, vol: .04 }); },
       combo(n)  { const sc = [0, 2, 4, 7, 9], k = Math.min(n - 5, 10); tone(523.25 * Math.pow(2, (sc[k % 5] + 12 * Math.floor(k / 5)) / 12), .07, { type: lead, vol: .03 }); },   // a rising pentatonic run while a tap streak holds
       rip()     { noise(.16, { freq: 4200, vol: .12 }); noise(.08, { freq: 1500, vol: .08, delay: .05 }); },
       chest()   { noise(.08, { freq: 500, vol: .3 }); tone(220, .12, { type: 'square', f1: 440, delay: .05, vol: .05 }); },
@@ -88,17 +104,17 @@ window.Core = (() => {
     const persist = () => { clearTimeout(saveT); saveT = 0; try { localStorage.setItem('imi-score', String(score)); } catch { /* storage blocked */ } };
     addEventListener('pagehide', persist);
     document.addEventListener('visibilitychange', () => { if (document.hidden) persist(); });
-    scoreEl.textContent = fmt(score);
+    scoreEl.textContent = fmtHud(score);
     const watchers = [];
     function tweenScore() {                                  // the counter rolls toward the real total
       const d = score - shown;
-      if (!(Math.abs(d) >= 1)) { shown = score; scoreEl.textContent = fmt(shown); tweening = false; return; }
-      shown += d * 0.16 + Math.sign(d); scoreEl.textContent = fmt(shown); requestAnimationFrame(tweenScore);
+      if (!(Math.abs(d) >= 1)) { shown = score; scoreEl.textContent = fmtHud(shown); tweening = false; return; }
+      shown += d * 0.16 + Math.sign(d); scoreEl.textContent = fmtHud(shown); requestAnimationFrame(tweenScore);
     }
     function paintScore(bump) {
       if (!saveT) saveT = setTimeout(persist, 1500);
-      hud.title = 'Bananas: ' + Math.round(score).toLocaleString('en-US');
-      if (reduceMotion || !inGame()) { shown = score; scoreEl.textContent = fmt(score); } else if (!tweening) { tweening = true; requestAnimationFrame(tweenScore); }
+      hud.title = 'Bananas: ' + NF.format(Math.round(score));
+      if (reduceMotion || !inGame()) { shown = score; scoreEl.textContent = fmtHud(score); } else if (!tweening) { tweening = true; requestAnimationFrame(tweenScore); }
       if (bump && inGame()) restart(hud, 'bump');
       watchers.forEach(f => f(score));
     }

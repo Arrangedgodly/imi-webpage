@@ -4,6 +4,8 @@
 <!-- Runs the real game logic (ops.js) on a virtual clock with a seeded RNG so a bot can play hours in seconds.
      Driven by tools/balance.mjs (puppeteer). Not part of the site. -->
 <div id="opsRoot"></div><div id="hud"><b id="score">0</b></div><ol id="logList"></ol>
+<!-- ops.js builds its department tabs into the side rail and wires the menu button; the harness only needs somewhere for them to go -->
+<aside id="rail"><button id="railToggle" type="button"></button><nav id="oTabs"></nav></aside>
 <script>
 window.__OPS_HEADLESS = true;
 try { localStorage.clear(); } catch (e) {}

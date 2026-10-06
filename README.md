@@ -56,7 +56,7 @@ Machines are purchased in order, and later machines start with a typist. They al
 
 Typists produce letters automatically and develop through traits, training, and levels. Keepers can then bank words, but their focus and stock targets matter: the default target is zero. Set the words or recipe you need rather than assuming a newly purchased keeper will build unlimited stock.
 
-The header's toys also interact with the game. A banana snack can accelerate typists, a coconut can grant letters, and weather/day-night states affect systems. The sound toggle controls synthesized effects. The menu's “banana” typing hint is an Easter egg, separate from the main typewriter controls.
+The toys in the side menu also interact with the game. A banana snack can accelerate typists, a coconut can grant letters, and weather/day-night states affect systems. The sound toggle controls synthesized effects. The menu's “banana” typing hint is an Easter egg, separate from the main typewriter controls.
 
 ## Publishing, pitches, and the Library
 
