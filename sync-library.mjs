@@ -19,13 +19,22 @@ if (!src) {
 
 rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
-for (const f of ['books.json', 'archives.json', 'kids.json']) cpSync(join(src, f), join(out, f));
+for (const f of ['books.json', 'archives.json', 'kids.json', 'word-stories.json']) cpSync(join(src, f), join(out, f));
 let n = 0;
 for (const shelf of SHELVES) {
   mkdirSync(join(out, shelf));
   for (const f of readdirSync(join(src, shelf))) {
     if (!f.endsWith('.md') || f === 'README.md') continue;
     cpSync(join(src, shelf, f), join(out, shelf, f)); n++;
+  }
+}
+// the 5-, 7- and 9-letter-cap collections live one level deeper: word-stories/max-N/*.md
+for (const cap of [5, 7, 9]) {
+  const dir = join('word-stories', `max-${cap}`);
+  mkdirSync(join(out, dir), { recursive: true });
+  for (const f of readdirSync(join(src, dir))) {
+    if (!f.endsWith('.md') || f === 'README.md') continue;
+    cpSync(join(src, dir, f), join(out, dir, f)); n++;
   }
 }
 console.log(`Synced ${n} manuscripts into ${out}`);
