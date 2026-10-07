@@ -81,6 +81,8 @@ Besides the sixteen authored editions and generated pitches, the Titles page car
 
 The **Publisher's assistant** (Shop > Market tools, three tiers) sells your finished titles for you so the loop can run on its own: it sells one every 12 seconds (6 from the second tier, and the third also sells while you are away at an average price). A switch on the Titles page chooses **Any** price, **Fair** (hold until the market is at least x1.0) or **Hot** (hold until x1.4), and it never sells a title you focused by hand. Holding for a better price costs time early on, so the default is Any.
 
+On the Train page, every monkey has a **talent** rolled when it is hired (+0 to +12% typing speed) and can be **coached** (+2% per level, up to ten levels) or **rerolled** (a new trait and talent, with one undo; coaching is kept) for bananas. The five tiered upgrades now have five levels each; levels 4 and 5 need the machine restored to Mk II and Mk III in the Shop.
+
 Each machine's keeper can be **tuned up** in the Shop (up to six levels, bananas) to bank words faster; the Words page shows each keeper's level.
 
 The Titles page opens with the title you are writing, then a search box and sort dropdown, then these filters:

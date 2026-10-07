@@ -15,8 +15,8 @@ Typist upgrades stop early: the five "tier" upgrades (`vowel`, `ink`, `practice`
 ## Part B: a roll stat on every monkey
 
 - New hires get a hidden-then-shown **talent**: `t.talent`, an integer 0-12 meaning +0 to +12 % typing speed, rolled with a skew toward the middle (sum of two dice). `typistSpeed` multiplies by `1 + talent/100`. Existing typists (old saves) get talent 0 and keep their trait.
-- **Coaching:** per monkey, up to `COACH_MAX = 10` levels, each +1 % speed on top of the talent. Cost in bananas: `COACH_BASE[desk] * 1.6 ^ level` with `COACH_BASE = [60, 600, 6000, 70000, 8e5, 9e6]`.
-- **Reroll:** per monkey, re-rolls **talent and trait** (not name, hat, xp, level, shiny status). Costs bananas, `REROLL_BASE[desk] * 1.5 ^ rerolls` (counter saved per monkey, shared by the monkey's lifetime), `REROLL_BASE = [40, 400, 4000, 45000, 5e5, 6e6]`. The previous roll is shown for one confirm step ("Keep the old roll?") so a bad reroll can be undone once.
+- **Coaching:** per monkey, up to `COACH_MAX = 10` levels, each **+2 %** speed on top of the talent (built as +2 %, not +1 %: one monkey of twelve at +1 % is worth about +0.08 % of a machine, not worth a purchase). Cost in bananas: `COACH_BASE[desk] * 1.35 ^ level` with `COACH_BASE = [18, 215, 2700, 33500, 4.2e5, 5e6]` (all ten levels of one monkey cost about half the next machine).
+- **Reroll:** per monkey, re-rolls **talent and trait** (not name, hat, xp, level, shiny status). Costs bananas, `REROLL_BASE[desk] * 1.5 ^ rerolls` (counter saved per monkey), `REROLL_BASE = [20, 250, 3000, 38000, 5e5, 5.6e6]`. The previous roll is shown for one confirm step ("Keep the old roll?") so a bad reroll can be undone once.
 - Coaching is **kept** across rerolls (the monkey is trained, the dice are not), which makes rerolling a trait a safe thing to do late.
 - **UI:** the Train page crew cards gain a line `Talent +7% · Coached +3%` and two small buttons, **Coach** and **Reroll**, with prices. Pixel and classic, phone first (buttons min 40 px high). The crew card is already busy: collapse the new controls into an expandable row if it does not fit.
 - `simulateAway` and `autoRate` must include talent and coaching (single helper `typistSpeed`).
@@ -33,8 +33,11 @@ Typist upgrades stop early: the five "tier" upgrades (`vowel`, `ink`, `practice`
 
 ## Status
 
-Not started.
+Done. Train page: tiered upgrades run to level 5 (levels 4 and 5 locked behind Mk II / Mk III, with the reason shown on the card); every crew card shows `Talent +n%` and `Coached +n%` chips with **Coach** and **Reroll** buttons (and **Undo** after a reroll).
 
 ## Handoff notes
 
-(none yet)
+- Typist fields (all optional, old saves read them as 0): `talent` (0-12, two dice at hire), `coach` (0-10), `rerolls`, `prev` (the previous `{trait, talent}`, kept for one undo). `typistSpeed` multiplies by `1 + (talent + coach * COACH_STEP) / 100`; `simulateAway` uses the same factor (checked: offline letters x1.199 against the expected x1.2 for talent 10 + coaching 5). `coachTypist`, `rerollTypist` and `unrollTypist` are the three actions (bananas via `bananas.spend`).
+- `UPV` holds the per-level chances of the five tiered upgrades (`roll` and `offlineDist` both read it), `TIER` is `[1, 2.5, 6, 24, 96]`, `upCap(u, d)` is the level the machine's restoration allows and `upMax(u)` the absolute maximum. `upLock` explains what a capped card needs.
+- **Balance (bot, one seed).** Tiers 4 and 5 add a modest boost: active first division 184.7 to 167.5, first star 231.4 to 216.6, Honeycomb 355.6 to 334.1; idle Honeycomb 451.7 to 431.8. Coaching is a **poor investment compared with machines and divisions**: a bot that bought it early (one level at most 10% of the next machine's price) delayed Lagoon from 80 to 160 minutes and the first division to 474; at most 2% still moved Honeycomb from 334 to 431. As a surplus purchase (only when holding 4x the next machine's price) it never triggers inside 8 simulated hours and pacing is unchanged. So it is a late banana sink and a feel system, not a lever that reshapes progression; keep prices where they are unless it should become a real choice. The maximum bonus is +12% talent and +20% coaching on one monkey.
+- Not done: no change to the floor art for talent (the name tag does not show it); rerolls cannot be undone twice.

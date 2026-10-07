@@ -14,8 +14,8 @@
   const mark = k => { if (!st.seen[k]) { st.seen[k] = true; st.marks.push([k, Math.round(st.sec / 6) / 10]); } };   // minutes, 1 decimal
   function trainDesk(i) {
     const d = S().desks[i]; if (!d.owned) return;
-    const order = ['paw', 'fing', 'vowel', 'ink', 'paw', 'fing', 'practice', 'stock', 'ribbon', 'paw', 'fing', 'rapid'];
-    const want = [4, 3, 1, 1, 8, 6, 1, 1, 1, 12, 10, 2];
+    const order = ['paw', 'fing', 'vowel', 'ink', 'paw', 'fing', 'practice', 'stock', 'ribbon', 'paw', 'fing', 'rapid', 'practice', 'vowel', 'ink', 'stock', 'ribbon'];
+    const want = [4, 3, 1, 1, 8, 6, 1, 1, 1, 12, 10, 2, (window.__TUNE || {}).BOT_TIERS3 ? 3 : 5, (window.__TUNE || {}).BOT_TIERS3 ? 3 : 5, (window.__TUNE || {}).BOT_TIERS3 ? 3 : 5, (window.__TUNE || {}).BOT_TIERS3 ? 3 : 5, (window.__TUNE || {}).BOT_TIERS3 ? 3 : 5];
     const prev = D.ui.buyN; D.ui.buyN = 1; let on = true;
     for (const [k, key] of order.map((key, n) => [n, key])) {
       const u = D.UPS.find(x => x.k === key), lvl = key === 'paw' ? d.paws : d.up[key];
@@ -41,6 +41,8 @@
     s.desks.forEach((d, i) => { if (d.owned && d.mk < 2) tryBuy('mk', i, D.mkCost(i), 4); });
     // keeper levels only while they are small next to the machine being saved for (a sensible player does not tune a keeper instead of buying the next desk)
     if (BT().BOT_SELL === 'pub' && D.PUB_COST && s.pub.tier < 3 && D.soldCount() >= 3) tryBuy('pub', undefined, D.PUB_COST[s.pub.tier], 2);
+    // coaching is a surplus purchase: only when the bot holds four times the next machine's price (it is a poor investment next to machines and divisions) (the typists with the weakest roll first), when the run asks for it
+    if (BT().BOT_COACH && D.coachCost) s.desks.forEach((d, i) => { if (!d.owned) return; let w = null; d.crew.forEach((t, p) => { if ((t.coach || 0) < D.COACH_MAX && (!w || (t.talent || 0) + (t.coach || 0) * D.COACH_STEP < (w.t.talent || 0) + (w.t.coach || 0) * D.COACH_STEP)) w = { t, p }; }); if (w && bn.get() >= Math.min(price * 4, 1e15) && bn.get() >= D.coachCost(i, w.t) * 3) D.coachTypist(i, w.p); });
     if (D.keeperUpCost) s.desks.forEach((d, i) => { if (d.owned && D.keeperLv(i) < D.KEEPER_UP_MAX && D.keeperUpCost(i) <= .15 * price) tryBuy('keeper', i, D.keeperUpCost(i), 3); });
     if (D.soldCount() >= 2) { tryBuy('agent', undefined, D.SHOP.agent, 3); tryBuy('analyst', undefined, D.SHOP.analyst, 3); }
     if (s.lamp < 3) tryBuy('lamp', undefined, D.LAMP[s.lamp].cost, 5);

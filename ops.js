@@ -56,6 +56,11 @@
   const KEEPER_UP_MAX = TUNE.KEEPER_UP_MAX || 6;
   const KEEPER_UP_GROW = TUNE.KEEPER_UP_GROW || 1.8;                      // each level costs this much more than the last
   const KEEPER_UP_BASE = TUNE.KEEPER_UP_BASE || [100, 600, 3000, 30000, 4e5, 5e6];   // bananas for level 1, by desk
+  const COACH_MAX = TUNE.COACH_MAX || 10;                                // Train > crew cards: coaching levels per monkey
+  const COACH_STEP = TUNE.COACH_STEP || 2;                               // each coaching level is +this % typing speed on top of the monkey's talent
+  const COACH_GROW = TUNE.COACH_GROW || 1.35;
+  const COACH_BASE = TUNE.COACH_BASE || [18, 215, 2700, 33500, 4.2e5, 5e6];     // bananas for a monkey's first coaching level, by desk (all 10 levels cost about half the next machine)
+  const REROLL_BASE = TUNE.REROLL_BASE || [20, 250, 3000, 38000, 5e5, 5.6e6];     // bananas for a monkey's first reroll, by desk; each reroll costs 1.5x the last
   const PUB_COST = TUNE.PUB_COST || [6000, 50000, 350000];             // Shop > Market tools: the Publisher's assistant, three tiers (bananas)
   const PUB_PERIOD = TUNE.PUB_PERIOD || [12, 6];                         // seconds between automatic sales: tiers 1, then 2 and up
   const PUB_RULES = { any: 0, fair: 1, hot: 1.4 };                       // the lowest market multiplier the assistant will sell into
@@ -205,11 +210,12 @@
   ];
   const hatOpen = h => !!S.awards[h.award];
   const hatById = id => HATS.find(h => h.id === id);
+  const rollTalent = () => Math.floor(rand() * 7) + Math.floor(rand() * 7);                // two dice: +0 to +12 % typing speed, most often about +6
   function newTypist() {
     const used = new Set(S.desks.flatMap(d => (d.crew || []).map(t => t.name)));
     const free = NAMES.filter(n => !used.has(n));
     const name = free.length ? free[Math.floor(rand() * free.length)] : NAMES[Math.floor(rand() * NAMES.length)] + ' ' + (used.size + 1);
-    return { name, trait: TRAIT_IDS[Math.floor(rand() * TRAIT_IDS.length)], xp: 0, lv: 1, hat: 0, shiny: rand() < .05 };   // 1 in 20 hires is shiny (cosmetic)
+    return { name, trait: TRAIT_IDS[Math.floor(rand() * TRAIT_IDS.length)], talent: rollTalent(), coach: 0, rerolls: 0, xp: 0, lv: 1, hat: 0, shiny: rand() < .05 };   // 1 in 20 hires is shiny (cosmetic)
   }
   function ensureCrew(d) {
     if (!d.crew) d.crew = [];
@@ -223,7 +229,7 @@
     if (t.trait === 'speedy') m *= 1.25;
     if (t.trait === 'owl') m *= isNight() ? 1.4 : .9;
     if (museOn('poe') && isNight()) m *= 1.25;
-    m *= speedPerks();
+    m *= speedPerks() * (1 + ((t.talent || 0) + (t.coach || 0) * COACH_STEP) / 100);        // the monkey's talent roll plus coaching
     if (t.trait === 'rainy') { if (typeof Weather !== 'undefined' && Weather.state >= 1) m *= 1.3; if (stormy()) m *= 2; }
     return m;
   }
@@ -398,13 +404,13 @@
   /* ================= typing ================= */
   function roll(d, i, auto, ty) {
     const up = d.up, k = d.keeper; let ch = null;
-    if (auto && focusRecipe(d) && rand() < Math.min(.98, [.65, .75, .85, .95][up.practice] + (ty && ty.trait === 'wordsmith' ? .15 : 0))) ch = pick(focusNeeds(d, i).missing);
-    if (!ch && auto && k.owned && up.stock && rand() < [0, .2, .4, .6][up.stock]) ch = pick(completers(d, i, w => target(d, w) > 0 && stock(w) < target(d, w)));
-    if (!ch && up.ink && rand() < [0, .25, .45, .65][up.ink]) ch = pick(completers(d, i, w => !stock(w)));
+    if (auto && focusRecipe(d) && rand() < Math.min(.98, UPV.practice[up.practice] + (ty && ty.trait === 'wordsmith' ? .15 : 0))) ch = pick(focusNeeds(d, i).missing);
+    if (!ch && auto && k.owned && up.stock && rand() < UPV.stock[up.stock]) ch = pick(completers(d, i, w => target(d, w) > 0 && stock(w) < target(d, w)));
+    if (!ch && up.ink && rand() < UPV.ink[up.ink]) ch = pick(completers(d, i, w => !stock(w)));
     if (!ch) {
       const last = rt[i].sheet.slice(-1).toUpperCase();
       const lastCons = last && /[A-Z]/.test(last) && !VOWELS.includes(last);
-      if (lastCons && !chal('vowel') && (up.vowel || (ty && ty.trait === 'vowel') || museOn('dick')) && rand() < Math.max([0, .45, .65, .8][up.vowel], ty && ty.trait === 'vowel' ? .3 : 0, museOn('dick') ? .3 : 0)) ch = pick(Object.fromEntries([...VOWELS].map(v => [v, FREQ[v]])));
+      if (lastCons && !chal('vowel') && (up.vowel || (ty && ty.trait === 'vowel') || museOn('dick')) && rand() < Math.max(UPV.vowel[up.vowel], ty && ty.trait === 'vowel' ? .3 : 0, museOn('dick') ? .3 : 0)) ch = pick(Object.fromEntries([...VOWELS].map(v => [v, FREQ[v]])));
       else ch = pick(freqNow());
     }
     return ch;
@@ -420,7 +426,7 @@
     const st = S.stats; st.letters++; if (!auto) { st.manual++; IMI.emit('tap', { letters: st.letters }); } st.byLetter[ch] = (st.byLetter[ch] || 0) + 1;
     if (stormy()) st.storm++; if (document.body.classList.contains('night')) st.night++;
     if (!auto && buffOn('golden')) addLetter(d, roll(d, i, false));
-    if (auto && d.up.ribbon && d.keeper.owned && rand() < [0, .1, .2, .3][d.up.ribbon]) {
+    if (auto && d.up.ribbon && d.keeper.owned && rand() < UPV.ribbon[d.up.ribbon]) {
       const { required, missing } = focusNeeds(d, i), want = pick(missing);
       const spare = Object.keys(d.letters).filter(l => d.letters[l] > (required[l] || 0));
       if (want && spare.length) { takeLetter(d, spare[Math.floor(rand() * spare.length)]); addLetter(d, want); }
@@ -1220,10 +1226,10 @@
   function offlineDist(d, i) {
     const up = d.up, k = d.keeper, mix = []; let r = 1;
     const fr = focusRecipe(d) ? focusNeeds(d, i).missing : null;
-    if (fr && Object.keys(fr).length) { const p = [.65, .75, .85, .95][up.practice] * r; mix.push([fr, p]); r -= p; }
-    if (k.owned && up.stock) { const m = completers(d, i, w => target(d, w) > 0 && stock(w) < target(d, w)); if (Object.keys(m).length) { const p = [0, .2, .4, .6][up.stock] * r; mix.push([m, p]); r -= p; } }
-    if (up.ink) { const m = completers(d, i, w => !stock(w)); if (Object.keys(m).length) { const p = [0, .25, .45, .65][up.ink] * r; mix.push([m, p]); r -= p; } }
-    const q = chal('vowel') ? 0 : Math.max([0, .45, .65, .8][up.vowel], museOn('dick') ? .3 : 0), base = {}, F = freqNow();
+    if (fr && Object.keys(fr).length) { const p = UPV.practice[up.practice] * r; mix.push([fr, p]); r -= p; }
+    if (k.owned && up.stock) { const m = completers(d, i, w => target(d, w) > 0 && stock(w) < target(d, w)); if (Object.keys(m).length) { const p = UPV.stock[up.stock] * r; mix.push([m, p]); r -= p; } }
+    if (up.ink) { const m = completers(d, i, w => !stock(w)); if (Object.keys(m).length) { const p = UPV.ink[up.ink] * r; mix.push([m, p]); r -= p; } }
+    const q = chal('vowel') ? 0 : Math.max(UPV.vowel[up.vowel], museOn('dick') ? .3 : 0), base = {}, F = freqNow();
     for (const ch in F) base[ch] = F[ch] * (VOWELS.includes(ch) ? 1 + 1.5 * q : 1);
     mix.push([base, r]);
     const out = {};
@@ -1265,7 +1271,7 @@
     for (let st = 0; st < steps; st++) {
       S.desks.forEach((d, i) => {
         if (!d.owned || !d.paws) return;
-        const speedSum = d.crew.reduce((a, t) => a + (1 + .04 * (levelOf(t.xp) - 1)) * (t.trait === 'speedy' ? 1.25 : 1), 0) * deskMk(d) || d.paws;
+        const speedSum = d.crew.reduce((a, t) => a + (1 + .04 * (levelOf(t.xp) - 1)) * (t.trait === 'speedy' ? 1.25 : 1) * (1 + ((t.talent || 0) + (t.coach || 0) * COACH_STEP) / 100), 0) * deskMk(d) || d.paws;
         const n = Math.round(speedSum / (PAW_BASE[i] * Math.pow(.85, d.up.fing) * (S.metro ? .5 : 1)) * dt * eff);
         if (n > 0) {
           const dist = offlineDist(d, i);
@@ -1445,7 +1451,7 @@
   /* Balance harness hook (tools/balance.html): lets a bot drive the real game logic. Not used by the site itself. */
   Object.defineProperty(IMI.ops, 'dev', { configurable: true, get: () => ({
     S: () => S, holdRate, ui, tick, press, genPitch, newOffers, buyUp, buy, writeTitle, bankWord, keeperStep, canWrite, RECIPES, RBY, DESKS, KEEPER_PERIOD, UPS, upPlan, upLock, DIVS, divPlan, releaseDiv, DEALS, SHOP, LAMP, MUSES, MK_BASE, mkCost,
-    GARDEN_COSTS, MILES, focusNeeds, focusRecipe, stock, totalLetters, soldCount, kidsSold, kidsListed, KIDS, libSold, LIBS, touchBank: () => { bankV++; mark(); }, pubSell, pubStatus, PUB_COST, PUB_PERIOD, PUB_RULES, keeperPeriod, keeperUpCost, keeperLv, KEEPER_UP_MAX, royBase, divBase, salePay, marketMult, checkAwards, starsNow, museSlots, registerPitch, pitchActive, PITCH_MAX, buffs, makeCopies,
+    GARDEN_COSTS, MILES, focusNeeds, focusRecipe, stock, totalLetters, soldCount, kidsSold, kidsListed, KIDS, libSold, LIBS, touchBank: () => { bankV++; mark(); }, typistSpeed, autoRate, coachTypist, rerollTypist, unrollTypist, coachCost, rerollCost, COACH_MAX, COACH_STEP, upCap, pubSell, pubStatus, PUB_COST, PUB_PERIOD, PUB_RULES, keeperPeriod, keeperUpCost, keeperLv, KEEPER_UP_MAX, royBase, divBase, salePay, marketMult, checkAwards, starsNow, museSlots, registerPitch, pitchActive, PITCH_MAX, buffs, makeCopies,
     plant, harvest, gardenTime, gardenYield, BAND_WORDS, target, ensureCrew, doPrint, awayCap, awayEff, LEG, legLvl, ROY_BASE, RATE, comboHit: () => comboHit(), setSel: i => { S.sel = i; }
    }) });
 
@@ -1518,24 +1524,48 @@
   }
 
   /* ================= training upgrades (spend this desk's letters) ================= */
-  const TIER = [1, 2.5, 6];
+  const TIER = [1, 2.5, 6, 24, 96];
+  /* chance by level, 0 to 5, of each tiered upgrade (levels 4 and 5 need the machine restored to Mk II and Mk III) */
+  const UPV = { practice: [.65, .75, .85, .95, .97, .98], stock: [0, .2, .4, .6, .72, .8], ink: [0, .25, .45, .65, .78, .88], vowel: [0, .45, .65, .8, .88, .92], ribbon: [0, .1, .2, .3, .38, .45] };
   const UPS = [
     { k: 'paw',      ico: 'monkey', name: 'Hire a typist', base: 25, max: 12, desc: 'Another junior monkey swings in and types letters on its own.' },
     { k: 'fing',     name: 'Quick fingers', base: 40, grow: 1.6, max: 10, desc: "Speeds up this desk's typists by about 18% per level." },
     { k: 'rapid',    name: 'Rapid touch', base: 75, grow: 1.7, max: 8, desc: 'Held typing here gains +2 letters per second per level.', needs: 'hold' },
-    { k: 'vowel',    name: 'Vowel rhythm', base: 30, tier: 1, desc: 'After a consonant, a vowel comes up 45%, 65%, then 80% of the time.' },
-    { k: 'ink',      name: 'Fresh ink', base: 40, tier: 1, desc: 'Leans 25%, 45%, then 65% toward the letter that finishes a word you have never banked.' },
-    { k: 'practice', name: 'Recipe practice', base: 100, tier: 1, desc: 'Typists chase the focused title harder: 75%, 85%, then 95% (base 65%).' },
-    { k: 'stock',    name: 'Stock-aware ink', base: 80, tier: 1, desc: 'Leans 20%, 40%, then 60% toward words below the keeper’s targets, duplicates included.' },
-    { k: 'ribbon',   name: 'Spare ribbon', base: 150, tier: 1, desc: 'Each typist press has a 10%, 20%, then 30% chance to swap a surplus letter for a missing ingredient.' }
+    { k: 'vowel',    name: 'Vowel rhythm', base: 30, tier: 1, desc: 'After a consonant, a vowel comes up 45%, 65%, 80%, then 88% and 92% of the time.' },
+    { k: 'ink',      name: 'Fresh ink', base: 40, tier: 1, desc: 'Leans 25%, 45%, 65%, then 78% and 88% toward the letter that finishes a word you have never banked.' },
+    { k: 'practice', name: 'Recipe practice', base: 100, tier: 1, desc: 'Typists chase the focused title harder: 75%, 85%, 95%, then 97% and 98% (base 65%).' },
+    { k: 'stock',    name: 'Stock-aware ink', base: 80, tier: 1, desc: 'Leans 20%, 40%, 60%, then 72% and 80% toward words below the keeper’s targets, duplicates included.' },
+    { k: 'ribbon',   name: 'Spare ribbon', base: 150, tier: 1, desc: 'Each typist press has a 10%, 20%, 30%, then 38% and 45% chance to swap a surplus letter for a missing ingredient.' }
   ];
+  /* ---- coaching and rerolls: per-monkey upgrades, bought with bananas on the Train page ---- */
+  const coachCost = (i, t) => Math.round(COACH_BASE[i] * Math.pow(COACH_GROW, t.coach || 0));
+  const rerollCost = (i, t) => Math.round(REROLL_BASE[i] * Math.pow(1.5, t.rerolls || 0));
+  function coachTypist(i, p) {
+    const t = S.desks[i].crew[p]; if (!t || (t.coach || 0) >= COACH_MAX || !bananas.spend(coachCost(i, t))) return false;
+    t.coach = (t.coach || 0) + 1; IMI.sfx.ding(); logIt(`${t.name} was coached to +${t.coach * COACH_STEP}%.`); mark(); save(); return true;
+  }
+  function rerollTypist(i, p) {
+    const t = S.desks[i].crew[p]; if (!t || !bananas.spend(rerollCost(i, t))) return false;
+    t.prev = { trait: t.trait, talent: t.talent || 0 };                                    // one undo: the roll you just replaced
+    t.rerolls = (t.rerolls || 0) + 1; t.trait = TRAIT_IDS[Math.floor(rand() * TRAIT_IDS.length)]; t.talent = rollTalent();
+    IMI.sfx.ding(); logIt(`${t.name} was re-rolled: ${TRAITS[t.trait].name}, talent +${t.talent}%.`); mark(); save(); return true;
+  }
+  function unrollTypist(i, p) {
+    const t = S.desks[i].crew[p]; if (!t || !t.prev) return false;
+    t.trait = t.prev.trait; t.talent = t.prev.talent; t.prev = null; IMI.sfx.tick(); mark(); save(); return true;
+  }
   const upLevel = (u, d, i) => (u.k === 'paw' ? Math.max(0, d.paws - (i ? 1 : 0)) : d.up[u.k]);
-  const upMax = u => (u.k === 'paw' ? u.max : u.tier ? 3 : u.max);
+  const upMax = u => (u.k === 'paw' ? u.max : u.tier ? 5 : u.max);
+  const upCap = (u, d) => (u.tier ? (d.mk >= 2 ? 5 : d.mk >= 1 ? 4 : 3) : upMax(u));      // levels 4 and 5 of the tiered upgrades need the machine restored (Shop > Restorations)
   const upCost = (u, d, i) => { const l = upLevel(u, d, i), bs = u.k === 'paw' ? PAW_COST[i] * (1 + PAW_DESK_STEP * i) : u.base; return Math.round(u.tier ? bs * TIER[l] : bs * Math.pow((u.k === 'paw' ? PAW_GROW : u.grow || 1.7), l)); };
-  const upLock = (u, d) => (u.needs === 'hold' && !S.hold ? 'Needs Hold to type (in the Shop)' : '');
+  const upLock = (u, d) => {
+    if (u.needs === 'hold' && !S.hold) return 'Needs Hold to type (in the Shop)';
+    if (u.tier) { const lv = d.up[u.k]; if (lv >= upCap(u, d) && lv < 5) return `Needs ${MK_NAMES[lv - 2]} (restore this machine in the Shop)`; }
+    return '';
+  };
   /* how many levels a purchase of `want` covers and what it costs (Max stops where your letters run out) */
   function upPlan(u, d, i, want) {
-    const max = upMax(u), have = totalLetters(d); let lv = u.k === 'paw' ? d.paws : d.up[u.k], n = 0, cost = 0;
+    const max = upCap(u, d), have = totalLetters(d); let lv = u.k === 'paw' ? d.paws : d.up[u.k], n = 0, cost = 0;
     while (n < want && lv + n < max) {
       const l = u.k === 'paw' ? Math.max(0, lv + n - (i ? 1 : 0)) : lv + n;
       const bs = u.k === 'paw' ? PAW_COST[i] * (1 + PAW_DESK_STEP * i) : u.base, c = Math.round(u.tier ? bs * TIER[l] : bs * Math.pow((u.k === 'paw' ? PAW_GROW : u.grow || 1.7), l));
@@ -1894,15 +1924,18 @@
         const first = u.k === 'paw' && i === 0 && d.paws === 0 && plan.n === 1;
         return `<div class="o-card"><div class="o-row"><h3>${u.name}</h3><span class="o-lvl">${lvl}/${max}</span></div>
           ${pips(lvl, max)}<p>${u.desc}</p>${lock ? `<p class="o-warn">${lock}</p>` : ''}
-          <button type="button" class="o-btn" data-act="up" data-k="${u.k}" ${done || lock || have < plan.cost ? 'disabled' : ''}>${done ? 'Maxed' : `${first ? 'Hire first typist · ' : ''}${plan.n > 1 ? `x${plan.n} · ` : ''}${fmt(plan.cost)} letters`}</button></div>`;
+          <button type="button" class="o-btn" data-act="up" data-k="${u.k}" ${done || lock || have < plan.cost ? 'disabled' : ''}>${done ? 'Maxed' : lock ? 'Locked' : `${first ? 'Hire first typist · ' : ''}${plan.n > 1 ? `x${plan.n} · ` : ''}${fmt(plan.cost)} letters`}</button></div>`;
       }).join('')}</div>
       <h3 class="o-h">The crew <span class="o-dim">(${d.crew.length})</span></h3>
       ${d.crew.length ? `<div class="o-grid o-crew">${d.crew.map((t, p) => {
         const l = levelOf(t.xp), nx = LVL_XP[l], pv = LVL_XP[l - 1], pct = nx ? Math.round(100 * (t.xp - pv) / (nx - pv)) : 100, hh = hatById(t.hat);
         return `<div class="o-card o-crewcard${t.shiny ? ' shiny' : ''}"><div class="o-row"><button type="button" class="o-name" data-act="rename" data-p="${p}" title="Rename">${t.shiny ? '✦ ' : ''}${esc(t.name)}</button><span class="o-lvl">Lv ${l}</span></div>
-          <span class="o-chip trait">${TRAITS[t.trait].name}</span><p class="o-dim">${TRAITS[t.trait].desc}</p>
+          <div class="o-chips"><span class="o-chip trait">${TRAITS[t.trait].name}</span><span class="o-chip" title="This monkey's roll when hired">Talent +${t.talent || 0}%</span>${t.coach ? `<span class="o-chip ok" title="Coaching">Coached +${t.coach * COACH_STEP}%</span>` : ''}</div><p class="o-dim">${TRAITS[t.trait].desc}</p>
           <span class="o-prog" role="img" aria-label="${pct}% to the next level"><i style="width:${pct}%"></i></span>
-          <div class="o-row"><span class="o-dim">${fmt(t.xp)} xp${nx ? ' / ' + fmt(nx) : ' (max)'}</span><button type="button" class="o-btn sm" data-act="hat" data-p="${p}" ${HATS.some(hatOpen) ? '' : 'disabled'} title="${HATS.some(hatOpen) ? 'Change hat' : 'Earn awards to unlock hats'}">${hh ? hh.name : 'No hat'}</button></div></div>`;
+          <div class="o-row"><span class="o-dim">${fmt(t.xp)} xp${nx ? ' / ' + fmt(nx) : ' (max)'}</span><button type="button" class="o-btn sm" data-act="hat" data-p="${p}" ${HATS.some(hatOpen) ? '' : 'disabled'} title="${HATS.some(hatOpen) ? 'Change hat' : 'Earn awards to unlock hats'}">${hh ? hh.name : 'No hat'}</button></div>
+          <div class="o-row o-left o-coach"><button type="button" class="o-btn sm" data-act="coach" data-p="${p}" ${(t.coach || 0) >= COACH_MAX || bananas.get() < coachCost(i, t) ? 'disabled' : ''} title="Coaching: +${COACH_STEP}% typing speed for this monkey (${t.coach || 0}/${COACH_MAX})">${(t.coach || 0) >= COACH_MAX ? 'Fully coached' : `Coach ${ico('banana', 16)} ${fmtBig(coachCost(i, t))}`}</button>
+            <button type="button" class="o-btn sm" data-act="reroll" data-p="${p}" ${bananas.get() < rerollCost(i, t) ? 'disabled' : ''} title="Re-roll this monkey's trait and talent. Coaching is kept.">Reroll ${ico('banana', 16)} ${fmtBig(rerollCost(i, t))}</button>
+            ${t.prev ? `<button type="button" class="o-btn sm" data-act="unroll" data-p="${p}" title="Go back to the previous roll">Undo (was ${TRAITS[t.prev.trait].name} +${t.prev.talent}%)</button>` : ''}</div></div>`;
       }).join('')}</div>` : '<p class="o-dim">Nobody works here yet. Hire a typist above.</p>'}`);
     hydrate($('#o-training'));
   }
@@ -2246,6 +2279,9 @@
   const ACTIONS = {
     go: el => setTab(el.dataset.tab),
     sel: el => { const to = +el.dataset.i, from = S.sel; S.sel = to; el.scrollIntoView({ inline: 'nearest', block: 'nearest' }); if (ui.tab === 'floor') swapStage(to === from ? 0 : to > from ? 1 : -1); mark(); save(); },
+    coach: el => { const at = IMI.centerOf(el); if (coachTypist(S.sel, +el.dataset.p)) { IMI.burst(at[0], at[1], ['spark', 'star'], 8); floatText('+' + COACH_STEP + '%', at[0], at[1] - 10, '#7be05a'); } },
+    reroll: el => { const at = IMI.centerOf(el); if (rerollTypist(S.sel, +el.dataset.p)) { IMI.burst(at[0], at[1], ['spark', 'leaf', 'star'], 10); floatText('NEW ROLL', at[0], at[1] - 10, '#ffd23a', true); } },
+    unroll: el => { unrollTypist(S.sel, +el.dataset.p); },
     hat: el => {
       const t = cur().crew[+el.dataset.p]; if (!t) return;
       const open = [0, ...HATS.filter(hatOpen).map(h => h.id)], at = open.indexOf(t.hat || 0);

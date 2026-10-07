@@ -34,6 +34,9 @@ Owning a desk means its keeper works from the first second (no purchase, task 03
 | `LIB_PAY` (new) multiplier on the baked-in pay of the 900 library stories (5-, 7-, 9-letter caps), by band | n/a | 0, 0.03, 0.018, 0.018 | Baked pay is words x `RATE[band]`; at these values a 65-word cap-5 story pays about 530, a 71-word cap-7 about 4.3K, a 77-word cap-9 about 28K. See "Library stories" below |
 | `LIB_ROY` (new) share of normal royalties the library stories pay | n/a | 0.5 | Same treatment as the kids' books |
 | `PUB_COST`, `PUB_PERIOD` (new) | n/a | bananas [6000, 50000, 350000]; seconds [12, 6] | Publisher's assistant, Shop > Market tools. Tier 1 sells a ready title every 12 s (needs 3 sold titles), tier 2 every 6 s, tier 3 also sells while away at market x1.0. Task 11 |
+| `TIER` (cost multipliers of the tiered upgrades), `UPV` (their chances by level) | `[1, 2.5, 6]`, levels 0-3 | `[1, 2.5, 6, 24, 96]`, levels 0-5 | Levels 4 and 5 need the machine restored to Mk II and Mk III. Task 12 |
+| `COACH_MAX`, `COACH_STEP`, `COACH_GROW`, `COACH_BASE` (new) | n/a | 10 levels, +2% each, x1.35, bananas [18, 215, 2700, 33500, 4.2e5, 5e6] by desk | Per-monkey coaching on the Train page. Task 12 |
+| `REROLL_BASE` (new) | n/a | bananas [20, 250, 3000, 38000, 5e5, 5.6e6], x1.5 per reroll | Rerolls a monkey's trait and talent. Task 12 |
 | `KEEPER_UP_STEP`, `KEEPER_UP_MAX`, `KEEPER_UP_GROW`, `KEEPER_UP_BASE` (new) | n/a | 0.9, 6 levels, x1.8, bananas [100, 600, 3000, 30000, 4e5, 5e6] by desk | Shop > Keepers. A level multiplies that desk's seconds per banked word by 0.9 (a maxed keeper is 1.9x faster). Task 10 |
 | `KID_ROY` | 0.5 | 0.5 | Unchanged; 300 kids' titles at 0.5 are a small slice of royalties |
 | `PITCH_PAY` rights for a standard pitched title, by band | 100, 1.26K, 15.6K, 196K, 2.44M, 30.6M | 40, 504, 5000, 39.1K, 489K, 6.12M | Pitches carried the mid game; reduced so Lagoon and Honeycomb are real goals |
@@ -142,3 +145,18 @@ The assistant sells one finished title per `PUB_PERIOD` seconds, optionally hold
 So the assistant is a tax compared with a perfectly attentive player, small at tier 2 and with Any price, and **holding for a fair price costs a lot early** (income is small and compounds), which is why Any is the default and Fair/Hot are opt-in. Its value is for players who are not watching. A casual player who checks in one minute in ten: without the assistant Hibiscus at 80 min and Lagoon never within 8 hours; with it (Fair, bought at 6,000) 100 kids' titles at 265 instead of 311 minutes and Lagoon at 371. An earlier price of 20,000 arrived at about minute 80 and was cut to 6,000. Tier 3 (selling while away) has no simulation, because the harness has no away periods; it is covered by a unit test only.
 
 Bot options for this: `BOT_SELL: "pub"`, `BOT_PUB_RULE: "any|fair|hot"`, `BOT_VISIT: N`, all via the tune JSON.
+
+## Typist tiers, talent, coaching and rerolls (task 12)
+Tiered upgrades (`vowel`, `ink`, `practice`, `stock`, `ribbon`) now have five levels; levels 4 and 5 need Mk II and Mk III. Each hired monkey rolls a **talent** (+0 to +12% typing speed), can be **coached** (+2% per level, ten levels) and **rerolled** for a new trait and talent. One seed each, bot with the tiered upgrades bought to level 5 where the restoration allows (`BOT_TIERS3` caps it at 3 for the comparison):
+
+| Milestone (min) | Tiers capped at 3 | Tiers 4-5 | Target |
+|---|---|---|---|
+| Active: Lagoon | 80.5 | 80.5 | 90-180 |
+| Active: first division | 184.7 | 167.5 | |
+| Active: first star | 231.4 | 216.6 | 240-480 |
+| Active: Honeycomb | 355.6 | 334.1 | 210-360 |
+| Idle: Lagoon | 164.8 | 164.2 | 180-300 |
+| Idle: first star | 330.2 | 320.8 | |
+| Idle: Honeycomb | 451.7 | 431.8 | 360-600 |
+
+**Coaching is a poor investment next to machines and divisions.** Bot variants (active, Honeycomb in minutes; baseline 334): coaching whenever one level cost at most 10% of the next machine, with 3x its price in hand: Lagoon 160, first division 474 (the cost multiplies across a dozen monkeys per machine); at most 2%: Lagoon 100, Honeycomb 431; only as a surplus purchase (holding 4x the next machine's price): identical to no coaching (it never triggers in 8 hours). The talent roll is free. A fully coached, well-rolled monkey is at most +32% speed (+12% talent, +20% coaching).
