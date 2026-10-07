@@ -1484,3 +1484,15 @@ html[data-style="classic"] .o-long small { font-size: 12px; font-family: var(--f
 /* ---- crew cards: coaching and rerolls ---- */
 .o-coach { flex-wrap: wrap; gap: 6px; }
 .o-coach .o-btn { display: inline-flex; align-items: center; gap: 4px; }
+
+/* ---- the weather and day/night gauges (core.js): a countdown under the icon ---- */
+.toy-eta { position: absolute; left: 0; right: 0; bottom: 1px; z-index: 2; text-align: center; font-style: normal; font-size: 10px; line-height: 1; color: #fff; text-shadow: 1px 1px 0 #000, -1px 1px 0 #000; pointer-events: none; }
+html[data-style="pixel"] .toy-eta { font-family: var(--font-px); font-size: 7px; }
+html[data-style="classic"] .toy-eta { font-family: var(--font-display); font-size: 11px; }
+
+/* ---- the sky: a one-line chip on the Floor and a card on the Market page ---- */
+.o-sky { flex: 1 0 100%; font-size: .8em; opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-height: 0; }
+.o-sky b { font-weight: 400; color: var(--banana, #ffd93b); }
+.o-skycard .o-row { gap: 10px; }
+.o-skycard b { font-weight: 400; min-width: 44px; color: var(--banana, #ffd93b); }
+@media (max-height: 640px) { .o-sky { display: none; } }

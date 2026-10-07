@@ -236,7 +236,7 @@
     localStorage.setItem('imi-weather', Weather.state);
     rc.style.backgroundColor = `rgba(8,18,40,${LV[Weather.state].dim})`;
     document.body.classList.toggle('raining', Weather.state > 0);
-    if (!quiet) { A.unlocked = true; audioCtx(); }
+    if (!quiet && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) { A.unlocked = true; audioCtx(); }      // the sky changes by itself now: no audio until the page has been touched
     applyVolume();
     if (Weather.onChange) Weather.onChange(Weather.state, LV[Weather.state]);
     emit('change', Weather.state, LV[Weather.state], prev, !!quiet);

@@ -160,3 +160,7 @@ Tiered upgrades (`vowel`, `ink`, `practice`, `stock`, `ribbon`) now have five le
 | Idle: Honeycomb | 451.7 | 431.8 | 360-600 |
 
 **Coaching is a poor investment next to machines and divisions.** Bot variants (active, Honeycomb in minutes; baseline 334): coaching whenever one level cost at most 10% of the next machine, with 3x its price in hand: Lagoon 160, first division 474 (the cost multiplies across a dozen monkeys per machine); at most 2%: Lagoon 100, Honeycomb 431; only as a surplus purchase (holding 4x the next machine's price): identical to no coaching (it never triggers in 8 hours). The talent roll is free. A fully coached, well-rolled monkey is at most +32% speed (+12% talent, +20% coaching).
+
+## The sky (plan 13)
+
+Day, night and weather now follow `world.js` (a 14 minute day; weather re-rolled every 2.5 minutes, 55/15/21/9 % clear/drizzle/rain/storm) instead of toggles. The bot's virtual clock drives it. Active (30 min), seed 1: Lagoon 64.3 (was 80.5), first division 165 (167.5), first star 205.7 (216.6), Honeycomb 325.1 (334.1). Idle: Honeycomb 432.6 (431.8). Market bias averaged over two days per band: 0.064, 0.107, 0.042, 0.087, 0.035, 0.062 (the old fixed clear day gave only band 3 a flat +0.2). Storms halve typing speed, so about 9 % of the time is slower; owls and rain lovers get their boost on a schedule instead of on demand. No economy numbers were retuned.

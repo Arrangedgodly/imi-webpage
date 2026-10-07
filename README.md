@@ -56,7 +56,7 @@ Machines are purchased in order, and later machines start with a typist. They al
 
 Typists produce letters automatically and develop through traits, training, and levels. Keepers can then bank words, but their focus and stock targets matter: the default target is zero. Set the words or recipe you need rather than assuming a newly purchased keeper will build unlimited stock.
 
-The toys in the side menu also interact with the game. A banana snack can accelerate typists, a coconut can grant letters, and weather/day-night states affect systems. The sound toggle controls synthesized effects. The menu's “banana” typing hint is an Easter egg, separate from the main typewriter controls.
+The toys in the side menu also interact with the game. A banana snack can accelerate typists and a coconut can grant letters. The weather and day/night toys are read-only **gauges**: the sky follows the game clock (`world.js`, a day is 14 real minutes: 9 day, 1 dusk, 3 night, 1 dawn; weather changes every 2.5 minutes), the same for everyone and computed from the wall clock, so nothing is saved and time away counts. Each gauge shows a countdown to the next change and tapping it reads the forecast; the Shop barometer (two tiers) extends the forecast and names the titles each change lifts. The sky drives the rights market, some typists (Night Owl, Rain Lover, storms) and the Floor's sky chip. The sound toggle controls synthesized effects. The menu's “banana” typing hint is an Easter egg, separate from the main typewriter controls.
 
 ## Publishing, pitches, and the Library
 

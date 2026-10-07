@@ -61,6 +61,7 @@
   const COACH_GROW = TUNE.COACH_GROW || 1.35;
   const COACH_BASE = TUNE.COACH_BASE || [18, 215, 2700, 33500, 4.2e5, 5e6];     // bananas for a monkey's first coaching level, by desk (all 10 levels cost about half the next machine)
   const REROLL_BASE = TUNE.REROLL_BASE || [20, 250, 3000, 38000, 5e5, 5.6e6];     // bananas for a monkey's first reroll, by desk; each reroll costs 1.5x the last
+  const BARO_COST = TUNE.BARO_COST || [30000, 150000];                   // Shop > Market tools: the barometer, two tiers (bananas): forecast 2 changes ahead, then 4 with market hints
   const PUB_COST = TUNE.PUB_COST || [6000, 50000, 350000];             // Shop > Market tools: the Publisher's assistant, three tiers (bananas)
   const PUB_PERIOD = TUNE.PUB_PERIOD || [12, 6];                         // seconds between automatic sales: tiers 1, then 2 and up
   const PUB_RULES = { any: 0, fair: 1, hot: 1.4 };                       // the lowest market multiplier the assistant will sell into
@@ -164,7 +165,7 @@
     up: { fing: 0, rapid: 0, vowel: 0, ink: 0, practice: 0, stock: 0, ribbon: 0 },
     keeper: { owned: i === 0, on: true, def: 0, targets: {}, lv: 0 }
   });
-  const fresh = () => ({ focus: null, autoFocus: true, printing: 0, legacy: { stars: 0, total: 0, ups: {} }, editions: {}, run: { earned: 0 }, challenge: null, chDone: {}, muses: { owned: {}, seated: [null, null, null] }, garden: { beds: [null, null] }, divs: { songs: 0, tv: 0, radio: 0, sketch: 0, film: 0 }, divTotal: 0, pitches: [], offers: [], market: { v: [1, 1, 1, 1, 1, 1], m: [0, 0, 0, 0, 0, 0], hist: [[1], [1], [1], [1], [1], [1]] }, agent: false, analyst: false, pub: { tier: 0, on: true, rule: 'any' }, lamp: 0, lastSeen: 0, awards: {}, stats: { pitched: 0, pitchSold: 0, awayMax: 0, letters: 0, manual: 0, words: 0, lump: 0, rotten: 0, secs: 0, storm: 0, night: 0, byLetter: {} }, deals: {}, royTotal: 0, gold: 0, best: 0, hold: false, metro: false, dbl: false, contracts: false, sel: 0, written: {}, bank: {}, log: [], desks: DESKS.map((_, i) => newDesk(i)) });
+  const fresh = () => ({ focus: null, autoFocus: true, printing: 0, legacy: { stars: 0, total: 0, ups: {} }, editions: {}, run: { earned: 0 }, challenge: null, chDone: {}, muses: { owned: {}, seated: [null, null, null] }, garden: { beds: [null, null] }, divs: { songs: 0, tv: 0, radio: 0, sketch: 0, film: 0 }, divTotal: 0, pitches: [], offers: [], market: { v: [1, 1, 1, 1, 1, 1], m: [0, 0, 0, 0, 0, 0], hist: [[1], [1], [1], [1], [1], [1]] }, agent: false, analyst: false, baro: 0, pub: { tier: 0, on: true, rule: 'any' }, lamp: 0, lastSeen: 0, awards: {}, stats: { pitched: 0, pitchSold: 0, awayMax: 0, letters: 0, manual: 0, words: 0, lump: 0, rotten: 0, secs: 0, storm: 0, night: 0, byLetter: {} }, deals: {}, royTotal: 0, gold: 0, best: 0, hold: false, metro: false, dbl: false, contracts: false, sel: 0, written: {}, bank: {}, log: [], desks: DESKS.map((_, i) => newDesk(i)) });
   let S = (() => {
     try {
       const saved = JSON.parse(localStorage.getItem(KEY));
@@ -222,7 +223,11 @@
     while (d.crew.length < d.paws) d.crew.push(newTypist());
     if (d.crew.length > d.paws) d.crew.length = d.paws;
   }
-  const isNight = () => document.body.classList.contains('night');
+  /* the sky for the game's rules comes from World (world.js), the same clock that drives the rain and the night class on screen.
+     skyOv lets offline catch-up evaluate the sky at the moment it is simulating instead of now. */
+  let skyOv = null, skyC = null, skyT = 0;
+  const sky = () => { if (skyOv) return skyOv; const t = Date.now(); if (!skyC || t - skyT > 400) { skyC = World.at(t); skyT = t; } return skyC; };
+  const isNight = () => sky().night;
   function typistSpeed(t) {
     if (!t) return 1;
     let m = 1 + .04 * (levelOf(t.xp) - 1);
@@ -230,7 +235,7 @@
     if (t.trait === 'owl') m *= isNight() ? 1.4 : .9;
     if (museOn('poe') && isNight()) m *= 1.25;
     m *= speedPerks() * (1 + ((t.talent || 0) + (t.coach || 0) * COACH_STEP) / 100);        // the monkey's talent roll plus coaching
-    if (t.trait === 'rainy') { if (typeof Weather !== 'undefined' && Weather.state >= 1) m *= 1.3; if (stormy()) m *= 2; }
+    if (t.trait === 'rainy') { if (sky().wx >= 1) m *= 1.3; if (stormy()) m *= 2; }
     return m;
   }
   const maxLevel = () => S.desks.reduce((m, d) => d.crew.reduce((a, t) => Math.max(a, levelOf(t.xp)), m), 1);
@@ -255,7 +260,7 @@
   const stock = w => S.bank[w] || 0;
   const totalLetters = d => Object.values(d.letters).reduce((a, b) => a + b, 0);
   const target = (d, w) => (w in d.keeper.targets ? d.keeper.targets[w] : d.keeper.def);
-  const stormy = () => typeof Weather !== 'undefined' && Weather.state === 3;
+  const stormy = () => sky().wx === 3;
   const buffs = { frenzy: 0, golden: 0, snack: 0, rush: 0, sluggish: 0, critic: 0 };
   const BUFF_INFO = { frenzy: ['FRENZY', ''], golden: ['GOLDEN KEYS', ''], snack: ['SNACK BREAK x1.5', ''], rush: ['ROYALTY RUSH x7', ''], sluggish: ['SPOILED: SLOW', 'bad'], critic: ['BAD REVIEW: ROYALTIES HALF', 'bad'] };
   const anyBuff = () => Object.keys(buffs).some(k => performance.now() < buffs[k]);
@@ -424,7 +429,7 @@
     addLetter(d, ch);
     if (ty) { grantXp(d, p, 1); if (ty.trait === 'lucky' && rand() < .05) addLetter(d, roll(d, i, true, ty)); }
     const st = S.stats; st.letters++; if (!auto) { st.manual++; IMI.emit('tap', { letters: st.letters }); } st.byLetter[ch] = (st.byLetter[ch] || 0) + 1;
-    if (stormy()) st.storm++; if (document.body.classList.contains('night')) st.night++;
+    if (stormy()) st.storm++; if (isNight()) st.night++;
     if (!auto && buffOn('golden')) addLetter(d, roll(d, i, false));
     if (auto && d.up.ribbon && d.keeper.owned && rand() < UPV.ribbon[d.up.ribbon]) {
       const { required, missing } = focusNeeds(d, i), want = pick(missing);
@@ -628,8 +633,8 @@
       quirk: 'Primetime: x1.5 income at night.', mult: () => (isNight() ? 1.5 : 1),
       status: () => (isNight() ? 'Primetime is on: x1.5.' : 'Waiting for night: x1.0.') },
     { id: 'radio', shelf: 'radio-plays', name: 'Vine Radio', unit: 'play', base: 3000, cost: 24e6, need: 9,
-      quirk: 'Listeners stay in when it rains: x1.5 in rain or storms.', mult: () => (typeof Weather !== 'undefined' && Weather.state >= 1 ? 1.5 : 1),
-      status: () => (typeof Weather !== 'undefined' && Weather.state >= 1 ? 'Rainy-day listening: x1.5.' : 'Clear skies: x1.0. Try the weather toy.') },
+      quirk: 'Listeners stay in when it rains: x1.5 in rain or storms.', mult: () => (sky().wx >= 1 ? 1.5 : 1),
+      status: () => (sky().wx >= 1 ? 'Rainy-day listening: x1.5.' : 'Clear skies: x1.0. Waiting for rain.') },
     { id: 'sketch', shelf: 'sketches', name: 'Monkey Business Troupe', unit: 'sketch', base: 42000, cost: 3.3e8, need: 12,
       quirk: 'Improv energy: x1.5 while a tap streak of 10 or more is running.', mult: () => (combo.n >= 10 ? 1.5 : 1),
       status: () => (combo.n >= 10 ? `Improv is on (streak x${combo.n}): x1.5.` : 'Tap the typewriter fast to get the troupe going.') },
@@ -928,6 +933,13 @@
       ${pips(lv, KEEPER_UP_MAX)}<p>Banks a word every ${now.toFixed(2)}s${max ? '.' : `. Next level: ${(now * KEEPER_UP_STEP).toFixed(2)}s.`}${museOn('hemi') ? ' (Hemingwape doubles it.)' : ''}</p>
       ${max ? '' : `<button type="button" class="o-btn gold" data-act="buy" data-what="keeper" data-i="${i}" ${have < cost ? 'disabled' : ''}>Tune up</button>`}</div>`;
   }
+  function baroCard(have) {
+    const t = S.baro, descs = ['Names what the sky does next, two changes ahead, when you tap the weather or day/night gauge, and lists them on the Market page.', 'Four changes ahead, and the Market page says which titles each change will lift.'];
+    if (t >= 2) return `<div class="o-card"><div class="o-row"><h3>Barometer</h3><span class="o-lvl">MAXED</span></div>${pips(2, 2)}<p>Forecasts four changes ahead, with the titles each one lifts.</p></div>`;
+    const lock = soldCount() < 2 ? 'Needs 2 sold titles' : '';
+    return `<div class="o-card"><div class="o-row"><h3>${t ? 'Better barometer' : 'Barometer'}</h3>${price(BARO_COST[t])}</div>${pips(t, 2)}<p>${descs[t]}</p>${lock ? `<p class="o-warn">${lock}</p>` : ''}
+      <button type="button" class="o-btn gold" data-act="buy" data-what="baro" ${lock || have < BARO_COST[t] ? 'disabled' : ''}>Buy</button></div>`;
+  }
   function pubCard(have) {
     const t = S.pub.tier, names = ['Publisher’s assistant', 'Fast presses', 'Night shift'];
     const descs = [`Sells your finished titles for you, one every ${PUB_PERIOD[0]} seconds, at a price you choose (on the Titles page). It never sells a title you picked by hand.`,
@@ -951,8 +963,8 @@
   const marketFloor = () => (S.agent ? .85 : MK_MIN);
   const marketMult = b => Math.max(marketFloor(), Math.round(S.market.v[b] * 100) / 100);
   const salePay = (r, m = marketMult(r.band)) => Math.round(r.pay * (S.contracts ? 1.25 : 1) * awardMult() * m * (1 + .05 * (S.desks[r.band].mk || 0)) * museSale(r.band) * legacyMult() * editionMult());
-  function marketBias(b) {
-    const wx = typeof Weather !== 'undefined' ? Weather.state : 0, night = document.body.classList.contains('night');
+  function marketBias(b, sk = sky()) {
+    const wx = sk.wx, night = sk.night;
     if (b === 0) return night ? .3 : 0;                       // bedtime books sell at night
     if (b === 1) return wx === 1 || wx === 2 ? .3 : 0;        // cosy reading weather
     if (b === 2) return wx === 3 ? .45 : 0;                   // dramatic stories sell in a storm
@@ -1011,6 +1023,28 @@
     }
     mark();
   }
+  /* ---- the sky on the Market page: what is lifting prices now and (with a barometer) what is coming ---- */
+  const BAND_NAME = DESKS.map(D => D.name.split(' ')[0]);
+  const SKY_PHASE = { day: 'Day', dusk: 'Dusk', night: 'Night', dawn: 'Dawn' }, SKY_WX = ['Clear', 'Drizzle', 'Rain', 'Storm'];
+  const favoured = sk => DESKS.map((_, b) => b).filter(b => marketBias(b, sk) > 0).map(b => BAND_NAME[b]);
+  const clock = ms => { const t = Math.max(0, Math.ceil(ms / 1000)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
+  function skyCard() {
+    const t = Date.now(), sk = sky(), tier = S.baro, fav = favoured(sk);
+    const evs = World.next(t, tier >= 2 ? 4 : tier ? 2 : 1);
+    const row = e => { const after = World.at(e.at + 1000), lift = favoured(after);
+      return tier ? `<div class="o-row o-left"><b>${clock(e.at - t)}</b><span>${World.label(e)}${tier >= 2 ? (lift.length ? ` · lifts ${lift.join(', ')}` : ' · lifts nothing') : ''}</span></div>` : `<div class="o-row o-left"><b>${clock(e.at - t)}</b><span class="o-dim">the sky changes</span></div>`; };
+    return `<div class="o-card o-skycard"><div class="o-row"><h3>The sky</h3><span class="o-dim">${SKY_PHASE[sk.phase]} · ${SKY_WX[sk.wx]}</span></div>
+      <p>${fav.length ? `Lifting ${fav.join(', ')} titles right now.` : 'No band is lifted right now.'}</p>${evs.map(row).join('')}
+      ${tier < 2 ? `<p class="o-dim">${tier ? 'A better barometer' : 'A barometer'} (Shop) ${tier ? 'looks further ahead and names the titles each change lifts' : 'names what is coming'}.</p>` : ''}</div>`;
+  }
+  /* one line on the Floor: what the sky is doing to your crew and the market */
+  function skyLine() {
+    const sk = sky(), bits = [];
+    if (sk.night) bits.push('Owls +40%'); else bits.push('Owls -10%');
+    if (sk.wx === 3) bits.push('Storm: typists half speed'); else if (sk.wx >= 1) bits.push('Rain Lovers +30%');
+    const fav = favoured(sk); if (fav.length) bits.push('lifts ' + fav.join(', '));
+    return `<b>${SKY_PHASE[sk.phase]}, ${SKY_WX[sk.wx].toLowerCase()}</b> · ${bits.join(' · ')}`;
+  }
   function marketHTML() {
     const M = S.market, rows = DESKS.map((D, b) => {
       const v = marketMult(b), h = M.hist[b], prev = h.length > 1 ? h[h.length - 2] : v, dir = v > prev + .004 ? 'up' : v < prev - .004 ? 'down' : 'flat';
@@ -1021,7 +1055,7 @@
       return `<div class="o-mrow${left ? '' : ' done'}" style="--bc:${D.color}"><span class="o-mname"><b>${D.name.split(' ')[0]}</b><small>${D.lo}–${D.hi} letters${any ? (left ? '' : ' · all sold') : ' · pitch to unlock'}</small></span><span class="o-spark" aria-hidden="true">${bars}</span><span class="o-mval"><i class="o-arr ${dir}"></i>x${v.toFixed(2)}</span><span class="o-mextra">${tag}${fc}</span></div>`;
     }).join('');
     return `<div class="o-card o-market"><div class="o-row"><h3>Rights market</h3><span class="o-dim">sales pay base x demand</span></div>${rows}
-      <p class="o-dim">Demand drivers: night lifts Bamboo, rain lifts Hibiscus, storms lift Lagoon, a clear day lifts Honeycomb, a clear night lifts Orchid, and a stormy night lifts Moonflower. Flip the weather and day/night buttons in the header to steer it.</p></div>`;
+      <p class="o-dim">Demand drivers: night lifts Bamboo, rain lifts Hibiscus, storms lift Lagoon, a clear day lifts Honeycomb, a clear night lifts Orchid, and a stormy night lifts Moonflower. The sky follows its own clock, so plan around it.</p></div>`;
   }
 
   /* ================= awards ================= */
@@ -1174,8 +1208,8 @@
     if (paws >= 5) out.push(`The typing pool reaches ${paws} monkeys. HR is overwhelmed.`);
     if (paws >= 20) out.push(`${paws} typists now employed; the break room is mostly banana peels.`);
     if (stormy()) out.push('Storm warning: typists clinging to vines. Spelling affected.');
-    else if (typeof Weather !== 'undefined' && Weather.state > 0) out.push('Rain delays typing. Monkeys in leaf hats report improved morale.');
-    if (document.body.classList.contains('night')) out.push('Night shift begins. Fireflies file for overtime.');
+    else if (sky().wx > 0) out.push('Rain delays typing. Monkeys in leaf hats report improved morale.');
+    if (isNight()) out.push('Night shift begins. Fireflies file for overtime.');
     if (royBase() > 0) out.push(`Royalties reach ${fmtRate(royRate())} bananas per second. Accountants dizzy.`);
     out.push('Word keepers keep words. Experts call this “keeping”.');
     if (S.hold) out.push('New study: holding a key is also a kind of typing.');
@@ -1268,11 +1302,13 @@
     const cap = awayCap(), eff = awayEff(), sec = Math.min(awaySec, cap);
     const rep = { away: awaySec, counted: sec, capped: awaySec > cap, letters: 0, words: 0, roy: 0, ready: 0 };
     const steps = Math.max(1, Math.min(300, Math.ceil(sec / 20))), dt = sec / steps, words0 = S.stats.words;
+    const nowMs = Date.now();
     for (let st = 0; st < steps; st++) {
+      skyOv = World.at(nowMs - sec * 1000 + (st + .5) * dt * 1000);              // owls, rain lovers and storms count for the hours you were away
       S.desks.forEach((d, i) => {
         if (!d.owned || !d.paws) return;
-        const speedSum = d.crew.reduce((a, t) => a + (1 + .04 * (levelOf(t.xp) - 1)) * (t.trait === 'speedy' ? 1.25 : 1) * (1 + ((t.talent || 0) + (t.coach || 0) * COACH_STEP) / 100), 0) * deskMk(d) || d.paws;
-        const n = Math.round(speedSum / (PAW_BASE[i] * Math.pow(.85, d.up.fing) * (S.metro ? .5 : 1)) * dt * eff);
+        const speedSum = d.crew.reduce((a, t) => a + typistSpeed(t), 0) * deskMk(d) || d.paws;
+        const n = Math.round(speedSum / (PAW_BASE[i] * Math.pow(.85, d.up.fing) * (S.metro ? .5 : 1) * (stormy() ? 2 : 1)) * dt * eff);
         if (n > 0) {
           const dist = offlineDist(d, i);
           for (const ch in dist) {
@@ -1290,7 +1326,8 @@
       for (let q = bag.length - 1; q > 0; q--) { const j = Math.floor(rand() * (q + 1)); [bag[q], bag[j]] = [bag[j], bag[q]]; }
       d.tray = bag.slice(-80); rt[i].sheet = d.tray.join('').slice(-120);
     });
-    for (let q = 0, m = Math.min(200, Math.floor(sec / 6)); q < m; q++) marketStep(true);
+    for (let q = 0, m = Math.min(200, Math.floor(sec / 6)); q < m; q++) { skyOv = World.at(nowMs - sec * 1000 + (q + .5) * (sec * 1000 / m)); marketStep(true); }
+    skyOv = null;
     rep.words = S.stats.words - words0;
     rep.roy = Math.floor(royBase() * sec * eff);
     if (rep.roy > 0) { S.royTotal += rep.roy; bananas.add(rep.roy); }
@@ -1447,11 +1484,11 @@
   }
   /* a cheap read-only view for the tutorial */
   const snap = () => ({ typed: S.stats.letters, letters: totalLetters(cur()), words: S.stats.words, paws: totalPaws(), sold: Object.keys(S.written).length, bananas: bananas.get(), ready: readyList().length, tab: ui.tab, sub: ui.sub, desk: S.sel, owned: S.desks.filter(d => d.owned).length, deskPrice: DESKS[1].price, gold: S.gold, printing: S.printing, stars: starsNow(), hireCost: PAW_COST[0], hot: S.market.v.some((v, b) => S.desks[b] && S.desks[b].owned && marketMult(b) >= 1.4), pitch: !!firstPitch(), museSlots: museSlots() });
-  IMI.ops = { snap, spawnGold, royRate, simulateAway, genPitch, newOffers, perk, reset: () => ACTIONS.reset() };
+  IMI.ops = { baro: () => S.baro, snap, spawnGold, royRate, simulateAway, genPitch, newOffers, perk, reset: () => ACTIONS.reset() };
   /* Balance harness hook (tools/balance.html): lets a bot drive the real game logic. Not used by the site itself. */
   Object.defineProperty(IMI.ops, 'dev', { configurable: true, get: () => ({
     S: () => S, holdRate, ui, tick, press, genPitch, newOffers, buyUp, buy, writeTitle, bankWord, keeperStep, canWrite, RECIPES, RBY, DESKS, KEEPER_PERIOD, UPS, upPlan, upLock, DIVS, divPlan, releaseDiv, DEALS, SHOP, LAMP, MUSES, MK_BASE, mkCost,
-    GARDEN_COSTS, MILES, focusNeeds, focusRecipe, stock, totalLetters, soldCount, kidsSold, kidsListed, KIDS, libSold, LIBS, touchBank: () => { bankV++; mark(); }, typistSpeed, autoRate, coachTypist, rerollTypist, unrollTypist, coachCost, rerollCost, COACH_MAX, COACH_STEP, upCap, pubSell, pubStatus, PUB_COST, PUB_PERIOD, PUB_RULES, keeperPeriod, keeperUpCost, keeperLv, KEEPER_UP_MAX, royBase, divBase, salePay, marketMult, checkAwards, starsNow, museSlots, registerPitch, pitchActive, PITCH_MAX, buffs, makeCopies,
+    GARDEN_COSTS, MILES, focusNeeds, focusRecipe, stock, totalLetters, soldCount, kidsSold, kidsListed, KIDS, libSold, LIBS, touchBank: () => { bankV++; mark(); }, sky, marketBias, BARO_COST, typistSpeed, autoRate, coachTypist, rerollTypist, unrollTypist, coachCost, rerollCost, COACH_MAX, COACH_STEP, upCap, pubSell, pubStatus, PUB_COST, PUB_PERIOD, PUB_RULES, keeperPeriod, keeperUpCost, keeperLv, KEEPER_UP_MAX, royBase, divBase, salePay, marketMult, checkAwards, starsNow, museSlots, registerPitch, pitchActive, PITCH_MAX, buffs, makeCopies,
     plant, harvest, gardenTime, gardenYield, BAND_WORDS, target, ensureCrew, doPrint, awayCap, awayEff, LEG, legLvl, ROY_BASE, RATE, comboHit: () => comboHit(), setSel: i => { S.sel = i; }
    }) });
 
@@ -1601,6 +1638,9 @@
     } else if (what === 'mk') {
       const d = S.desks[i]; if (!d || !d.owned || d.mk >= 2 || !bananas.spend(mkCost(i))) return;
       d.mk++; logIt(`${DESKS[i].name} restored to ${MK_NAMES[d.mk]}. It gleams.`);
+    } else if (what === 'baro') {
+      const t = S.baro; if (t >= 2 || soldCount() < 2 || !bananas.spend(BARO_COST[t])) return;
+      S.baro = t + 1; logIt(t ? 'A better barometer: the forecast reaches four changes ahead.' : 'Hung a barometer on the porch: the forecast now names what is coming.');
     } else if (what === 'pub') {
       const t = S.pub.tier; if (t >= 3 || (t === 0 && soldCount() < 3) || !bananas.spend(PUB_COST[t])) return;
       S.pub.tier = t + 1; if (t === 0) S.pub.on = true;
@@ -1710,6 +1750,7 @@
       <div class="o-info">
         <div class="o-tray" id="oTray" aria-label="Recent letters"></div>
         <div class="o-stats" id="oStats"></div>
+        <div class="o-sky" id="oSky"></div>
         <div class="o-miles" id="oMiles"></div>
         <p class="o-guide" id="oGuide"></p>
       </div>`;
@@ -1899,6 +1940,7 @@
     const want = fr ? focusNeeds(d, S.sel).missing : {};               // keys glow for letters the focused title still needs
     $$('.o-key[data-k]').forEach(k => k.classList.toggle('want', !!want[k.dataset.k]));
     if (ft) morph(ft, fr ? `<span class="o-fgoal">Goal</span><b class="o-ftitle">${esc(fr.title)}</b>${bar(progress(fr), fr.total)}<span class="o-fn">${progress(fr)}/${fr.total}</span>` : '');
+    morph($('#oSky'), skyLine());
     morph($('#oStats'), `<span class="o-s1"><b>${cnt('f-let' + S.sel, totalLetters(d))}</b> letters</span><span class="o-s2"><b>${d.paws}</b> typists · <b>${autoRate(d).toFixed(2)}</b>/s</span>` +
       (S.hold ? `<span class="o-sx"><b>${holdRate(d)}</b>/s held</span>` : '') + `<span class="o-sx o-dim">${D.lo}–${D.hi} letter words</span>` +
       (stormy() ? '<span class="o-sx o-warn">Storm! Half speed.</span>' : ''));
@@ -2066,7 +2108,7 @@
       const written = Object.keys(S.written).length;
       body = `<div class="o-card o-shelf"><div class="o-row"><h3>Your bookshelf</h3><span class="o-dim">${written} sold · royalties ${fmtRate(royRate())}/s</span></div>${sold ? '<p class="o-dim">Tap a spine to read it.</p>' : '<p class="o-dim">Sell a title to put it here.</p>'}${shelfHTML()}</div>`;
     } else if (sub === 'pitches') body = pitchHTML();
-    else if (sub === 'market') body = `<p class="o-lede">Publishers pay more or less depending on demand. Sell when your title’s band is HOT. Weather and night change demand.</p>${marketHTML()}`;
+    else if (sub === 'market') body = `<p class="o-lede">Publishers pay more or less depending on demand. Sell when your title’s band is HOT. The weather and the time of day change demand.</p>${skyCard()}${marketHTML()}`;
     else body = `<div class="o-card o-archive"><h3>The Archive</h3>
         <p class="o-dim" id="oArchNote" data-own>Loading the stacks…</p>
         <input class="o-search" id="oArchQ" placeholder="Search the complete manuscripts…" value="${esc(ui.archq)}" autocomplete="off" aria-label="Search the archive">
@@ -2129,6 +2171,7 @@
       <h3 class="o-h">Keepers</h3><div class="o-grid">${DESKS.map((D, i) => S.desks[i].owned ? keeperCard(i, have) : '').join('')}</div>
       <h3 class="o-h">Garden</h3><div class="o-grid">${gardenCard(have)}</div>
       <h3 class="o-h">Market tools</h3><div class="o-grid">
+        ${baroCard(have)}
         ${pubCard(have)}
         ${item('Literary agent', 'Haggles: the market can never push your sale prices below x0.85.', SHOP.agent, S.agent, soldCount() < 2 ? 'Needs 2 sold titles' : '', 'agent')}
         ${item('Market analyst', 'Shows which way each band is heading next.', SHOP.analyst, S.analyst, soldCount() < 2 ? 'Needs 2 sold titles' : '', 'analyst')}
@@ -2168,7 +2211,8 @@
       const mks = plots || S.desks.some((d, i) => d.owned && d.mk < 2 && have >= mkCost(i));
       const keepers = mks || S.desks.some((d, i) => d.owned && keeperLv(i) < KEEPER_UP_MAX && have >= keeperUpCost(i));
       const pubOk = S.pub.tier < 3 && (S.pub.tier > 0 || soldCount() >= 3) && have >= PUB_COST[S.pub.tier];
-      const tools = keepers || pubOk || (!S.agent && soldCount() >= 2 && have >= SHOP.agent) || (!S.analyst && soldCount() >= 2 && have >= SHOP.analyst);
+      const baroOk = S.baro < 2 && soldCount() >= 2 && have >= BARO_COST[S.baro];
+      const tools = keepers || pubOk || baroOk || (!S.agent && soldCount() >= 2 && have >= SHOP.agent) || (!S.analyst && soldCount() >= 2 && have >= SHOP.analyst);
       const deal = tools || DEALS.some(x => !S.deals[x.id] && soldCount() >= x.need && have >= x.cost);
       return can || deal || (LAMP[S.lamp] && have >= LAMP[S.lamp].cost) ? '!' : '';
     }
@@ -2413,6 +2457,10 @@
   window.addEventListener('beforeunload', save);
   document.addEventListener('visibilitychange', () => { if (document.hidden) save(); else { last = performance.now(); welcomeBack(30); setTimeout(dailyLater, 1200); } });
   if (typeof Weather !== 'undefined') Weather.on('change', () => { paintWindow(); mark(); });
+  /* the sky announces itself in the ticker; with a barometer it also warns shortly before a change */
+  const SKY_NEWS = ['The clouds clear over the canopy. Honeycomb gift books look brighter already.', 'Drizzle on the canopy. Cosy-reading weather: Hibiscus titles are in demand.', 'Rain! The monkeys put on leaf hats and the water starts to rise.', 'STORM. The typists cling to their vines and Lagoon drama sells.'];
+  IMI.on('sky', e => { skyC = null; if (e.night !== e.prev.night) newsPush(e.night ? 'Night falls. Owls clock in and bedtime books sell.' : 'The sun comes up. The owls go home grumbling.'); else newsPush(SKY_NEWS[e.wx]); mark(); });
+  IMI.on('skysoon', e => { if (S.baro >= 1) newsPush(`Forecast: ${World.label(e.ev)} in about ${Math.max(1, Math.round(e.etaMs / 1000))} seconds.`); });
 
   pickAutoFocus(); S.desks.forEach(ensureCrew); if (totalReleased() > 0) loadArchive(); checkAwards(true); buildStage(); render(); startNews(); welcomeBack(60); setTimeout(dailyLater, 1800);
   IMI.onScreen(name => { if (name === 'game') { mark(); buildStage(); startNews(); render(); } else render(); });

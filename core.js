@@ -177,14 +177,14 @@ window.Core = (() => {
     const TOYS = {
       snack:   { cd: 90, name: 'Snack break', tip: 'Peel a banana: typists work 50% faster for 20 seconds', sound: 'peel' },
       coconut: { cd: 60, name: 'Coconut crack', tip: 'Crack a coconut open for a pile of letters', sound: 'crack' },
-      weather: { name: 'Weather', tip: 'Change the weather. Rain and storms move the market and some typists' },
-      night:   { name: 'Day and night', tip: 'Flip between day and night. Night owls and TV love the dark' },
+      weather: { name: 'Weather', gauge: true, tip: 'The sky outside. Tap for the forecast. Rain and storms move the market and some typists' },
+      night:   { name: 'Day and night', gauge: true, tip: 'The time of day. Tap for the forecast. Night owls and TV love the dark' },
     };
     const dock = $('#toyDock'), toys = {};
     const readyAt = JSON.parse(localStorage.getItem('imi-toys') || '{}');
     for (const [id, T] of Object.entries(TOYS)) {
       const el = document.createElement('button'); el.type = 'button'; el.className = 'toy'; el.dataset.toy = id; el.title = T.tip;
-      el.setAttribute('aria-label', T.name); el.innerHTML = '<span class="toy-art"></span>' + (T.cd ? '<i class="toy-cd"></i>' : '');
+      el.setAttribute('aria-label', T.name); el.innerHTML = '<span class="toy-art"></span>' + (T.cd ? '<i class="toy-cd"></i>' : '') + (T.gauge ? '<i class="toy-eta"></i>' : '');
       dock.appendChild(el);
       toys[id] = { el, art: art.toys[id](el.firstChild), timer: 0 };
     }
@@ -213,21 +213,43 @@ window.Core = (() => {
     Object.entries(toys).forEach(([id, o]) => { if (TOYS[id].cd) { o.el.addEventListener('click', () => useToy(id)); coolDown(id); } });
     document.addEventListener('visibilitychange', () => { if (!document.hidden) Object.keys(toys).forEach(id => TOYS[id].cd && coolDown(id)); });
 
-    /* day and night */
+    /* ---------- the sky ----------
+       Day, night and weather follow the World clock (world.js), the same for everyone and computed from the time, so nothing is saved and
+       time away counts. The two toys are gauges: they show the sky now and how long until it changes; tapping one reads out the forecast. */
+    const WX_SAY = ['Clear skies.', 'Drizzle. Cozy.', 'Rain. The water is rising.', 'STORM! Hold on to the vines.'];
+    const WX_NOW = ['Clear', 'Drizzle', 'Rain', 'Storm'], PHASE_NOW = { day: 'Day', dusk: 'Dusk', night: 'Night', dawn: 'Dawn' };
     function setNight(on, announce) {
       document.body.classList.toggle('night', on); toys.night.art.paint(on); toys.night.el.setAttribute('aria-pressed', String(on));
       if (announce) { (on ? sfx.night : sfx.day)(); say(on ? 'LIGHTS OUT. Night owls rejoice.' : 'RISE AND SHINE.'); }
-      localStorage.setItem('imi-night', on ? '1' : '0');
     }
-    toys.night.el.addEventListener('click', () => { restart(toys.night.el, 'hit'); setNight(!document.body.classList.contains('night'), true); emit('toy', { id: 'night' }); });
-    setNight(localStorage.getItem('imi-night') === '1', false);
-
-    /* weather: one shared simulation (weather.js); the toy shows its state */
-    const WX_SAY = ['Clear skies.', 'Drizzle. Cozy.', 'Rain. The water is rising.', 'STORM! Hold on to the vines.'];
     Weather.on('change', (n, lv) => toys.weather.art.paint(n, lv));
     Weather.init({ style: art.edition, S: art.S });
-    toys.weather.el.addEventListener('click', () => { sfx.tick(); restart(toys.weather.el, 'hit'); Weather.next(); say(WX_SAY[Weather.state]); emit('toy', { id: 'weather' }); });
-
+    const mmss = ms => { const t = Math.max(0, Math.ceil(ms / 1000)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
+    const baro = () => (IMI.ops && IMI.ops.baro ? IMI.ops.baro() : 0);
+    let skyNow = null, soonFor = 0, shownEta = {};
+    function paintGauges(t, at) {
+      const wxEta = World.untilNext(t, 'wx'), nightEta = World.untilNext(t, 'night');
+      const set = (id, text, label) => { const o = toys[id]; if (shownEta[id] !== text) { shownEta[id] = text; o.el.querySelector('.toy-eta').textContent = text; } o.el.setAttribute('aria-label', label); };
+      set('weather', mmss(wxEta), `Weather: ${WX_NOW[at.wx]}. Changes in ${mmss(wxEta)}.`);
+      set('night', mmss(nightEta), `${PHASE_NOW[at.phase]}. ${at.night ? 'Sunrise' : 'Night'} in ${mmss(nightEta)}.`);
+    }
+    function skyStep(quiet) {                                  // once a second, and the moment you come back to the tab
+      const t = Date.now(), at = World.at(t), prev = skyNow; skyNow = at;
+      if (!prev || prev.night !== at.night) setNight(at.night, !quiet && !!prev && inGame() && !document.hidden);
+      if (!prev || prev.wx !== at.wx) { Weather.setState(at.wx, quiet || !prev); if (prev && !quiet && inGame() && !document.hidden && !(prev.night !== at.night)) say(WX_SAY[at.wx]); }
+      if (prev && (prev.night !== at.night || prev.wx !== at.wx)) emit('sky', { ...at, prev });
+      const nx = World.next(t, 1)[0];                          // headline a change shortly before it happens
+      if (nx && nx.at - t < 45000 && soonFor !== nx.at) { soonFor = nx.at; emit('skysoon', { ev: nx, etaMs: nx.at - t }); }
+      paintGauges(t, at);
+    }
+    function forecastText(id) {                                // what tapping a gauge says; the barometer (Shop) adds what is coming
+      const t = Date.now(), at = World.at(t), tier = baro(), kind = id === 'weather' ? 'wx' : 'night';
+      const head = id === 'weather' ? `${WX_NOW[at.wx]} now.` : `${PHASE_NOW[at.phase]} now.`;
+      if (tier < 1) return `${head} ${id === 'weather' ? 'The weather changes' : (at.night ? 'Sunrise' : 'Night')} in ${mmss(World.untilNext(t, kind))}. A barometer (Shop) shows what is coming.`;
+      const list = World.next(t, tier >= 2 ? 4 : 2, id === 'weather' ? 'wx' : 'any').map(e => `${World.label(e)} in ${mmss(e.at - t)}`);
+      return `${head} Next: ${list.join(', ')}.`;
+    }
+    ['weather', 'night'].forEach(id => toys[id].el.addEventListener('click', () => { sfx.tick(); restart(toys[id].el, 'hit'); say(forecastText(id)); emit('toy', { id }); }));
     /* ---------- settings popover (game header): art style, sound, reset, tutorial replay ---------- */
     const setBtn = $('#settingsBtn');
     if (setBtn) {
@@ -322,7 +344,7 @@ window.Core = (() => {
     window.IMI = {
       on, off, emit,
       edition: art.edition, reduceMotion, sfx, centerOf, fmt, say, banner, heroSay: art.heroSay,
-      fx, setFx, bananaEl: art.bananaEl,
+      fx, setFx, bananaEl: art.bananaEl, forecastText,
       burst: (x, y, names, n = 12) => art.burst(x, y, names, fx.low ? Math.max(2, Math.ceil(n / 3)) : n),     // Low: a third of the particles
       fall: (x, y, name, life) => { if (fx.low && Math.random() < .5) return; art.fall(x, y, name, life); },
       bananas: { get: () => score, add: n => { score += n; paintScore(false); }, spend, earn, watch: f => watchers.push(f) },
@@ -331,6 +353,8 @@ window.Core = (() => {
       whenPlaying: f => (inGame() ? f() : queued.push(f)),     // modals wait for the game screen instead of covering the menu
     };
     apply(true); applyFx(); watchFrameRate();
+    skyStep(true); setInterval(() => skyStep(false), 1000);                // the sky starts once the event bus exists
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) skyStep(true); });
     return window.IMI;
   }
   return { boot, $, rand, pick, centerOf, restart, reduceMotion };

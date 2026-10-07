@@ -30,7 +30,7 @@
       hint: [60, 'Tap faster or hire more typists.'] },
     { id: 'shop', tab: 'shop', target: '.o-btn[data-act="buy"][data-what="desk"][data-i="1"]', text: 'Bananas! Spend them on a new typewriter.', done: s => s.owned >= 2, next: true,
       view: s => (s.bananas < s.deskPrice ? { text: `Bananas! Save up ${s.deskPrice.toLocaleString('en-US')} for a new typewriter.` } : null) },
-    { id: 'toys', tab: null, target: '#railToggle', text: 'The menu button holds the snack and coconut boosts, weather and night (they change what sells).', next: true },
+    { id: 'toys', tab: null, target: '#railToggle', text: 'The menu button holds the snack and coconut boosts, plus gauges for the weather and time of day. The sky runs on its own clock and changes what sells.', next: true },
     { id: 'end', tab: null, target: '#railToggle', text: 'More departments appear in the side bar as you grow. Replay this tour in Settings, under the menu button.', next: true, last: true }
   ];
 

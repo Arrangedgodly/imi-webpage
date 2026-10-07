@@ -32,8 +32,12 @@ Today `Weather.state` is a number the player cycles with a button and night is a
 
 ## Status
 
-Not started.
+Done. The sky follows the game clock (`world.js`); the weather and day/night toys are gauges with a countdown that read out the forecast when tapped; the Shop sells a two-tier **Barometer** (30k and 150k bananas); the Market page has a "The sky" card and the Floor info bar a sky chip; offline progress samples the sky.
 
 ## Handoff notes
 
-(none yet)
+- `world.js` is pure: `World.at(t)` gives `{night, phase, phaseT, wx}`, `World.next(t, n, kind)` the next changes (`'wx'`, `'night'`, `'any'`), `World.untilNext`, `World.label`. A day is 14 min (day 0-540 s, dusk 540-600, night 600-780, dawn 780-840; dusk and dawn count as day). Weather is chosen per 150 s cell by an integer hash: clear 55 %, drizzle 15 %, rain 21 %, storm 9 % (a storm needs weather in the cell before it, so clear never jumps to storm). `world_test.cjs`-style checks: forecast agrees with `at` across 6000 samples.
+- `core.js` applies the sky once a second (`skyStep`, also when the tab becomes visible): `body.night`, `Weather.setState`, the gauges, and the `sky` / `skysoon` events on the IMI bus (ops.js turns them into news lines). `IMI.forecastText(id)` is what a gauge tap says; the barometer tier is read through `IMI.ops.baro()`.
+- `ops.js` never reads the sky from the DOM now: `sky()` returns `World.at(Date.now())` unless `skyOv` is set (only `simulateAway` sets it, per step, so owls, rain lovers, storms and the market count for time away). `marketBias(band, sk = sky())`. The harness keeps working because `tools/balance.html` loads `world.js` and its fake `Date.now` drives the sky.
+- Balance (bot, one seed, `activeMinutes` 30 as in the other tables): active Lagoon 80.5 to 64.3, first division 167.5 to 165, first star 216.6 to 205.7, Honeycomb 334.1 to 325.1; idle Honeycomb 431.8 to 432.6. Pacing is unchanged within noise. Average market bias per band over two days (clear day was a fixed +0.2 on band 3 before): 0.064 0.107 0.042 0.087 0.035 0.062. Storms are 9 % of the time and halve typing speed (the offline check shows 6940 against 12928 letters per hour in a storm).
+- Not done: no nudge or weather control by design; the window art still reads `Weather.state` (visual only). The Settings popover never had a weather entry, so nothing to remove there.
