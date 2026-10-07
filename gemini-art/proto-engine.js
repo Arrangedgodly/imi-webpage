@@ -860,6 +860,7 @@
       this.mouseLogicalX = -100;
       this.mouseLogicalY = -100;
       this.hoveredKey = null;
+      this.deskTheme = 'mahogany';
 
       // Initialize Monkeys
       this.initMonkeys();
@@ -880,6 +881,10 @@
       this.ctx.imageSmoothingEnabled = false;
     }
 
+    
+    setDeskTheme(theme) {
+      this.deskTheme = theme;
+    }
     setCameraMode(mode) {
       this.cameraMode = mode;
       if (mode === 'keyboard') {
@@ -1474,14 +1479,36 @@
       g.scale(this.camZoom, this.camZoom);
       g.translate(-snap(this.camX), -snap(this.camY));
 
-      // 1. Mahogany Desk Surface
-      g.fillStyle = '#160c07';
-      g.fillRect(0, 0, this.logicalW, this.logicalH);
-
-      // Plank Wood Grain
-      g.fillStyle = '#22140c';
-      for (let y = 30; y < this.logicalH; y += 42) {
-        g.fillRect(0, y, this.logicalW, 2);
+      // 1. Desk Surface Theme
+      const theme = this.deskTheme || 'mahogany';
+      if (theme === 'jungle') {
+        g.fillStyle = '#0a2a1c';
+        g.fillRect(0, 0, this.logicalW, this.logicalH);
+        g.fillStyle = '#144630';
+        for (let y = 20; y < this.logicalH; y += 36) {
+          g.fillRect(0, y, this.logicalW, 2);
+        }
+      } else if (theme === 'blueprint') {
+        g.fillStyle = '#0c1a2e';
+        g.fillRect(0, 0, this.logicalW, this.logicalH);
+        g.fillStyle = '#163259';
+        for (let x = 0; x < this.logicalW; x += 16) g.fillRect(x, 0, 1, this.logicalH);
+        for (let y = 0; y < this.logicalH; y += 16) g.fillRect(0, y, this.logicalW, 1);
+      } else if (theme === 'parchment') {
+        g.fillStyle = '#d9ceb9';
+        g.fillRect(0, 0, this.logicalW, this.logicalH);
+        g.fillStyle = '#c7bca5';
+        for (let y = 30; y < this.logicalH; y += 42) {
+          g.fillRect(0, y, this.logicalW, 1);
+        }
+      } else {
+        // Mahogany Desk Surface
+        g.fillStyle = '#160c07';
+        g.fillRect(0, 0, this.logicalW, this.logicalH);
+        g.fillStyle = '#22140c';
+        for (let y = 30; y < this.logicalH; y += 42) {
+          g.fillRect(0, y, this.logicalW, 2);
+        }
       }
 
       // Desk Cast Shadow
@@ -1617,6 +1644,14 @@
       g.fillStyle = PAL.redBase;
       g.fillRect(-paperW / 2 + 16, -paperH + 6, 1, paperH - 4); // Margin line
 
+      // Vintage Ornamental Watermark / Letterhead Stamp
+      drawPixelGlyph(g, 'I', -25, -paperH + 10, 'rgba(150, 140, 120, 0.45)');
+      drawPixelGlyph(g, 'M', -19, -paperH + 10, 'rgba(150, 140, 120, 0.45)');
+      drawPixelGlyph(g, 'I', -13, -paperH + 10, 'rgba(150, 140, 120, 0.45)');
+      g.fillStyle = 'rgba(150, 140, 120, 0.35)';
+      g.fillRect(-35, -paperH + 17, 70, 1);
+      g.fillRect(-20, -paperH + 19, 40, 1);
+
       // Typed Text on Paper (Crisp Monospace Pixel Font)
       this.paperLines.forEach((line, idx) => {
         const lineY = -48 + idx * 8 - (this.paperScrollY % 8);
@@ -1688,6 +1723,28 @@
       g.fillRect(cx - 121, cy + 49, 242, 2);
       g.fillRect(cx - 121, cy - 38, 2, 89);
       g.fillRect(cx + 119, cy - 38, 2, 89);
+
+      // Flank Cast Iron Ventilation Louvers (Beveled 3D Slits)
+      g.fillStyle = '#080a0e';
+      for (let ly = cy - 24; ly <= cy + 18; ly += 7) {
+        g.fillRect(cx - 114, ly, 10, 3);
+        g.fillRect(cx + 104, ly, 10, 3);
+        g.fillStyle = PAL.ironMid;
+        g.fillRect(cx - 114, ly + 3, 10, 1);
+        g.fillRect(cx + 104, ly + 3, 10, 1);
+        g.fillStyle = '#080a0e';
+      }
+
+      // 4 Corner Brass Hex Rivets with Specular Gleam
+      const drawRivet = (rx, ry) => {
+        drawSteppedCircle(g, rx, ry, 2.5, PAL.brassDark);
+        g.fillStyle = PAL.brassHi;
+        g.fillRect(rx - 1, ry - 1, 1, 1);
+      };
+      drawRivet(cx - 118, cy - 35);
+      drawRivet(cx + 116, cy - 35);
+      drawRivet(cx - 118, cy + 46);
+      drawRivet(cx + 116, cy + 46);
 
       // Cast Iron Feet with Rubber Base
       g.fillStyle = PAL.ironBlack;

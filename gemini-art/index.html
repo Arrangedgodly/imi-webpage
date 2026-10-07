@@ -730,6 +730,86 @@
       </p>
     </div>
 
+    <!-- 0. CANDIDATE ASSET APPROVAL DASHBOARD -->
+    <div class="card" id="approvalDashboardCard" style="border: 2px solid var(--accent-gold); box-shadow: 0 0 24px rgba(255, 209, 59, 0.25);">
+      <div class="card-header" style="background: #24351a; border-bottom: 2px solid var(--accent-gold);">
+        <span class="card-title" style="color: #ffd13b; font-size: 20px;">
+          📋 Candidate Asset Approval Dashboard
+        </span>
+        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+          <button class="btn btn-gold" id="btnApproveAll" style="font-weight: 700;">✅ Approve All Assets</button>
+          <button class="btn" id="btnExportApprovals" style="background: #11261b; border-color: #4fa844; color: #a4f2c2;">📋 Copy Decision Brief</button>
+          <button class="btn" id="btnResetApprovals" style="background: #261111; border-color: #882222; color: #ff9999;">🔄 Reset</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 16px;">
+          <!-- Column 1: Monkeys -->
+          <div style="background: #0d1711; border: 1px solid #1f3825; border-radius: 6px; padding: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <strong style="color: #ffd13b; font-size: 14px;">🐒 30 Monkey Variants</strong>
+              <span id="monkeyApprovalCount" class="badge" style="background: #1e4529; color: #7cf29c; margin: 0;">0 / 30 Approved</span>
+            </div>
+            <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 10px;">
+              5 Archetypes (Athletic, Industrial, Scholarly, Tech, Whimsical) across 5 physical typewriter stations with stepped raster limbs and expressive facial glints.
+            </p>
+            <div style="display: flex; gap: 6px;">
+              <button class="btn btn-sm" id="btnApproveMonkeys" style="padding: 4px 8px; font-size: 11px; background: #163320;">Approve 30 Monkeys</button>
+              <a href="#inspectorCard" class="btn btn-sm" style="padding: 4px 8px; font-size: 11px; text-decoration: none; color: #9aa89b;">Inspect Roster ↓</a>
+            </div>
+          </div>
+
+          <!-- Column 2: Typewriters -->
+          <div style="background: #0d1711; border: 1px solid #1f3825; border-radius: 6px; padding: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <strong style="color: #ffd13b; font-size: 14px;">⌨️ 6 Typewriter Models</strong>
+              <span id="typewriterApprovalCount" class="badge" style="background: #1e4529; color: #7cf29c; margin: 0;">0 / 6 Approved</span>
+            </div>
+            <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 10px;">
+              6 Canonical colorways (Bamboo Classic, Hibiscus Ribbon, Lagoon Sprint, Honeycomb, Orchid, Moonflower) with knurled knobs, fluted platen, and louvers.
+            </p>
+            <div style="display: flex; gap: 6px;">
+              <button class="btn btn-sm" id="btnApproveTypewriters" style="padding: 4px 8px; font-size: 11px; background: #163320;">Approve 6 Models</button>
+              <a href="#showcaseCard" class="btn btn-sm" style="padding: 4px 8px; font-size: 11px; text-decoration: none; color: #9aa89b;">View Models ↓</a>
+            </div>
+          </div>
+
+          <!-- Column 3: Upgrade Matrix Components -->
+          <div style="background: #0d1711; border: 1px solid #1f3825; border-radius: 6px; padding: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <strong style="color: #ffd13b; font-size: 14px;">🏛️ 40 Upgrade Matrix Props</strong>
+              <span id="matrixApprovalCount" class="badge" style="background: #1e4529; color: #7cf29c; margin: 0;">0 / 40 Approved</span>
+            </div>
+            <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 10px;">
+              7 Modular subsystems: 9 Muses Oil Portraits, 5 Media Studios, 6 Nursery Stages, 6 Commodities, 5 Hall Awards, 6 Book Spines, 4 Celestial Toys.
+            </p>
+            <div style="display: flex; gap: 6px;">
+              <button class="btn btn-sm" id="btnApproveMatrix" style="padding: 4px 8px; font-size: 11px; background: #163320;">Approve 40 Matrix</button>
+              <a href="#componentCard" class="btn btn-sm" style="padding: 4px 8px; font-size: 11px; text-decoration: none; color: #9aa89b;">Explore Matrix ↓</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage Viewport Settings & Desk Theme -->
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; background: #112017; padding: 10px 14px; border-radius: 6px; border: 1px solid #203c29;">
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <span style="font-size: 12px; font-weight: 700; color: #ffd13b;">🪵 Desk Surface Theme:</span>
+            <button class="btn btn-sm active" data-desk="mahogany" style="padding: 4px 10px;">🪵 Mahogany</button>
+            <button class="btn btn-sm" data-desk="jungle" style="padding: 4px 10px;">🌿 Canopy</button>
+            <button class="btn btn-sm" data-desk="blueprint" style="padding: 4px 10px;">📐 Blueprint</button>
+            <button class="btn btn-sm" data-desk="parchment" style="padding: 4px 10px;">📜 Parchment</button>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <span style="font-size: 12px; font-weight: 700; color: #ffd13b;">🔍 Integer Zoom:</span>
+            <button class="btn btn-sm" data-scale="1" style="padding: 4px 8px;">1x</button>
+            <button class="btn btn-sm" data-scale="2" style="padding: 4px 8px;">2x</button>
+            <button class="btn btn-sm active" data-scale="3" style="padding: 4px 8px;">3x</button>
+            <button class="btn btn-sm" data-scale="4" style="padding: 4px 8px;">4x</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 2. LIVE MECHANICAL TYPEWRITER STAGE -->
     <div class="card">
       <div class="card-header">
@@ -818,7 +898,7 @@
     </div>
 
     <!-- 3. CANONICAL TYPEWRITER HARDWARE SHOWCASE -->
-    <div class="card">
+    <div class="card" id="showcaseCard">
       <div class="card-header">
         <span class="card-title">🏛️ Canonical Typewriter Hardware Showcase (6 Models × 3 Restoration Tiers)</span>
         <span style="font-size: 12px; color: var(--text-dim);">Authentic 16-bit color palettes, hand-cast brass medallions, and tiered restoration trim</span>
@@ -831,7 +911,7 @@
     </div>
 
         <!-- 4. SPRITE & ANIMATION INSPECTOR (64x64 HIGH FRAME COUNT & 30 VARIANTS) -->
-    <div class="card">
+    <div class="card" id="inspectorCard">
       <div class="card-header">
         <div>
           <span class="card-title">🔬 64x64 High-Frame-Count Animation Inspector</span>
@@ -876,7 +956,7 @@
 
     
     <!-- 5. FULL GAME PIXEL ART UPGRADE SUITE & COMPONENT LAB -->
-    <div class="card" id="componentUpgradeSuite">
+    <div class="card" id="componentCard">
       <div class="card-header">
         <div style="display:flex; justify-content:space-between; align-items:flex-start; width:100%;">
           <div>
@@ -898,6 +978,20 @@
           <button class="comp-tab" data-tab="library">📚 Library Book Spines (6)</button>
           <button class="comp-tab" data-tab="weather">⛅ Weather & Celestial (4)</button>
         </div>
+        <!-- Live Animation Control Bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin:14px 0; padding:10px 14px; background:#121c15; border:1px solid #1a3222; border-radius:6px; flex-wrap:wrap; gap:10px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button id="compAnimToggleBtn" class="proto-btn" style="background:#2a1f10; border-color:#ffd23a; color:#ffd23a; font-weight:600;">⏸ Pause Animations</button>
+            <div style="font-size:0.75rem; color:#888; margin-left:6px;">Playback Speed:</div>
+            <button class="proto-btn comp-speed-btn" data-speed="0.5" style="padding:4px 8px; font-size:0.75rem;">0.5x</button>
+            <button class="proto-btn comp-speed-btn active" data-speed="1.0" style="padding:4px 8px; font-size:0.75rem; border-color:#ffd23a; color:#ffd23a;">1.0x</button>
+            <button class="proto-btn comp-speed-btn" data-speed="2.0" style="padding:4px 8px; font-size:0.75rem;">2.0x</button>
+          </div>
+          <div style="font-size:0.8rem; color:#78e08f; font-family:monospace; display:flex; align-items:center; gap:6px;">
+            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#78e08f; box-shadow:0 0 8px #78e08f;"></span>
+            <span>41 Components Fully Animated (8 Looping Frames @ 8 FPS)</span>
+          </div>
+        </div>
 
         <div id="compTabContent" class="comp-tab-content">
           <!-- Dynamically populated based on active tab -->
@@ -915,7 +1009,7 @@
           
           <div class="gallery-item" style="grid-column: 1 / -1;">
             <div class="gallery-img-wrap" style="max-height: 520px;">
-              <img src="concepts/monkey_variants_pixel_art.jpg" alt="5 Distinct 16-Bit Pixel Art Monkey Variants">
+              <img loading="lazy" src="concepts/monkey_variants_pixel_art.jpg" alt="5 Distinct 16-Bit Pixel Art Monkey Variants">
             </div>
             <div class="gallery-info">
               <div class="gallery-title">Direction F: 5 Bespoke Monkey Character Variants & Tailored Costumes</div>
@@ -927,7 +1021,7 @@
           
           <div class="gallery-item" style="grid-column: 1 / -1;">
             <div class="gallery-img-wrap" style="max-height: 480px;">
-              <img src="concepts/monkeys_on_pixel_typewriter.jpg" alt="Master 16-Bit Pixel Art Typewriter & Monkeys">
+              <img loading="lazy" src="concepts/monkeys_on_pixel_typewriter.jpg" alt="Master 16-Bit Pixel Art Typewriter & Monkeys">
             </div>
             <div class="gallery-info">
               <div class="gallery-title">Direction E: Master 16-Bit Pixel Art Typewriter & Physical Monkey Operations</div>
@@ -939,7 +1033,7 @@
 
           <div class="gallery-item">
             <div class="gallery-img-wrap">
-              <img src="concepts/pixel_typewriter_assets.jpg" alt="16-Bit Pixel Art Typewriter Asset Breakdown">
+              <img loading="lazy" src="concepts/pixel_typewriter_assets.jpg" alt="16-Bit Pixel Art Typewriter Asset Breakdown">
             </div>
             <div class="gallery-info">
               <div class="gallery-title">Direction D2: 16-Bit Pixel Art Asset Breakdown</div>
@@ -951,7 +1045,7 @@
 
           <div class="gallery-item">
             <div class="gallery-img-wrap">
-              <img src="concepts/typewriter_blueprint.jpg" alt="Typewriter Mechanical Blueprint Study">
+              <img loading="lazy" src="concepts/typewriter_blueprint.jpg" alt="Typewriter Mechanical Blueprint Study">
             </div>
             <div class="gallery-info">
               <div class="gallery-title">Direction D: 16-Bit Mechanical Typewriter Blueprint</div>
@@ -963,7 +1057,7 @@
 
           <div class="gallery-item">
             <div class="gallery-img-wrap">
-              <img src="concepts/monkey_64x64_spritesheet.jpg" alt="64x64 Sprite Sheet Study">
+              <img loading="lazy" src="concepts/monkey_64x64_spritesheet.jpg" alt="64x64 Sprite Sheet Study">
             </div>
             <div class="gallery-info">
               <div class="gallery-title">Direction C: 64x64 High-Fidelity Character Study</div>
@@ -975,7 +1069,7 @@
 
           <div class="gallery-item">
             <div class="gallery-img-wrap">
-              <img src="concepts/scene-concept.jpg" alt="Pixel Art Scene Concept">
+              <img loading="lazy" src="concepts/scene-concept.jpg" alt="Pixel Art Scene Concept">
             </div>
             <div class="gallery-info">
               <div class="gallery-title">Direction A: Integrated Jungle Workshop Typewriter</div>
@@ -997,9 +1091,22 @@
 
   <!-- SCRIPT INTEGRATION -->
     <script>
+    // Ensure any previously registered root service worker does not intercept preview assets
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (let reg of registrations) {
+          reg.unregister();
+        }
+      }).catch(function() {});
+    }
     window.__allErrors = [];
     window.addEventListener('error', (e) => {
       window.__allErrors.push(e.message + ' at ' + e.filename + ':' + e.lineno);
+      console.error('Captured preview error:', e);
+    });
+    window.addEventListener('unhandledrejection', (e) => {
+      window.__allErrors.push('Unhandled rejection: ' + e.reason);
+      console.error('Unhandled rejection:', e.reason);
     });
   </script>
   <script src="monkey-variants.js"></script>
@@ -1007,7 +1114,98 @@
   <script src="typewriter-styles.js"></script>
   <script src="game-components.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    function initTestSuite() {
+      // --- Asset Approvals State & Handlers ---
+      let approvals = {
+        monkeys: false,
+        typewriters: false,
+        matrix: false
+      };
+
+      function updateApprovalDisplay() {
+        const mCount = document.getElementById('monkeyApprovalCount');
+        const tCount = document.getElementById('typewriterApprovalCount');
+        const xCount = document.getElementById('matrixApprovalCount');
+        if (mCount) {
+          mCount.textContent = approvals.monkeys ? '30 / 30 Approved ✅' : '0 / 30 Approved';
+          mCount.style.background = approvals.monkeys ? '#1f6634' : '#1e4529';
+        }
+        if (tCount) {
+          tCount.textContent = approvals.typewriters ? '6 / 6 Approved ✅' : '0 / 6 Approved';
+          tCount.style.background = approvals.typewriters ? '#1f6634' : '#1e4529';
+        }
+        if (xCount) {
+          xCount.textContent = approvals.matrix ? '40 / 40 Approved ✅' : '0 / 40 Approved';
+          xCount.style.background = approvals.matrix ? '#1f6634' : '#1e4529';
+        }
+      }
+
+      document.getElementById('btnApproveMonkeys')?.addEventListener('click', () => {
+        approvals.monkeys = true;
+        updateApprovalDisplay();
+      });
+      document.getElementById('btnApproveTypewriters')?.addEventListener('click', () => {
+        approvals.typewriters = true;
+        updateApprovalDisplay();
+      });
+      document.getElementById('btnApproveMatrix')?.addEventListener('click', () => {
+        approvals.matrix = true;
+        updateApprovalDisplay();
+      });
+      document.getElementById('btnApproveAll')?.addEventListener('click', () => {
+        approvals.monkeys = true;
+        approvals.typewriters = true;
+        approvals.matrix = true;
+        updateApprovalDisplay();
+      });
+      document.getElementById('btnResetApprovals')?.addEventListener('click', () => {
+        approvals.monkeys = false;
+        approvals.typewriters = false;
+        approvals.matrix = false;
+        updateApprovalDisplay();
+      });
+
+      document.getElementById('btnExportApprovals')?.addEventListener('click', () => {
+        const brief = [
+          '# ASSET APPROVAL DECISION BRIEF',
+          'Date: ' + new Date().toISOString(),
+          '- 30 Monkey Variants: ' + (approvals.monkeys ? 'APPROVED' : 'PENDING'),
+          '- 6 Typewriter Models (18 Assemblies): ' + (approvals.typewriters ? 'APPROVED' : 'PENDING'),
+          '- 40 Upgrade Matrix Components: ' + (approvals.matrix ? 'APPROVED' : 'PENDING'),
+          'Ready for production integration.'
+        ].join('\n');
+        navigator.clipboard?.writeText(brief).then(() => {
+          alert('Asset Approval Brief copied to clipboard!\n\n' + brief);
+        }).catch(() => {
+          alert('Asset Approval Brief:\n\n' + brief);
+        });
+      });
+
+      // --- Desk Theme Switcher ---
+      document.querySelectorAll('[data-desk]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('[data-desk]').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const theme = btn.getAttribute('data-desk');
+          if (stage && stage.setDeskTheme) {
+            stage.setDeskTheme(theme);
+          }
+        });
+      });
+
+      // --- Integer Zoom Switcher ---
+      document.querySelectorAll('[data-scale]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('[data-scale]').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const scale = parseInt(btn.getAttribute('data-scale'), 10);
+          if (stage) {
+            stage.scaleMode = scale;
+            stage.updateIntegerScaling();
+          }
+        });
+      });
+
       const stageCanvas = document.getElementById('stageCanvas');
       const stage = new ProtoEngine.TypewriterPixelStage(stageCanvas, {
         scaleMode: 3,
@@ -1470,140 +1668,210 @@
         const GC = window.GameComponents;
         const compTabContent = document.getElementById('compTabContent');
         const compTabs = document.querySelectorAll('#compTabsBar .comp-tab');
+        const compAnimToggleBtn = document.getElementById('compAnimToggleBtn');
+        const compSpeedBtns = document.querySelectorAll('.comp-speed-btn');
+
+        let activeCompCanvases = [];
+        let compIsPaused = false;
+        let compCurrentSpeed = 1.0;
+
+        if (compAnimToggleBtn) {
+          compAnimToggleBtn.addEventListener('click', () => {
+            compIsPaused = !compIsPaused;
+            compAnimToggleBtn.innerHTML = compIsPaused ? '▶ Play Animations' : '⏸ Pause Animations';
+            compAnimToggleBtn.style.color = compIsPaused ? '#78e08f' : '#ffd23a';
+            compAnimToggleBtn.style.borderColor = compIsPaused ? '#78e08f' : '#ffd23a';
+            activeCompCanvases.forEach(cv => {
+              if (compIsPaused) cv._animController?.stop();
+              else cv._animController?.start();
+            });
+          });
+        }
+
+        compSpeedBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            compSpeedBtns.forEach(b => {
+              b.classList.remove('active');
+              b.style.borderColor = '';
+              b.style.color = '';
+            });
+            btn.classList.add('active');
+            btn.style.borderColor = '#ffd23a';
+            btn.style.color = '#ffd23a';
+            compCurrentSpeed = parseFloat(btn.getAttribute('data-speed')) || 1.0;
+            activeCompCanvases.forEach(cv => cv._animController?.setSpeed(compCurrentSpeed));
+          });
+        });
+
+        function createSpritesheetFromFrames(frames, name) {
+          if (!frames || !frames.length) return;
+          const fw = frames[0].width, fh = frames[0].height;
+          const sheet = document.createElement('canvas');
+          sheet.width = fw * frames.length;
+          sheet.height = fh;
+          const sCtx = sheet.getContext('2d');
+          sCtx.imageSmoothingEnabled = false;
+          frames.forEach((f, idx) => {
+            sCtx.drawImage(f, idx * fw, 0);
+          });
+          const a = document.createElement('a');
+          a.download = `${name}_8frame_spritesheet.png`;
+          a.href = sheet.toDataURL('image/png');
+          a.click();
+        }
 
         function renderCompTab(tabId) {
           if (!compTabContent) return;
+          // Stop and release previous anim loops
+          activeCompCanvases.forEach(cv => cv._animController?.stop());
+          activeCompCanvases = [];
+
           compTabContent.innerHTML = '';
           const grid = document.createElement('div');
           grid.className = 'comp-grid';
+
+          function attachCard(card, cv, itemTitle, animFrames) {
+            if (cv._animController) {
+              cv._animController.setSpeed(compCurrentSpeed);
+              if (compIsPaused) cv._animController.stop();
+            }
+            activeCompCanvases.push(cv);
+            card.querySelector('.comp-card-preview').appendChild(cv);
+
+            const dlBtn = card.querySelector('.comp-dl-btn');
+            if (dlBtn && animFrames) {
+              dlBtn.addEventListener('click', () => createSpritesheetFromFrames(animFrames, itemTitle.toLowerCase().replace(/[^a-z0-9]/g, '_')));
+            }
+            grid.appendChild(card);
+          }
 
           if (tabId === 'muses') {
             GC.MUSES_DATA.forEach(m => {
               const card = document.createElement('div');
               card.className = 'comp-card';
-              const cv = GC.renderMusePortrait(m.id, 3);
-              const preview = document.createElement('div');
-              preview.className = 'comp-card-preview';
-              preview.appendChild(cv);
-
-              card.appendChild(preview);
-              card.innerHTML += `
-                <div class="comp-card-title">${m.name}</div>
+              card.innerHTML = `
+                <div class="comp-card-preview"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div class="comp-card-title">${m.name}</div>
+                  <span style="font-size:0.65rem; background:rgba(255,210,58,0.15); border:1px solid rgba(255,210,58,0.4); color:#ffd23a; padding:2px 6px; border-radius:4px;">8F Loop</span>
+                </div>
                 <div class="comp-card-subtitle">${m.archetype}</div>
-                <div class="comp-card-tag">${m.bonuses}</div>
+                ${m.bonuses ? `<div class="comp-card-tag">${m.bonuses}</div>` : ''}
                 <p class="comp-card-desc">${m.bio}</p>
+                <button class="proto-btn comp-dl-btn" style="padding:2px 8px; font-size:0.7rem; margin-top:8px; border-color:#2a4430; color:#85c296; width:100%;">⬇ Export 8-Frame Sheet</button>
               `;
-              grid.appendChild(card);
+              const cv = GC.createAnimatedCanvas('muses', m.id, 3, 8);
+              attachCard(card, cv, m.name, cv._animController?.getFrames());
             });
           } else if (tabId === 'studios') {
             GC.STUDIOS_DATA.forEach(s => {
               const card = document.createElement('div');
               card.className = 'comp-card';
-              const cv = GC.renderStudioHardware(s.id, 2);
-              const preview = document.createElement('div');
-              preview.className = 'comp-card-preview';
-              preview.appendChild(cv);
-
-              card.appendChild(preview);
-              card.innerHTML += `
-                <div class="comp-card-title">${s.name}</div>
+              card.innerHTML = `
+                <div class="comp-card-preview"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div class="comp-card-title">${s.name}</div>
+                  <span style="font-size:0.65rem; background:rgba(255,210,58,0.15); border:1px solid rgba(255,210,58,0.4); color:#ffd23a; padding:2px 6px; border-radius:4px;">8F Loop</span>
+                </div>
                 <div class="comp-card-subtitle">Media Unit: ${s.unit}</div>
                 <div class="comp-card-tag" style="background:${s.color}22; color:${s.color}; border-color:${s.color}66;">${s.tagline}</div>
-                <p class="comp-card-desc">Produces syndicated ${s.unit} content, unlocking massive passive multipliers and premiere bonuses.</p>
+                <p class="comp-card-desc">Produces syndicated ${s.unit} content with live looping animated dials, scanlines, and mechanical components.</p>
+                <button class="proto-btn comp-dl-btn" style="padding:2px 8px; font-size:0.7rem; margin-top:8px; border-color:#2a4430; color:#85c296; width:100%;">⬇ Export 8-Frame Sheet</button>
               `;
-              grid.appendChild(card);
+              const cv = GC.createAnimatedCanvas('studios', s.id, 2, 8);
+              attachCard(card, cv, s.name, cv._animController?.getFrames());
             });
           } else if (tabId === 'garden') {
             GC.GARDEN_STAGES.forEach(g => {
               const card = document.createElement('div');
               card.className = 'comp-card';
-              const cv = GC.renderGardenAsset(g.id, 'E', 3);
-              const preview = document.createElement('div');
-              preview.className = 'comp-card-preview';
-              preview.appendChild(cv);
-
-              card.appendChild(preview);
-              card.innerHTML += `
-                <div class="comp-card-title">${g.name}</div>
+              card.innerHTML = `
+                <div class="comp-card-preview"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div class="comp-card-title">${g.name}</div>
+                  <span style="font-size:0.65rem; background:rgba(255,210,58,0.15); border:1px solid rgba(255,210,58,0.4); color:#ffd23a; padding:2px 6px; border-radius:4px;">8F Loop</span>
+                </div>
                 <div class="comp-card-subtitle">Letter Nursery Component</div>
                 <p class="comp-card-desc">${g.desc}</p>
+                <button class="proto-btn comp-dl-btn" style="padding:2px 8px; font-size:0.7rem; margin-top:8px; border-color:#2a4430; color:#85c296; width:100%;">⬇ Export 8-Frame Sheet</button>
               `;
-              grid.appendChild(card);
+              const cv = GC.createAnimatedCanvas('garden', g.id, 3, 8);
+              attachCard(card, cv, g.name, cv._animController?.getFrames());
             });
           } else if (tabId === 'shop') {
             GC.SHOP_ITEMS_DATA.forEach(item => {
               const card = document.createElement('div');
               card.className = 'comp-card';
-              const cv = GC.renderShopItem(item.id, 3);
-              const preview = document.createElement('div');
-              preview.className = 'comp-card-preview';
-              preview.appendChild(cv);
-
-              card.appendChild(preview);
-              card.innerHTML += `
-                <div class="comp-card-title">${item.name}</div>
+              card.innerHTML = `
+                <div class="comp-card-preview"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div class="comp-card-title">${item.name}</div>
+                  <span style="font-size:0.65rem; background:rgba(255,210,58,0.15); border:1px solid rgba(255,210,58,0.4); color:#ffd23a; padding:2px 6px; border-radius:4px;">8F Loop</span>
+                </div>
                 <div class="comp-card-subtitle">Banana Logistics Commodity</div>
                 <p class="comp-card-desc">${item.desc}</p>
+                <button class="proto-btn comp-dl-btn" style="padding:2px 8px; font-size:0.7rem; margin-top:8px; border-color:#2a4430; color:#85c296; width:100%;">⬇ Export 8-Frame Sheet</button>
               `;
-              grid.appendChild(card);
+              const cv = GC.createAnimatedCanvas('shop', item.id, 3, 8);
+              attachCard(card, cv, item.name, cv._animController?.getFrames());
             });
           } else if (tabId === 'awards') {
             GC.AWARDS_TIERS_DATA.forEach(a => {
               const card = document.createElement('div');
               card.className = 'comp-card';
-              const cv = GC.renderAwardBadge(a.id, 3);
-              const preview = document.createElement('div');
-              preview.className = 'comp-card-preview';
-              preview.appendChild(cv);
-
-              card.appendChild(preview);
-              card.innerHTML += `
-                <div class="comp-card-title">${a.name}</div>
+              card.innerHTML = `
+                <div class="comp-card-preview"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div class="comp-card-title">${a.name}</div>
+                  <span style="font-size:0.65rem; background:rgba(255,210,58,0.15); border:1px solid rgba(255,210,58,0.4); color:#ffd23a; padding:2px 6px; border-radius:4px;">8F Loop</span>
+                </div>
                 <div class="comp-card-subtitle">Hall of Records Honor</div>
-                <p class="comp-card-desc">Permanent achievement token displayed in the Hall of Records, bestowing global prestige multipliers.</p>
+                <p class="comp-card-desc">Permanent achievement token displayed in the Hall of Records with animated gleams and prestige aura.</p>
+                <button class="proto-btn comp-dl-btn" style="padding:2px 8px; font-size:0.7rem; margin-top:8px; border-color:#2a4430; color:#85c296; width:100%;">⬇ Export 8-Frame Sheet</button>
               `;
-              grid.appendChild(card);
+              const cv = GC.createAnimatedCanvas('awards', a.id, 3, 8);
+              attachCard(card, cv, a.name, cv._animController?.getFrames());
             });
           } else if (tabId === 'library') {
             GC.BOOK_SPINES_DATA.forEach((b, idx) => {
               const card = document.createElement('div');
               card.className = 'comp-card';
-              const cv = GC.renderBookSpine(idx, 2);
-              const preview = document.createElement('div');
-              preview.className = 'comp-card-preview';
-              preview.appendChild(cv);
-
-              card.appendChild(preview);
-              card.innerHTML += `
-                <div class="comp-card-title">${b.name}</div>
+              card.innerHTML = `
+                <div class="comp-card-preview"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div class="comp-card-title">${b.name}</div>
+                  <span style="font-size:0.65rem; background:rgba(255,210,58,0.15); border:1px solid rgba(255,210,58,0.4); color:#ffd23a; padding:2px 6px; border-radius:4px;">8F Loop</span>
+                </div>
                 <div class="comp-card-subtitle">Sample Title: "${b.title}"</div>
                 <div class="comp-card-tag" style="background:${b.color}33; color:#fff; border-color:${b.color};">Binding Height: ${b.height}px</div>
-                <p class="comp-card-desc">Tooled leather spine with embossed gold leaf ribs, book title inset, and silk bookmark tassel.</p>
+                <p class="comp-card-desc">Tooled leather spine with sweeping gold leaf foil sheen and swaying silk bookmark ribbon tassel.</p>
+                <button class="proto-btn comp-dl-btn" style="padding:2px 8px; font-size:0.7rem; margin-top:8px; border-color:#2a4430; color:#85c296; width:100%;">⬇ Export 8-Frame Sheet</button>
               `;
-              grid.appendChild(card);
+              const cv = GC.createAnimatedCanvas('library', idx, 2, 8);
+              attachCard(card, cv, b.name, cv._animController?.getFrames());
             });
           } else if (tabId === 'weather') {
             const weatherStates = [
-              { name: 'Tropical Sun (Clear Sky)', desc: 'Friendly smiling sun with stepped pixel flares. Typists enjoy standard daytime lighting.' },
-              { name: 'Drizzle Cloud (Light Rain)', desc: 'Soft cyan raindrop trails. Rainforest listeners begin tuning into Vine Radio.' },
-              { name: 'Monsoon Rainstorm', desc: 'Heavy dark rain shower. Rain-loving typists gain +30% typing speed.' },
-              { name: 'Thunderstorm with Lightning', desc: 'Dramatic storm clouds with jagged yellow lightning bolts. Typists work double-speed on lucky rolls.' }
+              { name: 'Tropical Sun (Clear Sky)', desc: 'Rotating 12-ray solar flare corona with playful smiling monkey wink.' },
+              { name: 'Drizzle Cloud (Light Rain)', desc: 'Gently bobbing cloud with continuous cascading cyan raindrop streaks.' },
+              { name: 'Monsoon Rainstorm', desc: 'Heavy dark rainstorm with cascading rain sheets and ground splash ripples.' },
+              { name: 'Thunderstorm with Lightning', desc: 'Dramatic storm clouds with periodic blinding electric lightning bolt flashes.' }
             ];
             weatherStates.forEach((wState, idx) => {
               const card = document.createElement('div');
               card.className = 'comp-card';
-              const cv = GC.renderWeatherToy(idx, 3);
-              const preview = document.createElement('div');
-              preview.className = 'comp-card-preview';
-              preview.appendChild(cv);
-
-              card.appendChild(preview);
-              card.innerHTML += `
-                <div class="comp-card-title">${wState.name}</div>
+              card.innerHTML = `
+                <div class="comp-card-preview"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div class="comp-card-title">${wState.name}</div>
+                  <span style="font-size:0.65rem; background:rgba(255,210,58,0.15); border:1px solid rgba(255,210,58,0.4); color:#ffd23a; padding:2px 6px; border-radius:4px;">8F Loop</span>
+                </div>
                 <div class="comp-card-subtitle">Interactive Canopy Atmosphere</div>
                 <p class="comp-card-desc">${wState.desc}</p>
+                <button class="proto-btn comp-dl-btn" style="padding:2px 8px; font-size:0.7rem; margin-top:8px; border-color:#2a4430; color:#85c296; width:100%;">⬇ Export 8-Frame Sheet</button>
               `;
-              grid.appendChild(card);
+              const cv = GC.createAnimatedCanvas('weather', idx, 3, 8);
+              attachCard(card, cv, wState.name, cv._animController?.getFrames());
             });
           }
 
@@ -1621,7 +1889,13 @@
         // Initial render Muses
         renderCompTab('muses');
       }
-    });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTestSuite);
+    } else {
+      initTestSuite();
+    }
   </script>
 </body>
 </html>

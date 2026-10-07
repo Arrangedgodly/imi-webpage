@@ -1,4 +1,7 @@
-/* ============================================================================
+const fs = require('fs');
+
+// We will construct the entire game-components.js code cleanly.
+const code = `/* ============================================================================
    GAME COMPONENTS PIXEL ART SUITE - ANIMATED 16-BIT RETRO EDITION
    ----------------------------------------------------------------------------
    Custom 16-bit handcrafted procedural pixel art generators with full 8-frame
@@ -56,7 +59,8 @@
       const dx = Math.abs(x1 - x0), dy = Math.abs(y1 - y0);
       const sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
       let err = dx - dy;
-      while (true) {
+      let safety = Math.max(dx, dy) * 2 + 10;
+      while (safety-- > 0) {
         ctx.fillRect(x0, y0, 1, 1);
         if (x0 === x1 && y0 === y1) break;
         const e2 = 2 * err;
@@ -1515,3 +1519,7 @@
     createAnimatedCanvas
   };
 });
+`;
+
+fs.writeFileSync('gemini-art/game-components.js', code, 'utf8');
+console.log('Successfully wrote animated game-components.js!');
