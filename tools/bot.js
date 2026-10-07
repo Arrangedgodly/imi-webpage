@@ -47,7 +47,7 @@
   }
   function pitches() {
     const s = S(); if (!s.offers || !s.offers.length) s.offers = D.newOffers();
-    const open = D.RECIPES.filter(r => !s.written[r.id] && !r.kid && r.band <= topBand()).length;
+    const open = D.RECIPES.filter(r => !s.written[r.id] && !r.kid && !r.lib && r.band <= topBand()).length;      // library stories are extra supply, not a reason to stop pitching
     if (open >= 3 || D.pitchActive() >= D.PITCH_MAX) return;
     // the reading list (kids' titles) covers band 0, so only commissions that need a bigger machine are worth pitching
     const bandOfPitch = p => bandOf(Math.max(...(p.text.toLowerCase().match(/[a-z']+/g) || []).map(w => w.replace(/'/g, '').length)));
@@ -74,6 +74,7 @@
     // milestones
     const sold = D.soldCount(), kids = D.kidsSold(); [1, 3, 6, 10, 16, 24].forEach(n => { if (sold >= n) mark('titles_' + n); });
     [1, 25, 100].forEach(n => { if (kids >= n) mark('kids_' + n); });
+    if (D.libSold) [1, 25, 100, 300].forEach(n => { if (D.libSold() >= n) mark('lib_' + n); });
     if (s.desks[0].paws >= 1) mark('typist_1');
     if (s.desks[1].owned) mark('hibiscus'); if (s.desks[2].owned) mark('lagoon'); if (s.desks[3].owned) mark('honeycomb');
     if (Object.keys(s.deals).some(k => s.deals[k])) mark('first_deal');

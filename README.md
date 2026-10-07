@@ -75,6 +75,20 @@ The standalone Library contains **3,573 committed manuscripts**: 573 stories and
 | **Reader** | Open a manuscript. |
 | **Another!** | Pick another work at random. |
 
+### Titles you can write
+
+Besides the sixteen authored editions and generated pitches, the Titles page carries **1,200 writable stories**: 300 children's books that use only words of three letters or fewer (shown a few at a time as a reading list) and **900 library stories with a 5-, 7- or 9-letter cap** (300 each, children's and general parodies), all available at once. A story's longest word decides which typewriter it needs: a 5-letter-cap story needs Hibiscus Ribbon, 7 needs Lagoon Sprint, 9 needs Honeycomb Ledger. The library stories pay roughly what pitches do per word, count toward their own awards, and do not count toward the "sell N titles" progression gates, so they fill the middle game without speeding it up.
+
+The Titles list has three controls:
+
+| Control | Purpose |
+| --- | --- |
+| **To write / Ready / Pitched / Written / All** | What to list. |
+| **Word max** (All, 3, 5, 7, 9, 11, 13) | Only titles whose longest word is that long, with a count on each chip. Picking a number also shows titles that need a typewriter you do not own yet, so you can browse ahead. |
+| **Sort** (Closest, Pay, Short, A–Z) | Order within each group. Titles are always grouped first: ready to write, the focused title, writable now, needs a bigger typewriter, then sold. |
+
+Titles that need a typewriter you have not bought are hidden by default (**Show locked** reveals them). The bookshelf above the list starts open and folds away once it holds a dozen titles; your choices are remembered.
+
 The readable archive and the game's writable recipes are different sets. Full-length archive recipes are explicitly locked in the current game; the manuscript count is not a count of titles you can already manufacture through the gameplay loop.
 
 ## Beyond the first printing
@@ -157,7 +171,7 @@ These simulations are not a complete regression suite. They do not cover every l
 <details>
 <summary><strong>Refresh the manuscript library</strong></summary>
 
-`sync-library.mjs` can refresh content from a monkey-library checkout. Without a path argument, it clones Arrangedgodly/monkey-library. It deletes and replaces the existing `library/` directory, so preserve any local changes before running it. This is a maintenance action, not a prerequisite for playing the checked-in game.
+`sync-library.mjs` can refresh content from a monkey-library checkout (it also copies `kid-stories/`, `kids.json`, `word-stories.json` and `word-stories/max-5|7|9/`). After a sync, run `node tools/build-kids-readers.mjs` and `node tools/build-word-readers.mjs` to regenerate the game's recipe files. Without a path argument, it clones Arrangedgodly/monkey-library. It deletes and replaces the existing `library/` directory, so preserve any local changes before running it. This is a maintenance action, not a prerequisite for playing the checked-in game.
 
 </details>
 
@@ -170,7 +184,7 @@ These simulations are not a complete regression suite. They do not cover every l
 | Game systems and department UI | `ops.js`, `ops.css` |
 | Pixel artwork | `pixel.js`, `app.js` |
 | Classic artwork | `classic.js`, `classic.css` |
-| Short-edition texts | `readers.js` |
+| Short-edition texts | `readers.js`, `readers-kids.js`, `readers-w5.js`, `readers-w7.js`, `readers-w9.js` (the last four are generated) |
 | Standalone Library | `library.html`, `library.js`, `library.css`, `library/` |
 | Presentation switching | `style-swap.js` |
 | Balance tools | `tools/`, `BALANCE.md` |

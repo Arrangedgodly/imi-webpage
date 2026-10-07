@@ -1432,3 +1432,14 @@ html[data-fx="low"] .o-typist canvas, html[data-fx="low"] .o-mk { filter: none !
 html[data-fx="low"] .o-gold { filter: none; }
 /* the title-screen backdrop: still scenery only */
 html[data-fx="low"] :is(.stars, .fireflies span, .drifters > *, .layer-mid, .layer-near, .foliage) { animation: none !important; }
+
+/* ---- Titles list: status / longest-word / sort rows ---- */
+.o-lfilters { display: grid; gap: 8px; }
+.o-lfilters .o-row { flex-wrap: wrap; row-gap: 6px; }
+.o-flab { flex: none; min-width: 78px; }
+.o-lfilters .o-seg button { padding: 4px 9px; }
+.o-lfilters .o-row.o-left { gap: 8px; }
+.o-capn { margin-left: 5px; font-style: normal; opacity: .7; font-size: .8em; }
+.o-seg button.o-cap-locked { opacity: .6; }
+.o-lcount { margin: 0 0 6px; }
+@media (max-width: 720px) { .o-flab { min-width: 0; } .o-lfilters .o-seg button { min-height: 38px; padding: 4px 8px; } }

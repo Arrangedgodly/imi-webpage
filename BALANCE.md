@@ -31,6 +31,8 @@ Owning a desk means its keeper works from the first second (no purchase, task 03
 | `PAW_DESK_STEP` (new) | none | 0.35 | Typist cost x `1 + 0.35 * deskIndex`: later machines do not get a big crew cheaply |
 | `AUTH_PAY` (new) multiplier on authored readers' pay, by band | 1 | 0.15, 0.4, 0.35, 0.2, 0.2, 0.2 | The six Bamboo books were worth 3.7K bananas, enough for Hibiscus in 2 minutes |
 | `KID_PAY` (new) multiplier on the baked-in pay of kids' titles | 1 (24 per word) | 0.1 | About 100-170 bananas per kids' title, so 25 of them plus the six authored ones fund Hibiscus |
+| `LIB_PAY` (new) multiplier on the baked-in pay of the 900 library stories (5-, 7-, 9-letter caps), by band | n/a | 0, 0.03, 0.018, 0.018 | Baked pay is words x `RATE[band]`; at these values a 65-word cap-5 story pays about 530, a 71-word cap-7 about 4.3K, a 77-word cap-9 about 28K. See "Library stories" below |
+| `LIB_ROY` (new) share of normal royalties the library stories pay | n/a | 0.5 | Same treatment as the kids' books |
 | `KID_ROY` | 0.5 | 0.5 | Unchanged; 300 kids' titles at 0.5 are a small slice of royalties |
 | `PITCH_PAY` rights for a standard pitched title, by band | 100, 1.26K, 15.6K, 196K, 2.44M, 30.6M | 40, 504, 5000, 39.1K, 489K, 6.12M | Pitches carried the mid game; reduced so Lagoon and Honeycomb are real goals |
 | `ROY_BASE` | 0.00003 | 0.00001 | With 300 kids' titles on the shelf royalties and the Legacy star came hours too early |
@@ -85,3 +87,22 @@ So hoarding clearly loses titles (-40% kids' titles in the first hour active; La
 - Awards add 1% each, Muses and Legacy multiply on top, and the five publishing deals total about x18 on royalties. Check late-game income if players report runaway numbers.
 - The market multiplier and golden bananas are not modelled, so real income runs a little higher than the bot's.
 - Auto focus now optimises per banana of rights; a manual goal is still always honoured.
+
+## Library stories (900 titles with 5-, 7- and 9-letter caps)
+`readers-w5.js`, `readers-w7.js`, `readers-w9.js` (built by `tools/build-word-readers.mjs` from the monkey-library `word-stories.json`) add 300 stories each to bands 1-3 (Hibiscus, Lagoon, Honeycomb). They are 57-91 words long, all available at once (no reading list), and, like the kids' books, **never count toward `soldCount()` progression gates** (Muse slots, deals, divisions, agent). Three awards (25, 150 and all 900 sold) add the usual +1% income each.
+
+**What the pay has to be.** Supply was never the limit on progression: pitched titles can always be commissioned. What gates progress is pay per unit of effort. The first guess (`LIB_PAY` 0.17 / 0.09 / 0.09, a little above pitch pay per word) broke the economy: Lagoon at minute 20 instead of about 2 hours, Honeycomb at minute 30, 1.2M bananas earned in the first hour against 30K. The values below are the smallest that still get the stories used from minute 15 by the auto-focus bot (at 0.024 / 0.018 / 0.02 the bot ignores them for three hours because pitches pay better per word).
+
+| Milestone (min) | Before | `LIB_PAY` 0.03 / 0.018 / 0.018 | Target |
+|---|---|---|---|
+| Active: Hibiscus | 11.5 | 11.5 | 12-20 |
+| Active: Lagoon | 120.6 | 79.6 | 90-180 |
+| Active: first division | 171.6 | 140.8 | |
+| Active: first star | 292.8 | 226.9 | 240-480 |
+| Active: Honeycomb | 421.2 | 337.9 | 210-360 |
+| Active, hoard: Lagoon / star / Honeycomb | | 153.7 / 310.3 / 417.1 | |
+| Idle: Lagoon | 196 | 196 | 180-300 |
+| Idle: first star | 386 | 340 | |
+| Idle: Honeycomb | 497 | 443 | 360-600 |
+
+One seed each, 8-10 simulated hours, the bot's pitching rule ignores library stories (they are not "open" titles). The first library story is sold at minute 15 (active) or 255 (idle). Note the bot never browses or sorts; a human can pick the highest-paying titles with Sort > Pay, so players who do will beat these numbers a little. Re-run `node tools/balance.mjs` with `'{"LIB_PAY":[0,a,b,c,0,0]}'` before changing the knobs.
