@@ -1474,3 +1474,9 @@ html[data-style="classic"] .o-long small { font-size: 12px; font-family: var(--f
 .o-gbar .o-prog { min-width: 0; }
 @media (max-width: 720px) { .o-lfilters .o-seg button { padding: 4px 6px; } }
 @media (max-width: 720px) { html[data-style="pixel"] .o-lfilters .o-seg button { font-size: 19px; } }
+
+/* ---- Titles page: the publisher's assistant bar ---- */
+.o-pubbar { gap: 4px; padding-top: 8px; padding-bottom: 8px; margin-top: 8px; }
+.o-pubbar .o-row { flex-wrap: wrap; row-gap: 6px; }
+.o-pubbar .o-seg button { min-height: 34px; }
+.o-pubstat { margin: 0; }

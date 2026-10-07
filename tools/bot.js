@@ -27,6 +27,7 @@
     }
     d.keeper.on = on; D.ui.buyN = prev;
   }
+  const BT = () => window.__TUNE || {};
   function shop() {
     const s = S(), have = bn.get(), nextDesk = s.desks.findIndex(d => !d.owned), price = nextDesk >= 0 ? D.DESKS[nextDesk].price : Infinity;
     if (!s.hold && have >= D.SHOP.hold) D.buy('hold');
@@ -39,6 +40,7 @@
     for (const x of D.DEALS) if (!s.deals[x.id] && D.soldCount() >= x.need) tryBuy('deal', x.id, x.cost, 1.5);
     s.desks.forEach((d, i) => { if (d.owned && d.mk < 2) tryBuy('mk', i, D.mkCost(i), 4); });
     // keeper levels only while they are small next to the machine being saved for (a sensible player does not tune a keeper instead of buying the next desk)
+    if (BT().BOT_SELL === 'pub' && D.PUB_COST && s.pub.tier < 3 && D.soldCount() >= 3) tryBuy('pub', undefined, D.PUB_COST[s.pub.tier], 2);
     if (D.keeperUpCost) s.desks.forEach((d, i) => { if (d.owned && D.keeperLv(i) < D.KEEPER_UP_MAX && D.keeperUpCost(i) <= .15 * price) tryBuy('keeper', i, D.keeperUpCost(i), 3); });
     if (D.soldCount() >= 2) { tryBuy('agent', undefined, D.SHOP.agent, 3); tryBuy('analyst', undefined, D.SHOP.analyst, 3); }
     if (s.lamp < 3) tryBuy('lamp', undefined, D.LAMP[s.lamp].cost, 5);
@@ -66,7 +68,10 @@
   }
   function act() {
     const s = S();
-    for (const r of D.RECIPES) if (!s.written[r.id] && D.canWrite(r)) D.writeTitle(r.id);
+    const BT = window.__TUNE || {};                              // BOT_SELL: 'pub' = buy the assistant and let it sell (rule BOT_PUB_RULE); default is the bot selling by hand at any price
+    const viaPub = BT.BOT_SELL === 'pub' && s.pub && s.pub.tier > 0;
+    if (viaPub) s.pub.rule = BT.BOT_PUB_RULE || 'fair';
+    else if (!BT.BOT_VISIT || Math.floor(st.sec / 60) % BT.BOT_VISIT === 0) for (const r of D.RECIPES) if (!s.written[r.id] && D.canWrite(r)) D.writeTitle(r.id);   // BOT_VISIT = N: a casual player who only checks in for one minute every N minutes
     s.desks.forEach((d, i) => trainDesk(i));
     shop(); pitches();
     const activeMin = st.opts.activeMinutes == null ? 180 : st.opts.activeMinutes;

@@ -33,6 +33,7 @@ Owning a desk means its keeper works from the first second (no purchase, task 03
 | `KID_PAY` (new) multiplier on the baked-in pay of kids' titles | 1 (24 per word) | 0.1 | About 100-170 bananas per kids' title, so 25 of them plus the six authored ones fund Hibiscus |
 | `LIB_PAY` (new) multiplier on the baked-in pay of the 900 library stories (5-, 7-, 9-letter caps), by band | n/a | 0, 0.03, 0.018, 0.018 | Baked pay is words x `RATE[band]`; at these values a 65-word cap-5 story pays about 530, a 71-word cap-7 about 4.3K, a 77-word cap-9 about 28K. See "Library stories" below |
 | `LIB_ROY` (new) share of normal royalties the library stories pay | n/a | 0.5 | Same treatment as the kids' books |
+| `PUB_COST`, `PUB_PERIOD` (new) | n/a | bananas [6000, 50000, 350000]; seconds [12, 6] | Publisher's assistant, Shop > Market tools. Tier 1 sells a ready title every 12 s (needs 3 sold titles), tier 2 every 6 s, tier 3 also sells while away at market x1.0. Task 11 |
 | `KEEPER_UP_STEP`, `KEEPER_UP_MAX`, `KEEPER_UP_GROW`, `KEEPER_UP_BASE` (new) | n/a | 0.9, 6 levels, x1.8, bananas [100, 600, 3000, 30000, 4e5, 5e6] by desk | Shop > Keepers. A level multiplies that desk's seconds per banked word by 0.9 (a maxed keeper is 1.9x faster). Task 10 |
 | `KID_ROY` | 0.5 | 0.5 | Unchanged; 300 kids' titles at 0.5 are a small slice of royalties |
 | `PITCH_PAY` rights for a standard pitched title, by band | 100, 1.26K, 15.6K, 196K, 2.44M, 30.6M | 40, 504, 5000, 39.1K, 489K, 6.12M | Pitches carried the mid game; reduced so Lagoon and Honeycomb are real goals |
@@ -126,3 +127,18 @@ Bought with bananas in the Shop, per desk. One seed each, bot with the rule "buy
 | Idle: Honeycomb | 442.9 | 418.7 | 360-600 |
 
 Keeper speed only matters when letters outrun the keeper, which is the kids' era and the early middle game; later the economy is bananas-limited, so the upgrades are most valuable early and a mild trade-off after. Naive bot rules (buying any level at 3x its price) delayed Hibiscus by up to 28 minutes idle, so a first-draft price table was cut by an order of magnitude at the top end.
+
+## Publisher's assistant (task 11)
+The assistant sells one finished title per `PUB_PERIOD` seconds, optionally holding for a market rule. Bot (one seed, active profile, collect), **selling only through the assistant once bought** (it stops selling by hand):
+
+| Setup | Lagoon (min) | First division | First star | Honeycomb |
+|---|---|---|---|---|
+| By hand, instantly (baseline, no assistant) | 83.4 | 198.4 | 245.0 | 364.2 |
+| Assistant, Any, 12 s | 111.4 | 245.6 | 278.0 | |
+| Assistant, Any, 6 s (tier 2) | 91.7 | 210.7 | 241.2 | |
+| Assistant, Fair, 12 s | 172.7 | 305.4 | 339.6 | 474.9 |
+| Assistant, Fair, 6 s | 145.2 | 278.0 | 307.8 | |
+
+So the assistant is a tax compared with a perfectly attentive player, small at tier 2 and with Any price, and **holding for a fair price costs a lot early** (income is small and compounds), which is why Any is the default and Fair/Hot are opt-in. Its value is for players who are not watching. A casual player who checks in one minute in ten: without the assistant Hibiscus at 80 min and Lagoon never within 8 hours; with it (Fair, bought at 6,000) 100 kids' titles at 265 instead of 311 minutes and Lagoon at 371. An earlier price of 20,000 arrived at about minute 80 and was cut to 6,000. Tier 3 (selling while away) has no simulation, because the harness has no away periods; it is covered by a unit test only.
+
+Bot options for this: `BOT_SELL: "pub"`, `BOT_PUB_RULE: "any|fair|hot"`, `BOT_VISIT: N`, all via the tune JSON.

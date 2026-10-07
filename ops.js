@@ -56,6 +56,9 @@
   const KEEPER_UP_MAX = TUNE.KEEPER_UP_MAX || 6;
   const KEEPER_UP_GROW = TUNE.KEEPER_UP_GROW || 1.8;                      // each level costs this much more than the last
   const KEEPER_UP_BASE = TUNE.KEEPER_UP_BASE || [100, 600, 3000, 30000, 4e5, 5e6];   // bananas for level 1, by desk
+  const PUB_COST = TUNE.PUB_COST || [6000, 50000, 350000];             // Shop > Market tools: the Publisher's assistant, three tiers (bananas)
+  const PUB_PERIOD = TUNE.PUB_PERIOD || [12, 6];                         // seconds between automatic sales: tiers 1, then 2 and up
+  const PUB_RULES = { any: 0, fair: 1, hot: 1.4 };                       // the lowest market multiplier the assistant will sell into
   const AUTH_PAY = TUNE.AUTH_PAY || [0.15, 0.4, 0.35, 0.2, 0.2, 0.2];                       // runtime multiplier on the pay of authored readers, by band
   const LIB_PAY = TUNE.LIB_PAY || [0, 0.03, 0.018, 0.018, 0, 0];                // runtime multiplier on the baked-in pay of the 5-, 7- and 9-letter-cap library stories, by band
   const KID_PAY = TUNE.KID_PAY || 0.1;                                          // runtime multiplier on the baked-in pay of kids' titles
@@ -156,7 +159,7 @@
     up: { fing: 0, rapid: 0, vowel: 0, ink: 0, practice: 0, stock: 0, ribbon: 0 },
     keeper: { owned: i === 0, on: true, def: 0, targets: {}, lv: 0 }
   });
-  const fresh = () => ({ focus: null, autoFocus: true, printing: 0, legacy: { stars: 0, total: 0, ups: {} }, editions: {}, run: { earned: 0 }, challenge: null, chDone: {}, muses: { owned: {}, seated: [null, null, null] }, garden: { beds: [null, null] }, divs: { songs: 0, tv: 0, radio: 0, sketch: 0, film: 0 }, divTotal: 0, pitches: [], offers: [], market: { v: [1, 1, 1, 1, 1, 1], m: [0, 0, 0, 0, 0, 0], hist: [[1], [1], [1], [1], [1], [1]] }, agent: false, analyst: false, lamp: 0, lastSeen: 0, awards: {}, stats: { pitched: 0, pitchSold: 0, awayMax: 0, letters: 0, manual: 0, words: 0, lump: 0, rotten: 0, secs: 0, storm: 0, night: 0, byLetter: {} }, deals: {}, royTotal: 0, gold: 0, best: 0, hold: false, metro: false, dbl: false, contracts: false, sel: 0, written: {}, bank: {}, log: [], desks: DESKS.map((_, i) => newDesk(i)) });
+  const fresh = () => ({ focus: null, autoFocus: true, printing: 0, legacy: { stars: 0, total: 0, ups: {} }, editions: {}, run: { earned: 0 }, challenge: null, chDone: {}, muses: { owned: {}, seated: [null, null, null] }, garden: { beds: [null, null] }, divs: { songs: 0, tv: 0, radio: 0, sketch: 0, film: 0 }, divTotal: 0, pitches: [], offers: [], market: { v: [1, 1, 1, 1, 1, 1], m: [0, 0, 0, 0, 0, 0], hist: [[1], [1], [1], [1], [1], [1]] }, agent: false, analyst: false, pub: { tier: 0, on: true, rule: 'any' }, lamp: 0, lastSeen: 0, awards: {}, stats: { pitched: 0, pitchSold: 0, awayMax: 0, letters: 0, manual: 0, words: 0, lump: 0, rotten: 0, secs: 0, storm: 0, night: 0, byLetter: {} }, deals: {}, royTotal: 0, gold: 0, best: 0, hold: false, metro: false, dbl: false, contracts: false, sel: 0, written: {}, bank: {}, log: [], desks: DESKS.map((_, i) => newDesk(i)) });
   let S = (() => {
     try {
       const saved = JSON.parse(localStorage.getItem(KEY));
@@ -919,6 +922,15 @@
       ${pips(lv, KEEPER_UP_MAX)}<p>Banks a word every ${now.toFixed(2)}s${max ? '.' : `. Next level: ${(now * KEEPER_UP_STEP).toFixed(2)}s.`}${museOn('hemi') ? ' (Hemingwape doubles it.)' : ''}</p>
       ${max ? '' : `<button type="button" class="o-btn gold" data-act="buy" data-what="keeper" data-i="${i}" ${have < cost ? 'disabled' : ''}>Tune up</button>`}</div>`;
   }
+  function pubCard(have) {
+    const t = S.pub.tier, names = ['Publisher’s assistant', 'Fast presses', 'Night shift'];
+    const descs = [`Sells your finished titles for you, one every ${PUB_PERIOD[0]} seconds, at a price you choose (on the Titles page). It never sells a title you picked by hand.`,
+      `The assistant sells a title every ${PUB_PERIOD[1]} seconds.`, 'The assistant keeps selling while you are away, at an average market price.'];
+    if (t >= 3) return `<div class="o-card"><div class="o-row"><h3>Publisher’s assistant</h3><span class="o-lvl">MAXED</span></div>${pips(3, 3)}<p>Sells a title every ${PUB_PERIOD[1]} seconds, even while you are away.</p></div>`;
+    const lock = t === 0 && soldCount() < 3 ? 'Needs 3 sold titles' : '';
+    return `<div class="o-card"><div class="o-row"><h3>${names[t]}</h3>${price(PUB_COST[t])}</div>${pips(t, 3)}<p>${descs[t]}</p>${lock ? `<p class="o-warn">${lock}</p>` : ''}
+      <button type="button" class="o-btn gold" data-act="buy" data-what="pub" ${lock || have < PUB_COST[t] ? 'disabled' : ''}>Buy</button></div>`;
+  }
   function mkCard(i, have) {
     const D = DESKS[i], d = S.desks[i], next = MK_NAMES[d.mk + 1];
     return `<div class="o-card" style="--c:${D.color}"><div class="o-row"><h3>${D.name}${d.mk ? ' ' + MK_NAMES[d.mk] : ''}</h3>${d.mk >= 2 ? '<span class="o-lvl">MAXED</span>' : price(mkCost(i))}</div>
@@ -932,7 +944,7 @@
   const MK_MIN = 0.5, MK_MAX = 2.0;
   const marketFloor = () => (S.agent ? .85 : MK_MIN);
   const marketMult = b => Math.max(marketFloor(), Math.round(S.market.v[b] * 100) / 100);
-  const salePay = r => Math.round(r.pay * (S.contracts ? 1.25 : 1) * awardMult() * marketMult(r.band) * (1 + .05 * (S.desks[r.band].mk || 0)) * museSale(r.band) * legacyMult() * editionMult());
+  const salePay = (r, m = marketMult(r.band)) => Math.round(r.pay * (S.contracts ? 1.25 : 1) * awardMult() * m * (1 + .05 * (S.desks[r.band].mk || 0)) * museSale(r.band) * legacyMult() * editionMult());
   function marketBias(b) {
     const wx = typeof Weather !== 'undefined' ? Weather.state : 0, night = document.body.classList.contains('night');
     if (b === 0) return night ? .3 : 0;                       // bedtime books sell at night
@@ -947,6 +959,38 @@
     const g = S.garden; if (!g.beds.some(Boolean)) return;
     const now = Date.now(); g.beds.forEach((b, i) => { if (b && now >= b.ready && !b.told) { b.told = true; if (!document.hidden) { IMI.sfx.tick(); newsPush(`A plot of ${b.ch} is ripe in the letter garden.`); } } });
     if (ui.tab === 'lab' || ui.tab === 'muses') mark(); else dirty = true;
+  }
+  /* ---- the Publisher's assistant: sells finished titles for you (Shop > Market tools, three tiers) ---- */
+  let pubClock = 0;
+  const pubPeriod = () => PUB_PERIOD[S.pub.tier >= 2 ? 1 : 0];
+  const pubSellable = () => readyList().filter(r => S.autoFocus || S.focus !== r.id);          // a title you picked by hand stays yours to sell
+  function pubSell() {
+    if (!S.pub.tier || !S.pub.on || document.querySelector('.o-modal, .o-celebrate')) return false;
+    const rule = PUB_RULES[S.pub.rule] != null ? PUB_RULES[S.pub.rule] : 1; let best = null, bp = -1;
+    for (const r of pubSellable()) { if (marketMult(r.band) < rule) continue; const p = salePay(r); if (p > bp) { best = r; bp = p; } }
+    if (!best) return false;
+    writeTitle(best.id, null, { auto: true });
+    if (ui.tab === 'press') mark();
+    return true;
+  }
+  function pubStatus() {
+    const p = S.pub; if (!p.tier) return '';
+    if (!p.on) return 'Auto-sell is off. Finished titles wait for you.';
+    const rule = PUB_RULES[p.rule] != null ? PUB_RULES[p.rule] : 1, ready = pubSellable();
+    if (!ready.length) return 'Waiting for a finished title.';
+    const ok = ready.filter(r => marketMult(r.band) >= rule).length, held = ready.length - ok;
+    if (!ok) return `Holding ${held} title${held > 1 ? 's' : ''} for a better price.`;
+    return `Selling in ${Math.max(0, Math.ceil(pubPeriod() - pubClock))}s${held ? ` · holding ${held} for a better price` : ''}.`;
+  }
+  /* tier 3: at return, sell what finished while you were away, at an average market (x1.0), as many as the assistant could have managed */
+  function autoSellAway(effSec) {
+    const out = { n: 0, pay: 0 }; if (S.pub.tier < 3 || !S.pub.on) return out;
+    for (let k = Math.min(200, Math.floor(effSec / PUB_PERIOD[1])); k > 0; k--) {
+      let best = null, bp = -1; for (const r of pubSellable()) { const p = salePay(r, 1); if (p > bp) { best = r; bp = p; } }
+      if (!best) break;
+      writeTitle(best.id, null, { silent: true, mult: 1 }); out.n++; out.pay += bp;
+    }
+    return out;
   }
   function marketStep(silent) {
     const M = S.market;
@@ -1246,6 +1290,7 @@
     if (rep.roy > 0) { S.royTotal += rep.roy; bananas.add(rep.roy); }
     rep.div = Math.floor(divBase() * sec * eff); if (rep.div > 0) { S.divTotal += rep.div; bananas.add(rep.div); }
     S.stats.awayMax = Math.max(S.stats.awayMax || 0, awaySec);
+    const sold = autoSellAway(sec * eff); rep.pubSold = sold.n; rep.pubPay = sold.pay;
     rep.ready = readyList().length;
     return rep;
   }
@@ -1256,7 +1301,7 @@
     ['wb-let', 'wb-wds', 'wb-roy', 'wb-div'].forEach(k => { shownN[k] = 0; delete cntAnim[k]; });   // the report counts up as it opens
     el.innerHTML = `<div class="o-modal-card"><h3 id="oWbT">Welcome back!</h3>
       <p>You were away <b>${dur(rep.away)}</b>.${rep.capped ? ` The typists only worked ${dur(rep.counted)}, the most they will do unsupervised.` : ' The typists pretended to work the whole time.'}</p>
-      <div class="o-modal-rows">${row('Letters typed', cnt('wb-let', rep.letters))}${row('Words banked by keepers', cnt('wb-wds', rep.words))}${row('Royalties', `${ico('banana', 22)} ${cnt('wb-roy', rep.roy, true)}`)}${rep.div ? row('Division income', `${ico('banana', 22)} ${cnt('wb-div', rep.div, true)}`) : ''}${rep.ready ? row('Titles ready to write', rep.ready) : ''}</div>
+      <div class="o-modal-rows">${row('Letters typed', cnt('wb-let', rep.letters))}${row('Words banked by keepers', cnt('wb-wds', rep.words))}${row('Royalties', `${ico('banana', 22)} ${cnt('wb-roy', rep.roy, true)}`)}${rep.pubSold ? row('Titles sold by your assistant', `${rep.pubSold} · ${ico('banana', 22)} ${fmtBig(rep.pubPay)}`) : ''}${rep.div ? row('Division income', `${ico('banana', 22)} ${cnt('wb-div', rep.div, true)}`) : ''}${rep.ready ? row('Titles ready to write', rep.ready) : ''}</div>
       ${rep.capped && next ? '<p class="o-dim">A Night Lamp from the Shop keeps them working longer.</p>' : ''}
       <button type="button" class="o-btn gold" data-close>Collect</button></div>`;
     document.body.appendChild(el); hydrate(el);
@@ -1323,7 +1368,7 @@
     const away = (Date.now() - (S.lastSeen || Date.now())) / 1000;
     if (away < minSec) return;
     const rep = simulateAway(away); S.lastSeen = Date.now(); save();
-    logIt(`Back after ${dur(away)}: typists typed ${fmt(rep.letters)} letters, keepers banked ${fmt(rep.words)} words, royalties paid ${fmtBig(rep.roy)} and divisions ${fmtBig(rep.div || 0)} bananas.`);
+    logIt(`Back after ${dur(away)}: typists typed ${fmt(rep.letters)} letters, keepers banked ${fmt(rep.words)} words, royalties paid ${fmtBig(rep.roy)} and divisions ${fmtBig(rep.div || 0)} bananas.${rep.pubSold ? ` Your assistant sold ${rep.pubSold} title${rep.pubSold > 1 ? 's' : ''} for ${fmtBig(rep.pubPay)}.` : ''}`);
     newsPush('Welcome back. The typists pretended to work the whole time.');
     if (rep.letters || rep.roy || rep.words) IMI.whenPlaying(() => showWelcome(rep));
     mark();
@@ -1400,7 +1445,7 @@
   /* Balance harness hook (tools/balance.html): lets a bot drive the real game logic. Not used by the site itself. */
   Object.defineProperty(IMI.ops, 'dev', { configurable: true, get: () => ({
     S: () => S, holdRate, ui, tick, press, genPitch, newOffers, buyUp, buy, writeTitle, bankWord, keeperStep, canWrite, RECIPES, RBY, DESKS, KEEPER_PERIOD, UPS, upPlan, upLock, DIVS, divPlan, releaseDiv, DEALS, SHOP, LAMP, MUSES, MK_BASE, mkCost,
-    GARDEN_COSTS, MILES, focusNeeds, focusRecipe, stock, totalLetters, soldCount, kidsSold, kidsListed, KIDS, libSold, LIBS, touchBank: () => { bankV++; mark(); }, keeperPeriod, keeperUpCost, keeperLv, KEEPER_UP_MAX, royBase, divBase, salePay, marketMult, checkAwards, starsNow, museSlots, registerPitch, pitchActive, PITCH_MAX, buffs, makeCopies,
+    GARDEN_COSTS, MILES, focusNeeds, focusRecipe, stock, totalLetters, soldCount, kidsSold, kidsListed, KIDS, libSold, LIBS, touchBank: () => { bankV++; mark(); }, pubSell, pubStatus, PUB_COST, PUB_PERIOD, PUB_RULES, keeperPeriod, keeperUpCost, keeperLv, KEEPER_UP_MAX, royBase, divBase, salePay, marketMult, checkAwards, starsNow, museSlots, registerPitch, pitchActive, PITCH_MAX, buffs, makeCopies,
     plant, harvest, gardenTime, gardenYield, BAND_WORDS, target, ensureCrew, doPrint, awayCap, awayEff, LEG, legLvl, ROY_BASE, RATE, comboHit: () => comboHit(), setSel: i => { S.sel = i; }
    }) });
 
@@ -1444,31 +1489,31 @@
         { duration: 520, delay: k * 28, easing: PX ? 'steps(9)' : 'cubic-bezier(.5,0,.7,1)', fill: 'both' }).onfinish = () => { f.remove(); if (k === chips.length - 1) { shock(tx, ty, '#7be05a'); IMI.sfx.key(); } };
     });
   }
-  function writeTitle(id, fromEl) {
+  /* opts.auto: the publisher's assistant is selling (lighter fanfare); opts.silent: bulk sales while away (no effects, no news); opts.mult: price at this market multiplier */
+  function writeTitle(id, fromEl, opts = {}) {
     const r = RBY[id]; if (!r || !canWrite(r)) return;
     if (fromEl) gatherWords(fromEl);
     for (const w in r.need) { S.bank[w] -= r.need[w]; if (S.bank[w] <= 0) delete S.bank[w]; }
     bankV++;
-    const mk = marketMult(r.band), pay = salePay(r); S.stats.lump += pay; S.stats.bestMult = Math.max(S.stats.bestMult || 0, mk);
+    const quiet = !!opts.silent, mk = opts.mult != null ? opts.mult : marketMult(r.band), pay = salePay(r, mk); S.stats.lump += pay; if (!quiet) S.stats.bestMult = Math.max(S.stats.bestMult || 0, mk);
     dropCaches(); S.written[id] = true; if (r.gen) S.stats.pitchSold = (S.stats.pitchSold || 0) + 1;
     if (S.focus === id) S.focus = null;
     pickAutoFocus();
     const at = fromEl ? IMI.centerOf(fromEl) : undefined;
-    bananas.earn(pay, at);
+    if (quiet) bananas.add(pay); else bananas.earn(pay, at);
     if (at) { IMI.burst(at[0], at[1], ['banana', 'spark', 'leaf'], 14); shock(at[0], at[1], '#ffd23a', true); }
-    flash('#fff6d6'); shake(2);
+    if (!opts.auto && !quiet) { flash('#fff6d6'); shake(2); }
     ui.fresh = id; if (!(ui.tab === 'press' && ui.sub.press === 'shelf')) ui.shelfNew = (ui.shelfNew || 0) + 1;      // the Shelf tab wears a badge until you look
     setTimeout(() => { ui.fresh = null; mark(); }, 2200);
     if (at) { const big = pay >= 50000 ? 3 : pay >= 5000 ? 2 : 1; for (let k = 1; k < big + 1; k++) setTimeout(() => IMI.burst(at[0] + (k % 2 ? -1 : 1) * k * 40, at[1] - k * 20, ['banana', 'banana', 'spark', 'star'], 14), k * 220); }
-    vib([20, 40, 70]); cheer(3000, 'SOLD!');
-    IMI.sfx.ding();
-    logIt(`The Jungle Press bought the rights to “${r.title}”: ${fmtBig(pay)} bananas${mk !== 1 ? ` (market x${mk.toFixed(2)})` : ''}. It will not be reprinted.`);
-    newsPush(`EXTRA: The Jungle Press buys “${r.title}” for ${fmtBig(pay)} bananas${mk >= 1.3 ? ', cashing in on a hot market' : mk <= .8 ? ', in a cold market. Ouch' : ''}.`);
+    if (!quiet) { if (!opts.auto) vib([20, 40, 70]); cheer(opts.auto ? 1400 : 3000, 'SOLD!'); IMI.sfx.ding(); }
+    if (!quiet) logIt(`The Jungle Press bought the rights to “${r.title}”: ${fmtBig(pay)} bananas${mk !== 1 ? ` (market x${mk.toFixed(2)})` : ''}. It will not be reprinted.`);
+    if (!quiet) newsPush(`EXTRA: The Jungle Press buys “${r.title}” for ${fmtBig(pay)} bananas${mk >= 1.3 ? ', cashing in on a hot market' : mk <= .8 ? ', in a cold market. Ouch' : ''}.`);
     const n = Object.keys(S.written).length;
     if (authoredSold() === BOOKS && !r.gen) celebrate(PX ? 'THE COMPLETE WORKS' : 'The Complete Works', PX ? 'EVERY TITLE SOLD' : 'Every title sold', `<p class="o-cel-sub">${BOOKS} parodies, written by monkeys. The shelf is full.</p>`);
-    else if (n === 1) IMI.banner(PX ? 'FIRST PRINTING!' : 'First Printing!');
-    else if (n % 4 === 0) IMI.banner(PX ? 'BESTSELLER!' : 'Bestseller!');
-    mark(); save();
+    else if (!quiet && n === 1) IMI.banner(PX ? 'FIRST PRINTING!' : 'First Printing!');
+    else if (!quiet && n % 4 === 0) IMI.banner(PX ? 'BESTSELLER!' : 'Bestseller!');
+    mark(); if (!quiet) save();
     IMI.emit('sold', { id, pay });
   }
 
@@ -1526,6 +1571,10 @@
     } else if (what === 'mk') {
       const d = S.desks[i]; if (!d || !d.owned || d.mk >= 2 || !bananas.spend(mkCost(i))) return;
       d.mk++; logIt(`${DESKS[i].name} restored to ${MK_NAMES[d.mk]}. It gleams.`);
+    } else if (what === 'pub') {
+      const t = S.pub.tier; if (t >= 3 || (t === 0 && soldCount() < 3) || !bananas.spend(PUB_COST[t])) return;
+      S.pub.tier = t + 1; if (t === 0) S.pub.on = true;
+      logIt(['Hired a publisher’s assistant: finished titles now sell themselves.', 'Fast presses installed: the assistant sells twice as often.', 'The assistant now works the night shift: titles sell while you are away.'][t]);
     } else if (what === 'keeper') {
       const d = S.desks[i]; if (!d || !d.owned || keeperLv(i) >= KEEPER_UP_MAX || !bananas.spend(keeperUpCost(i))) return;
       d.keeper.lv = keeperLv(i) + 1; logIt(`${DESKS[i].name} keeper tuned up to level ${d.keeper.lv}: a word every ${keeperPeriod(i).toFixed(2)}s.`);
@@ -1959,6 +2008,13 @@
       <div class="o-grid">${shown.map(x => bookCard(x.r)).join('') || '<p class="o-dim">No titles match.</p>'}</div>
       ${rows.length > shown.length ? `<div class="o-row"><button type="button" class="o-btn sm" data-act="libmore">Show more (${(rows.length - shown.length).toLocaleString('en-US')})</button></div>` : ''}`;
   }
+  function pubBar() {
+    if (!S.pub.tier) return '';
+    const rules = [['any', 'Any', 'Sell as soon as a title is finished'], ['fair', 'Fair', 'Hold titles until the market is at least x1.0'], ['hot', 'Hot', 'Hold titles until the market is HOT (x1.4 or more)']];
+    return `<div class="o-card o-pubbar"><div class="o-row o-left"><span class="o-seg"><button type="button" data-act="pubon" aria-pressed="${S.pub.on}" title="Let the assistant sell finished titles for you">Auto-sell ${S.pub.on ? 'on' : 'off'}</button></span>
+      <span class="o-seg">${rules.map(([k, n, t]) => `<button type="button" data-act="pubrule" data-r="${k}" title="${t}" aria-pressed="${S.pub.rule === k}">${n}</button>`).join('')}</span></div>
+      <p class="o-dim o-pubstat">${pubStatus()}</p></div>`;
+  }
   function renderPress(force) {
     const pane = $('#o-press'); if (!force && pane.contains(document.activeElement) && document.activeElement.matches('input')) return;
     const sold = soldCount(), ready = readyList().length;
@@ -1970,6 +2026,7 @@
       const fr = focusRecipe();
       body = `<div class="o-card o-goalbar" id="oGoal"><div class="o-row o-gtop">${fr ? `<span class="o-gtitle">Now writing: <b>${esc(fr.title)}</b></span><span class="o-dim">${progress(fr)}/${fr.total}</span>` : '<span>Pick a title below</span>'}</div><div class="o-progrow o-gbar">${fr ? bar(progress(fr), fr.total) : '<span class="o-dim">Auto picks the best title</span>'}<span class="o-seg" title="Auto: the keepers pick the title that pays best for the effort"><button type="button" data-act="autotoggle" aria-pressed="${S.autoFocus}">Auto</button></span></div></div>
 
+        ${pubBar()}
         <div id="oTitleList">${pressList()}</div>${KIDS.length ? `<p class="o-dim o-kidsline">Kids' reading list: ${kidsSold()} of ${KIDS.length} written${LIBS.length ? ` · Library stories: ${libSold()} of ${LIBS.length} written` : ''}</p>` : ''}`;
     } else if (sub === 'shelf') {
       ui.shelfNew = 0;
@@ -2039,6 +2096,7 @@
       <h3 class="o-h">Keepers</h3><div class="o-grid">${DESKS.map((D, i) => S.desks[i].owned ? keeperCard(i, have) : '').join('')}</div>
       <h3 class="o-h">Garden</h3><div class="o-grid">${gardenCard(have)}</div>
       <h3 class="o-h">Market tools</h3><div class="o-grid">
+        ${pubCard(have)}
         ${item('Literary agent', 'Haggles: the market can never push your sale prices below x0.85.', SHOP.agent, S.agent, soldCount() < 2 ? 'Needs 2 sold titles' : '', 'agent')}
         ${item('Market analyst', 'Shows which way each band is heading next.', SHOP.analyst, S.analyst, soldCount() < 2 ? 'Needs 2 sold titles' : '', 'analyst')}
       </div>
@@ -2076,7 +2134,8 @@
       const plots = GARDEN_COSTS[S.garden.beds.length - 2] && have >= GARDEN_COSTS[S.garden.beds.length - 2];
       const mks = plots || S.desks.some((d, i) => d.owned && d.mk < 2 && have >= mkCost(i));
       const keepers = mks || S.desks.some((d, i) => d.owned && keeperLv(i) < KEEPER_UP_MAX && have >= keeperUpCost(i));
-      const tools = keepers || (!S.agent && soldCount() >= 2 && have >= SHOP.agent) || (!S.analyst && soldCount() >= 2 && have >= SHOP.analyst);
+      const pubOk = S.pub.tier < 3 && (S.pub.tier > 0 || soldCount() >= 3) && have >= PUB_COST[S.pub.tier];
+      const tools = keepers || pubOk || (!S.agent && soldCount() >= 2 && have >= SHOP.agent) || (!S.analyst && soldCount() >= 2 && have >= SHOP.analyst);
       const deal = tools || DEALS.some(x => !S.deals[x.id] && soldCount() >= x.need && have >= x.cost);
       return can || deal || (LAMP[S.lamp] && have >= LAMP[S.lamp].cost) ? '!' : '';
     }
@@ -2249,6 +2308,8 @@
     libf: el => { ui.libf = el.dataset.f; ui.libLimit = 24; saveView(); mark(); },
     libcap: el => { ui.libcap = el.dataset.c; ui.libLimit = 24; saveView(); IMI.sfx.tick(); mark(); },
     libsort: el => { ui.libsort = el.dataset.s; ui.libLimit = 24; saveView(); IMI.sfx.tick(); mark(); },
+    pubon: () => { S.pub.on = !S.pub.on; IMI.sfx.tick(); mark(); save(); },
+    pubrule: el => { S.pub.rule = el.dataset.r; IMI.sfx.tick(); mark(); save(); },
     liblock: () => { ui.libshow = !ui.libshow; ui.libLimit = 24; saveView(); IMI.sfx.tick(); mark(); },
     libmore: () => { ui.libLimit += 24; mark(); },
     sub: el => { ui.sub[el.dataset.dept] = el.dataset.sub; IMI.sfx.tick(); mark(); IMI.emit('tab', { tab: el.dataset.dept, sub: el.dataset.sub }); const p = $('#o-' + el.dataset.dept); if (p) p.scrollTop = 0; },
@@ -2305,6 +2366,7 @@
     if (divCount(DIVS[4])) { premiereClock += dt; if (premiereClock >= 300) { premiereClock = 0; premiere(); } }
     royFloat -= dt; if (royFloat <= 0) { royFloat = 2.4; royPing(); }
     if (!document.hidden) { goldIn -= dt * (museOn('christie') ? 1.3 : 1) * (1 + .25 * legLvl('golden')) * (1 + .03 * S.desks.reduce((a, d) => a + d.crew.filter(t => t.trait === 'scout').length, 0)); if (goldIn <= 0) { goldIn = 55 + rand() * 80; spawnGold(); } }
+    if (S.pub.tier && S.pub.on) { pubClock += dt; if (pubClock >= pubPeriod()) { pubClock = 0; pubSell(); } } else pubClock = 0;
     renderT += dt;
     if (renderT >= renderGap && dirty) {                           // renders are spaced by how long they take, so a slow phone spends a fixed share of its time here
       renderT = 0; dirty = false; const t0 = performance.now(); render();
