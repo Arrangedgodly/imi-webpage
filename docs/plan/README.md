@@ -15,6 +15,10 @@ This folder is the work queue. Each `NN-*.md` file is one self-contained task fo
 | 07 | Import the 300 kids' books as early titles | L | 03, 04 |
 | 08 | Balance pass for the new economy | M | 03, 07 |
 | 09 | Guided tutorial / progressive reveal | L | all of the above |
+| 10 | Keeper upgrades (faster keepers, bananas) | M | 03 |
+| 11 | Auto-publisher (automate selling, with a market rule) | M | 04 |
+| 12 | More typist tiers, plus coaching and rerolls per monkey | L | 10 (shop pattern) |
+| 13 | Weather and day/night as a game-clock cycle with forecast gauges | L | none |
 
 Do them in order. Tasks 01 and 02 are independent quick wins and can run in parallel with 03. When a task ends, update the "Status" line at the bottom of its file and add anything the next agent must know under "Handoff notes".
 
@@ -26,6 +30,7 @@ Do them in order. Tasks 01 and 02 are independent quick wins and can run in para
 - The Titles page is split into sub-tabs with the bookshelf first and the rights market last (04). Awards is only awards; Legacy/Second Printing is its own tab (06).
 - Early game gets many easy titles from the 300 kids' books, revealed a few at a time (07); progression gates must not be satisfied by them.
 - A guided tutorial plus progressive reveal comes last (09).
+- Tasks 10-13 (owner's backlog): keepers get bought upgrades; selling can be automated with a market rule; typists get more tiers plus per-monkey coaching and rerolls; weather and day/night run on a **game clock** (about 14 real minutes a day) and the toggle toys become **forecast-only gauges** (13). Build them one at a time, in this order, checking in after each.
 
 ## What the project is
 
