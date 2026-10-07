@@ -1441,5 +1441,36 @@ html[data-fx="low"] :is(.stars, .fireflies span, .drifters > *, .layer-mid, .lay
 .o-lfilters .o-row.o-left { gap: 8px; }
 .o-capn { margin-left: 5px; font-style: normal; opacity: .7; font-size: .8em; }
 .o-seg button.o-cap-locked { opacity: .6; }
-.o-lcount { margin: 0 0 6px; }
 @media (max-width: 720px) { .o-flab { min-width: 0; } .o-lfilters .o-seg button { min-height: 38px; padding: 4px 8px; } }
+
+/* ---- settings popover: stays inside the screen and its frame, rows wrap instead of overflowing ---- */
+.set-pop { width: min(330px, calc(100vw - var(--rail-w) - 16px)); max-height: calc(100dvh - 16px); overflow-y: auto; overflow-x: hidden; box-sizing: border-box; }
+.set-pop * { box-sizing: border-box; }
+.set-row { flex-wrap: wrap; row-gap: 6px; }
+.set-seg { flex-wrap: wrap; max-width: 100%; }
+@media (max-width: 720px) {
+  html[data-style="pixel"] .set-pop { padding: 2px 4px; gap: 8px; }
+  html[data-style="pixel"] .set-lab { font-size: 9px; }
+  html[data-style="pixel"] .set-seg button, html[data-style="pixel"] .set-btn { font-size: 9px; padding: 6px 6px; }
+}
+/* ---- drawer rows: the department's name, with what it does underneath ---- */
+.o-long b { display: block; font-weight: 400; }
+.o-long small { display: block; font-size: .78em; opacity: .7; font-family: inherit; letter-spacing: 0; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html[data-style="pixel"] .o-long small { font-size: 6px; line-height: 1.4; }
+html[data-style="classic"] .o-long small { font-size: 12px; font-family: var(--font-body); }
+
+/* ---- Titles page: keep the first title near the top ---- */
+.o-goalbar { gap: 6px; }
+.o-gtop { flex-wrap: nowrap; }
+.o-gtitle { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.o-goalbar .o-btn.sm, .o-goalbar .o-seg button { min-height: 34px; }
+.o-lsearch { flex-wrap: nowrap; gap: 8px; margin: 10px 0 0; }
+.o-lsearch .o-search { margin: 0; min-width: 0; }
+.o-lsearch #oLibQ { flex: 1 1 0; }
+.o-lsearch .o-lsort { flex: 0 0 auto; width: auto; max-width: 46%; }
+.o-lfilters { margin: 8px 0; }
+.o-lcount { margin: 0 0 6px; min-height: 0; }
+.o-gbar { flex-wrap: nowrap; }
+.o-gbar .o-prog { min-width: 0; }
+@media (max-width: 720px) { .o-lfilters .o-seg button { padding: 4px 6px; } }
+@media (max-width: 720px) { html[data-style="pixel"] .o-lfilters .o-seg button { font-size: 19px; } }

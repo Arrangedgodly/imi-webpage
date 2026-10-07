@@ -81,15 +81,17 @@ Besides the sixteen authored editions and generated pitches, the Titles page car
 
 Each machine's keeper can be **tuned up** in the Shop (up to six levels, bananas) to bank words faster; the Words page shows each keeper's level.
 
-The Titles list has three controls:
+The Titles page opens with the title you are writing, then a search box and sort dropdown, then these filters:
 
 | Control | Purpose |
 | --- | --- |
-| **To write / Ready / Pitched / Written / All** | What to list. |
+| **Open / Ready / Pitch / Sold / All** | What to list. |
 | **Word max** (All, 3, 5, 7, 9, 11, 13) | Only titles whose longest word is that long, with a count on each chip. Picking a number also shows titles that need a typewriter you do not own yet, so you can browse ahead. |
-| **Sort** (Closest, Pay, Short, A–Z) | Order within each group. Titles are always grouped first: ready to write, the focused title, writable now, needs a bigger typewriter, then sold. |
+| **Sort** (Closest, Pays most, Shortest, A–Z) | Order within each group. Titles are always grouped first: ready to write, the focused title, writable now, needs a bigger typewriter, then sold. |
 
-Titles that need a typewriter you have not bought are hidden by default (**Show locked** reveals them). The bookshelf above the list starts open and folds away once it holds a dozen titles; your choices are remembered.
+Titles that need a typewriter you have not bought are hidden by default (**Show locked** reveals them). Your choices are remembered. The books you have sold live on their own **Shelf** sub-tab, which wears a badge when a new book arrives, so the list of titles to write is never pushed down the page.
+
+Every department has one name in the interface: Floor, Train, Words, Titles, Shop, Media, Muses, Awards, Legacy. The open menu shows each name with a short line about what it does.
 
 The readable archive and the game's writable recipes are different sets. Full-length archive recipes are explicitly locked in the current game; the manuscript count is not a count of titles you can already manufacture through the gameplay loop.
 

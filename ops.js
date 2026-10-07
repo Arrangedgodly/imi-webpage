@@ -27,11 +27,11 @@
   ];
   /* [id, icon, department, what it does, short label] */
   const TABS = [
-    ['floor', 'type', 'Typewriter Ops', 'The floor', 'Floor'], ['training', 'monkey', 'Primate Resources', 'Hire & train', 'Train'],
-    ['lab', 'coconut', 'Coconut R&D', 'Word lab', 'Words'], ['press', 'log', 'Vine Infrastructure', 'Titles & rights', 'Titles'],
-    ['shop', 'banana', 'Banana Logistics', 'Spend bananas', 'Shop'],
-    ['studios', 'reel', 'IMI Studios', 'Media divisions', 'Media'],
-    ['muses', 'quill', 'Muse Salon', 'Literary patrons', 'Muses'], ['records', 'trophy2', 'Hall of Records', 'Stats & awards', 'Awards'],
+    ['floor', 'type', 'Floor', 'Type and watch the room', 'Floor'], ['training', 'monkey', 'Train', 'Hire and train typists', 'Train'],
+    ['lab', 'coconut', 'Words', 'Bank words, keepers, garden', 'Words'], ['press', 'log', 'Titles', 'Write and sell books', 'Titles'],
+    ['shop', 'banana', 'Shop', 'Spend your bananas', 'Shop'],
+    ['studios', 'reel', 'Media', 'Studios earn while you play', 'Media'],
+    ['muses', 'quill', 'Muses', 'Literary patrons', 'Muses'], ['records', 'trophy2', 'Awards', 'Stats and awards', 'Awards'],
     ['legacy', 'trophy1', 'Legacy', 'Second printing', 'Legacy']
   ];
   /* progressive reveal: a tab is visible unless it has a gate that says otherwise */
@@ -174,9 +174,9 @@
   if (!S.garden || !Array.isArray(S.garden.beds)) S.garden = { beds: [null, null] };
   const save = () => { S.lastSeen = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { /* storage blocked */ } };
   const rt = DESKS.map(() => ({ timers: [], sheet: '', col: 0, n: 0 }));    // runtime only
-  const ui = { nextCh: '', seed: 'E', hot: [false, false, false, false, false, false], buyN: 1, unseen: 0, pulled: null, dropped: {}, mcd: {}, readySet: null, fresh: null, lastBanked: null, bankedAt: 0, trayN: 0, tab: 'floor', libq: '', libf: 'open', libcap: 'all', libsort: 'close', libshow: false, shelf: null, archq: '', archf: 'all', read: null, sub: {}, libLimit: 24, archFailed: 0, bankq: '', ovr: '', ovrn: 3 };
+  const ui = { nextCh: '', seed: 'E', hot: [false, false, false, false, false, false], buyN: 1, unseen: 0, pulled: null, dropped: {}, mcd: {}, readySet: null, fresh: null, lastBanked: null, bankedAt: 0, trayN: 0, tab: 'floor', libq: '', libf: 'open', libcap: 'all', libsort: 'close', libshow: false, shelfNew: 0, archq: '', archf: 'all', read: null, sub: {}, libLimit: 24, archFailed: 0, bankq: '', ovr: '', ovrn: 3 };
   /* the Titles view (status, longest-word filter, sort, show-locked) is remembered between visits */
-  const VIEW_KEYS = ['libf', 'libcap', 'libsort', 'libshow', 'shelf'];
+  const VIEW_KEYS = ['libf', 'libcap', 'libsort', 'libshow'];
   try { const v = JSON.parse(localStorage.getItem('imi-titles-view') || '{}'); VIEW_KEYS.forEach(k => { if (k in v) ui[k] = v[k]; }); } catch { /* ignore a bad value */ }
   const saveView = () => { try { localStorage.setItem('imi-titles-view', JSON.stringify(Object.fromEntries(VIEW_KEYS.map(k => [k, ui[k]])))); } catch { /* storage blocked */ } };
   let dirty = true, holding = false, holdAcc = 0, popSlot = 0, lastBananas = bananas.get();
@@ -690,7 +690,7 @@
         <button type="button" class="o-btn gold" data-act="release" data-id="${D.id}" ${full || bananas.get() < plan.cost ? 'disabled' : ''}>${full ? 'Catalogue complete' : `${plan.n > 1 ? `Release x${plan.n}` : `Release ${/^[aeiou]/.test(D.unit) ? 'an' : 'a'} ${D.unit}`} · ${price(plan.cost)}`}</button></div>`;
     }).join('');
     morph($('#o-studios'), `
-      <p class="o-lede">IMI Studios turn your Archive into passive income. Each release picks a real manuscript from the monkey library and earns bananas every second; longer manuscripts earn a little more. Selling titles unlocks new divisions.</p>
+      <p class="o-lede">Media turns your Archive into passive income. Each release picks a real manuscript from the monkey library and earns bananas every second; longer manuscripts earn a little more. Selling titles unlocks new divisions.</p>
       <div class="o-row o-left"><span>Division income <b>${fmtRate(divRate())}/s</b> · ${fmt(total)} of ${fmt(pool)} manuscripts released</span></div>
       <div class="o-row o-left"><span class="o-dim">Release</span><span class="o-seg">${[1, 10, 100, 'max'].map(n => `<button type="button" data-act="buyn" data-n="${n}" aria-pressed="${String(ui.buyN) === String(n)}">${n === 'max' ? 'Max' : 'x' + n}</button>`).join('')}</span></div>
       <div class="o-grid">${cards}</div>`);
@@ -737,7 +737,7 @@
         ${owned ? (seatBtns || (seated ? '' : '<p class="o-dim">Unlock a slot by selling more titles.</p>')) : `<button type="button" class="o-btn gold" data-act="museinvite" data-id="${mu.id}" ${have < mu.cost ? 'disabled' : ''}>Invite</button>`}</div>`;
     }).join('');
     morph($('#o-muses'), `
-      <p class="o-lede">The Muse Salon hosts literary patrons. Invite a Muse once, then seat up to three of them (slots open as you sell titles) and swap them whenever you like. A seated Muse works for you passively.</p>
+      <p class="o-lede">Muses are literary patrons. Invite a Muse once, then seat up to three of them (slots open as you sell titles) and swap them whenever you like. A seated Muse works for you passively.</p>
       <h3 class="o-h">Seated (${M.seated.slice(0, slots).filter(Boolean).length}/${slots})</h3><div class="o-grid">${seatedCards}</div>
       <h3 class="o-h">The guest list</h3><div class="o-grid">${cards}</div>`);
     hydrate($('#o-muses'));
@@ -945,7 +945,7 @@
   const marketNext = b => { const M = S.market; return M.v[b] + (1 + marketBias(b) - M.v[b]) * .12 + M.m[b] * .55; };
   function gardenTick() {
     const g = S.garden; if (!g.beds.some(Boolean)) return;
-    const now = Date.now(); g.beds.forEach((b, i) => { if (b && now >= b.ready && !b.told) { b.told = true; if (!document.hidden) { IMI.sfx.tick(); newsPush(`A plot of ${b.ch} is ripe in the Coconut R&D garden.`); } } });
+    const now = Date.now(); g.beds.forEach((b, i) => { if (b && now >= b.ready && !b.told) { b.told = true; if (!document.hidden) { IMI.sfx.tick(); newsPush(`A plot of ${b.ch} is ripe in the letter garden.`); } } });
     if (ui.tab === 'lab' || ui.tab === 'muses') mark(); else dirty = true;
   }
   function marketStep(silent) {
@@ -1257,7 +1257,7 @@
     el.innerHTML = `<div class="o-modal-card"><h3 id="oWbT">Welcome back!</h3>
       <p>You were away <b>${dur(rep.away)}</b>.${rep.capped ? ` The typists only worked ${dur(rep.counted)}, the most they will do unsupervised.` : ' The typists pretended to work the whole time.'}</p>
       <div class="o-modal-rows">${row('Letters typed', cnt('wb-let', rep.letters))}${row('Words banked by keepers', cnt('wb-wds', rep.words))}${row('Royalties', `${ico('banana', 22)} ${cnt('wb-roy', rep.roy, true)}`)}${rep.div ? row('Division income', `${ico('banana', 22)} ${cnt('wb-div', rep.div, true)}`) : ''}${rep.ready ? row('Titles ready to write', rep.ready) : ''}</div>
-      ${rep.capped && next ? '<p class="o-dim">A Night Lamp from Banana Logistics keeps them working longer.</p>' : ''}
+      ${rep.capped && next ? '<p class="o-dim">A Night Lamp from the Shop keeps them working longer.</p>' : ''}
       <button type="button" class="o-btn gold" data-close>Collect</button></div>`;
     document.body.appendChild(el); hydrate(el);
     const close = () => { const b = el.querySelector('[data-close]').getBoundingClientRect(); el.remove(); IMI.sfx.ding(); if (rep.roy || rep.div) IMI.burst(b.left + b.width / 2, b.top, ['banana', 'spark', 'star'], 14); checkAwards(); mark(); };
@@ -1457,7 +1457,8 @@
     bananas.earn(pay, at);
     if (at) { IMI.burst(at[0], at[1], ['banana', 'spark', 'leaf'], 14); shock(at[0], at[1], '#ffd23a', true); }
     flash('#fff6d6'); shake(2);
-    ui.fresh = id; setTimeout(() => { ui.fresh = null; mark(); }, 2200);
+    ui.fresh = id; if (!(ui.tab === 'press' && ui.sub.press === 'shelf')) ui.shelfNew = (ui.shelfNew || 0) + 1;      // the Shelf tab wears a badge until you look
+    setTimeout(() => { ui.fresh = null; mark(); }, 2200);
     if (at) { const big = pay >= 50000 ? 3 : pay >= 5000 ? 2 : 1; for (let k = 1; k < big + 1; k++) setTimeout(() => IMI.burst(at[0] + (k % 2 ? -1 : 1) * k * 40, at[1] - k * 20, ['banana', 'banana', 'spark', 'star'], 14), k * 220); }
     vib([20, 40, 70]); cheer(3000, 'SOLD!');
     IMI.sfx.ding();
@@ -1486,7 +1487,7 @@
   const upLevel = (u, d, i) => (u.k === 'paw' ? Math.max(0, d.paws - (i ? 1 : 0)) : d.up[u.k]);
   const upMax = u => (u.k === 'paw' ? u.max : u.tier ? 3 : u.max);
   const upCost = (u, d, i) => { const l = upLevel(u, d, i), bs = u.k === 'paw' ? PAW_COST[i] * (1 + PAW_DESK_STEP * i) : u.base; return Math.round(u.tier ? bs * TIER[l] : bs * Math.pow((u.k === 'paw' ? PAW_GROW : u.grow || 1.7), l)); };
-  const upLock = (u, d) => (u.needs === 'hold' && !S.hold ? 'Needs Hold to type (Banana Logistics)' : '');
+  const upLock = (u, d) => (u.needs === 'hold' && !S.hold ? 'Needs Hold to type (in the Shop)' : '');
   /* how many levels a purchase of `want` covers and what it costs (Max stops where your letters run out) */
   function upPlan(u, d, i, want) {
     const max = upMax(u), have = totalLetters(d); let lv = u.k === 'paw' ? d.paws : d.up[u.k], n = 0, cost = 0;
@@ -1521,7 +1522,7 @@
       logIt(`${DESKS[i].name} installed on the canopy. It types ${DESKS[i].lo}–${DESKS[i].hi} letter words.`);
     } else if (what === 'plot') {
       const nx = GARDEN_COSTS[S.garden.beds.length - 2]; if (!nx || !bananas.spend(nx)) return;
-      S.garden.beds.push(null); logIt('Cleared another plot in the Coconut R&D garden.');
+      S.garden.beds.push(null); logIt('Cleared another plot in the letter garden.');
     } else if (what === 'mk') {
       const d = S.desks[i]; if (!d || !d.owned || d.mk >= 2 || !bananas.spend(mkCost(i))) return;
       d.mk++; logIt(`${DESKS[i].name} restored to ${MK_NAMES[d.mk]}. It gleams.`);
@@ -1568,7 +1569,8 @@
   function patchEl(x, y) {
     const ic = y.getAttribute('data-ico');
     if (ic && x.dataset.icoDone === ic + ':' + y.getAttribute('data-sz')) return;      // already hydrated into a sprite
-    for (const { name } of [...x.attributes]) if (!y.hasAttribute(name)) x.removeAttribute(name);
+    const keepOpen = x.tagName === 'DETAILS';                       // the browser owns a <details>'s open state: the template never mentions it, so a redraw must not close it
+    for (const { name } of [...x.attributes]) if (!y.hasAttribute(name) && !(keepOpen && name === 'open')) x.removeAttribute(name);
     for (const { name, value } of [...y.attributes]) { const v = name === 'class' && x.classList.contains('can') && !y.classList.contains('can') ? value + ' can' : value; if (x.getAttribute(name) !== v) x.setAttribute(name, v); }   // 'can' is set by markCan() after each render
     if (x.tagName === 'INPUT' && x !== document.activeElement && x.value !== y.value) x.value = y.value;
     if (!y.hasAttribute('data-own')) patchKids(x, y);
@@ -1823,8 +1825,8 @@
       (stormy() ? '<span class="o-sx o-warn">Storm! Half speed.</span>' : ''));
     const now = performance.now();
     morph($('#oMiles'), `<span class="o-dim">Tap streak goals${S.best ? ` (best x${S.best})` : ''}:</span>` + MILES.map(m => `<span class="o-mile${combo.n >= m.n ? ' hit' : ''}${now < (ui.mcd[m.n] || 0) ? ' cd' : ''}" title="${esc(m.desc)}">x${m.n} ${m.name}</span>`).join(''));
-    $('#oGuide').textContent = !d.paws ? 'Nobody is typing yet. Collect a few letters by hand, then hire a first typist at Primate Resources.' : S.hold ? 'Hold a finger, the mouse, or Space on the machine to type fast. Spend letters at Primate Resources or turn them into words at Coconut R&D.'
-      : 'Tap or click the typewriter (focus it and press Space too). Spend letters at Primate Resources or make words at Coconut R&D.';
+    $('#oGuide').textContent = !d.paws ? 'Nobody is typing yet. Collect a few letters by hand, then hire a first typist in Train.' : S.hold ? 'Hold a finger, the mouse, or Space on the machine to type fast. Spend letters in Train or turn them into words in Words.'
+      : 'Tap or click the typewriter (focus it and press Space too). Spend letters in Train or make words in Words.';
     syncTypists();
   }
 
@@ -1835,7 +1837,7 @@
   function renderTraining() {
     const d = cur(), i = S.sel, have = totalLetters(d), want = buyWant();
     morph($('#o-training'), `
-      <p class="o-lede">Primate Resources hires and trains the monkeys on <b>${esc(DESKS[i].name)}</b>. Training costs <b>letters from this desk</b> (the biggest piles go first). You hold ${fmt(have)}.</p>
+      <p class="o-lede">Train hires and trains the monkeys on <b>${esc(DESKS[i].name)}</b>. Training costs <b>letters from this desk</b> (the biggest piles go first). You hold ${fmt(have)}.</p>
       <div class="o-row o-left"><span class="o-dim">Keeper</span>${keeperSeg(i)}</div>
       <div class="o-row o-left"><span class="o-dim">Buy</span><span class="o-seg">${[1, 10, 100, 'max'].map(n => `<button type="button" data-act="buyn" data-n="${n}" aria-pressed="${String(ui.buyN) === String(n)}">${n === 'max' ? 'Max' : 'x' + n}</button>`).join('')}</span></div>
       <div class="o-grid">${UPS.map(u => {
@@ -1873,7 +1875,7 @@
     const ownedBank = Object.keys(S.bank).sort((a, b) => a.length - b.length || a.localeCompare(b));
     morph(pane, `
       ${keeperStrip()}
-      <p class="o-lede">Coconut R&amp;D turns <b>${esc(D.name)}</b> letters into words. Any letters on this desk can combine; letters never move between desks, but finished words go to the shared bank.</p>
+      <p class="o-lede">Words turns <b>${esc(D.name)}</b> letters into words. Any letters on this desk can combine; letters never move between desks, but finished words go to the shared bank.</p>
       ${gardenHTML()}
       <div class="o-card"><h3>Letters</h3>
         <div class="o-letters">${Object.keys(FREQ).sort().map(c => `<div class="o-lcell${d.letters[c] ? '' : ' zero'}"><b>${c}</b>${d.letters[c] || 0}</div>`).join('')}</div></div>
@@ -1947,29 +1949,32 @@
     const shown = rows.slice(0, ui.libLimit);
     const seg = (items, act, cur, attr) => `<span class="o-seg">${items.map(([k, n, extra]) => `<button type="button" data-act="${act}" data-${attr}="${k}" aria-pressed="${String(cur) === String(k)}"${extra ? ` class="${extra}"` : ''}>${n}</button>`).join('')}</span>`;
     const caps = [['all', 'All'], ...DESKS.map((D, i) => [String(i), `${D.hi}<i class="o-capn">${byBand[i]}</i>`, S.desks[i].owned ? '' : 'o-cap-locked']).filter(([k]) => byBand[+k] > 0 || ui.libcap === k)];
-    return `<input class="o-search" id="oLibQ" placeholder="Search titles…" value="${esc(ui.libq)}" autocomplete="off" aria-label="Search titles">
+    return `<div class="o-row o-left o-lsearch"><input class="o-search" id="oLibQ" placeholder="Search titles…" value="${esc(ui.libq)}" autocomplete="off" aria-label="Search titles">
+        <select class="o-search o-lsort" data-in="libsort" aria-label="Sort titles">${SORTS.map(([k, n]) => `<option value="${k}"${ui.libsort === k ? ' selected' : ''}>${n}</option>`).join('')}</select></div>
       <div class="o-filters o-lfilters">
-        <div class="o-row o-left">${seg([['open', 'To write'], ['ready', 'Ready'], ['pitched', 'Pitched'], ['written', 'Written'], ['all', 'All']], 'libf', f, 'f')}</div>
+        <div class="o-row o-left">${seg([['open', 'Open'], ['ready', 'Ready'], ['pitched', 'Pitch'], ['written', 'Sold'], ['all', 'All']], 'libf', f, 'f')}</div>
         <div class="o-row o-left"><span class="o-dim o-flab" title="The longest word in the title: which typewriter it needs">Word max</span>${seg(caps, 'libcap', ui.libcap, 'c')}</div>
-        <div class="o-row o-left"><span class="o-dim o-flab">Sort</span>${seg(SORTS, 'libsort', ui.libsort, 's')}${hidden || ui.libshow ? `<button type="button" class="o-btn sm" data-act="liblock" aria-pressed="${ui.libshow}">${ui.libshow ? 'Hide locked' : `Show locked (${hidden})`}</button>` : ''}</div>
       </div>
-      <p class="o-dim o-lcount">${rows.length.toLocaleString('en-US')} title${rows.length === 1 ? '' : 's'}${hidden && !ui.libshow ? ` · ${hidden.toLocaleString('en-US')} more need a bigger typewriter` : ''}</p>
+      <div class="o-row o-left o-lcount"><span class="o-dim">${rows.length.toLocaleString('en-US')} title${rows.length === 1 ? '' : 's'}${hidden && !ui.libshow ? ` · ${hidden.toLocaleString('en-US')} locked` : ''}</span>${hidden || ui.libshow ? `<button type="button" class="o-btn sm" data-act="liblock" aria-pressed="${ui.libshow}">${ui.libshow ? 'Hide locked' : 'Show locked'}</button>` : ''}</div>
       <div class="o-grid">${shown.map(x => bookCard(x.r)).join('') || '<p class="o-dim">No titles match.</p>'}</div>
       ${rows.length > shown.length ? `<div class="o-row"><button type="button" class="o-btn sm" data-act="libmore">Show more (${(rows.length - shown.length).toLocaleString('en-US')})</button></div>` : ''}`;
   }
   function renderPress(force) {
     const pane = $('#o-press'); if (!force && pane.contains(document.activeElement) && document.activeElement.matches('input')) return;
     const sold = soldCount(), ready = readyList().length;
-    const tabs = [['titles', 'Titles', ready || ''], ...(sold >= 1 ? [['pitches', 'Pitches', firstPitch() ? '!' : ''], ['market', 'Market']] : []), ...(sold >= 3 ? [['archive', 'Archive']] : [])];
+    const tabs = [['titles', 'Titles', ready || ''], ...(sold >= 1 ? [['shelf', 'Shelf', ui.shelfNew || ''], ['pitches', 'Pitches', firstPitch() ? '!' : ''], ['market', 'Market']] : []), ...(sold >= 3 ? [['archive', 'Archive']] : [])];
     if (!tabs.some(t => t[0] === ui.sub.press)) ui.sub.press = 'titles';
     const sub = ui.sub.press;
     let body = '';
     if (sub === 'titles') {
-      const fr = focusRecipe(), written = Object.keys(S.written).length, shelfOpen = ui.shelf == null ? written < 12 : ui.shelf;   // the shelf starts open, and folds away once it is long
-      body = `<div class="o-card o-goalbar" id="oGoal"><div class="o-row">${fr ? `<span>Now writing: <b>${esc(fr.title)}</b></span><span class="o-dim">${progress(fr)}/${fr.total} words</span>` : '<span>Pick a title below</span>'}</div>${fr ? bar(progress(fr), fr.total) : ''}
-          <div class="o-row o-left"><button type="button" class="o-btn sm" data-act="golist">Change</button><span class="o-seg"><button type="button" data-act="autotoggle" aria-pressed="${S.autoFocus}">Auto</button></span></div></div>
-        <div class="o-card o-shelf"><div class="o-row"><h3>Your bookshelf</h3><span class="o-row o-left"><span class="o-dim">${written} sold · royalties ${fmtRate(royRate())}/s</span><button type="button" class="o-btn sm" data-act="shelf">${shelfOpen ? 'Hide' : 'Show'}</button></span></div>${shelfOpen ? `${sold ? '<p class="o-dim">Tap a spine to read it.</p>' : '<p class="o-dim">Sell a title to put it here.</p>'}${shelfHTML()}` : ''}</div>
+      const fr = focusRecipe();
+      body = `<div class="o-card o-goalbar" id="oGoal"><div class="o-row o-gtop">${fr ? `<span class="o-gtitle">Now writing: <b>${esc(fr.title)}</b></span><span class="o-dim">${progress(fr)}/${fr.total}</span>` : '<span>Pick a title below</span>'}</div><div class="o-progrow o-gbar">${fr ? bar(progress(fr), fr.total) : '<span class="o-dim">Auto picks the best title</span>'}<span class="o-seg" title="Auto: the keepers pick the title that pays best for the effort"><button type="button" data-act="autotoggle" aria-pressed="${S.autoFocus}">Auto</button></span></div></div>
+
         <div id="oTitleList">${pressList()}</div>${KIDS.length ? `<p class="o-dim o-kidsline">Kids' reading list: ${kidsSold()} of ${KIDS.length} written${LIBS.length ? ` · Library stories: ${libSold()} of ${LIBS.length} written` : ''}</p>` : ''}`;
+    } else if (sub === 'shelf') {
+      ui.shelfNew = 0;
+      const written = Object.keys(S.written).length;
+      body = `<div class="o-card o-shelf"><div class="o-row"><h3>Your bookshelf</h3><span class="o-dim">${written} sold · royalties ${fmtRate(royRate())}/s</span></div>${sold ? '<p class="o-dim">Tap a spine to read it.</p>' : '<p class="o-dim">Sell a title to put it here.</p>'}${shelfHTML()}</div>`;
     } else if (sub === 'pitches') body = pitchHTML();
     else if (sub === 'market') body = `<p class="o-lede">Publishers pay more or less depending on demand. Sell when your title’s band is HOT. Weather and night change demand.</p>${marketHTML()}`;
     else body = `<div class="o-card o-archive"><h3>The Archive</h3>
@@ -2010,7 +2015,7 @@
   function gardenCard(have) {
     const n = S.garden.beds.length, nx = GARDEN_COSTS[n - 2];
     return `<div class="o-card"><div class="o-row"><h3>Garden plots</h3><span class="o-lvl">${n}/6</span></div>${pips(n - 2, 4)}
-      <p>More plots in the Coconut R&amp;D letter garden, so you can grow more letters at once.</p>
+      <p>More plots in the letter garden (on the Words page), so you can grow more letters at once.</p>
       ${nx ? `<button type="button" class="o-btn gold" data-act="buy" data-what="plot" ${have < nx ? 'disabled' : ''}>Add a plot · ${price(nx)}</button>` : '<span class="o-lvl">MAXED</span>'}</div>`;
   }
   function lampCard(have) {
@@ -2024,7 +2029,7 @@
     const item = (name, desc, cost, owned, lock, act, i) => `<div class="o-card"><div class="o-row"><h3>${name}</h3>${owned ? '<span class="o-lvl">OWNED</span>' : price(cost)}</div><p>${desc}</p>${lock && !owned ? `<p class="o-warn">${lock}</p>` : ''}
       ${owned ? '' : `<button type="button" class="o-btn gold" data-act="buy" data-what="${act}" ${i != null ? `data-i="${i}"` : ''} ${lock || have < cost ? 'disabled' : ''}>Buy</button>`}</div>`;
     morph($('#o-shop'), `
-      <p class="o-lede">Banana Logistics spends the bananas the Jungle Press pays you. Typewriters and room-wide upgrades are bought here.</p>
+      <p class="o-lede">The Shop spends the bananas your titles earn. Typewriters and room-wide upgrades are bought here.</p>
       <h3 class="o-h">Typewriters</h3><div class="o-grid">${DESKS.slice(1).map((D, n) => {
         const i = n + 1, d = S.desks[i];
         return item(D.name, `Specialises in ${D.lo}–${D.hi} letter words (${D.style} lettering). Starts with one typist.`, D.price, d.owned, chal('haiku') && i >= 2 ? 'Blocked by the Haiku Run' : !S.desks[i - 1].owned ? 'Buy ' + DESKS[i - 1].name + ' first' : '', 'desk', i);
@@ -2140,7 +2145,7 @@
   }
 
   /* ================= wiring ================= */
-  const tabBtn = ([k, ic, name, sub, short]) => `<button type="button" role="tab" class="o-tab" data-tab="${k}" aria-label="${name}" title="${name}: ${sub}"><span class="o-tabico">${ico(ic)}</span><em class="o-short">${short}</em><em class="o-long">${name}</em></button>`;
+  const tabBtn = ([k, ic, name, sub, short]) => `<button type="button" role="tab" class="o-tab" data-tab="${k}" aria-label="${name}" title="${name}: ${sub}"><span class="o-tabico">${ico(ic)}</span><em class="o-short">${short}</em><em class="o-long"><b>${name}</b><small>${sub}</small></em></button>`;
   root.innerHTML = `<div class="o-wrap" data-tab="floor">
     <div class="o-ticker" id="oTicker" role="marquee" aria-label="News" title="Tap for the next headline"><b class="o-tkr-tag">NEWS</b><div class="o-tkr-view"><span class="o-tkr-text" id="oTkrText"></span></div></div>
     <div class="o-desks" id="oDesks"></div>
@@ -2244,14 +2249,13 @@
     libf: el => { ui.libf = el.dataset.f; ui.libLimit = 24; saveView(); mark(); },
     libcap: el => { ui.libcap = el.dataset.c; ui.libLimit = 24; saveView(); IMI.sfx.tick(); mark(); },
     libsort: el => { ui.libsort = el.dataset.s; ui.libLimit = 24; saveView(); IMI.sfx.tick(); mark(); },
-    shelf: () => { const w = Object.keys(S.written).length; ui.shelf = !(ui.shelf == null ? w < 12 : ui.shelf); saveView(); IMI.sfx.tick(); mark(); },
     liblock: () => { ui.libshow = !ui.libshow; ui.libLimit = 24; saveView(); IMI.sfx.tick(); mark(); },
     libmore: () => { ui.libLimit += 24; mark(); },
     sub: el => { ui.sub[el.dataset.dept] = el.dataset.sub; IMI.sfx.tick(); mark(); IMI.emit('tab', { tab: el.dataset.dept, sub: el.dataset.sub }); const p = $('#o-' + el.dataset.dept); if (p) p.scrollTop = 0; },
     golist: () => { const n = $('#oTitleList'); if (n) n.scrollIntoView({ behavior: IMI.reduceMotion ? 'auto' : 'smooth', block: 'start' }); },
     autotoggle: () => { if (S.autoFocus) S.autoFocus = false; else { S.autoFocus = true; S.focus = null; pickAutoFocus(); } IMI.sfx.tick(); mark(); save(); },
     archf: el => { ui.archf = el.dataset.f; renderArchive(); },
-    pull: el => { ui.pulled = ui.pulled === el.dataset.id ? null : el.dataset.id; ui.sub.press = 'titles'; ui.shelf = true; IMI.sfx.tick(); if (ui.tab !== 'press') setTab('press'); else mark(); },
+    pull: el => { ui.pulled = ui.pulled === el.dataset.id ? null : el.dataset.id; ui.sub.press = 'shelf'; IMI.sfx.tick(); if (ui.tab !== 'press') setTab('press'); else mark(); },
     read: el => { ui.read = ui.read === el.dataset.id ? null : el.dataset.id; mark(); },
     reset: () => { if (confirm('Reset Typewriter Ops? Your bananas are kept.')) { S = fresh(); save(); buildStage(); mark(); } }
   };
@@ -2261,6 +2265,7 @@
   });
   root.addEventListener('change', e => {
     const el = e.target.closest('[data-in]');
+    if (el && el.dataset.in === 'libsort') { ui.libsort = el.value; ui.libLimit = 24; saveView(); IMI.sfx.tick(); mark(); }
     if (el && el.dataset.in === 'kdef') { cur().keeper.def = Math.max(0, Math.min(9999, el.value | 0)); save(); mark(); }
   });
   root.addEventListener('input', e => {
