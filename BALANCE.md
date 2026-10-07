@@ -33,6 +33,7 @@ Owning a desk means its keeper works from the first second (no purchase, task 03
 | `KID_PAY` (new) multiplier on the baked-in pay of kids' titles | 1 (24 per word) | 0.1 | About 100-170 bananas per kids' title, so 25 of them plus the six authored ones fund Hibiscus |
 | `LIB_PAY` (new) multiplier on the baked-in pay of the 900 library stories (5-, 7-, 9-letter caps), by band | n/a | 0, 0.03, 0.018, 0.018 | Baked pay is words x `RATE[band]`; at these values a 65-word cap-5 story pays about 530, a 71-word cap-7 about 4.3K, a 77-word cap-9 about 28K. See "Library stories" below |
 | `LIB_ROY` (new) share of normal royalties the library stories pay | n/a | 0.5 | Same treatment as the kids' books |
+| `KEEPER_UP_STEP`, `KEEPER_UP_MAX`, `KEEPER_UP_GROW`, `KEEPER_UP_BASE` (new) | n/a | 0.9, 6 levels, x1.8, bananas [100, 600, 3000, 30000, 4e5, 5e6] by desk | Shop > Keepers. A level multiplies that desk's seconds per banked word by 0.9 (a maxed keeper is 1.9x faster). Task 10 |
 | `KID_ROY` | 0.5 | 0.5 | Unchanged; 300 kids' titles at 0.5 are a small slice of royalties |
 | `PITCH_PAY` rights for a standard pitched title, by band | 100, 1.26K, 15.6K, 196K, 2.44M, 30.6M | 40, 504, 5000, 39.1K, 489K, 6.12M | Pitches carried the mid game; reduced so Lagoon and Honeycomb are real goals |
 | `ROY_BASE` | 0.00003 | 0.00001 | With 300 kids' titles on the shelf royalties and the Legacy star came hours too early |
@@ -106,3 +107,22 @@ So hoarding clearly loses titles (-40% kids' titles in the first hour active; La
 | Idle: Honeycomb | 497 | 443 | 360-600 |
 
 One seed each, 8-10 simulated hours, the bot's pitching rule ignores library stories (they are not "open" titles). The first library story is sold at minute 15 (active) or 255 (idle). Note the bot never browses or sorts; a human can pick the highest-paying titles with Sort > Pay, so players who do will beat these numbers a little. Re-run `node tools/balance.mjs` with `'{"LIB_PAY":[0,a,b,c,0,0]}'` before changing the knobs.
+
+## Keeper upgrades (task 10)
+Bought with bananas in the Shop, per desk. One seed each, bot with the rule "buy a keeper level only if it costs at most 15% of the next machine and you hold 3x its price". *Before* is the build with the library stories and no keeper upgrades.
+
+| Milestone (min) | Before | With keeper upgrades | Target |
+|---|---|---|---|
+| Active: Hibiscus | 11.5 | 13.2 | 12-20 |
+| Active: 100 kids' titles | 133.6 | 71.2 | |
+| Active: Lagoon | 79.6 | 83.4 | 90-180 |
+| Active: first division | 140.8 | 198.4 | |
+| Active: first star | 226.9 | 245.0 | 240-480 |
+| Active: Honeycomb | 337.9 | 364.2 | 210-360 |
+| Active, hoard: Hibiscus / Lagoon / Honeycomb | | 12.1 / 118 / 423 | |
+| Idle: Hibiscus | 50.5 | 56.2 | 40-90 |
+| Idle: Lagoon | 196 | 171.6 | 180-300 |
+| Idle: first star | 340.5 | 299.8 | |
+| Idle: Honeycomb | 442.9 | 418.7 | 360-600 |
+
+Keeper speed only matters when letters outrun the keeper, which is the kids' era and the early middle game; later the economy is bananas-limited, so the upgrades are most valuable early and a mild trade-off after. Naive bot rules (buying any level at 3x its price) delayed Hibiscus by up to 28 minutes idle, so a first-draft price table was cut by an order of magnitude at the top end.

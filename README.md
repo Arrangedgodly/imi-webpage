@@ -79,6 +79,8 @@ The standalone Library contains **3,573 committed manuscripts**: 573 stories and
 
 Besides the sixteen authored editions and generated pitches, the Titles page carries **1,200 writable stories**: 300 children's books that use only words of three letters or fewer (shown a few at a time as a reading list) and **900 library stories with a 5-, 7- or 9-letter cap** (300 each, children's and general parodies), all available at once. A story's longest word decides which typewriter it needs: a 5-letter-cap story needs Hibiscus Ribbon, 7 needs Lagoon Sprint, 9 needs Honeycomb Ledger. The library stories pay roughly what pitches do per word, count toward their own awards, and do not count toward the "sell N titles" progression gates, so they fill the middle game without speeding it up.
 
+Each machine's keeper can be **tuned up** in the Shop (up to six levels, bananas) to bank words faster; the Words page shows each keeper's level.
+
 The Titles list has three controls:
 
 | Control | Purpose |

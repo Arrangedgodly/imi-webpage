@@ -52,6 +52,10 @@
   const PAW_COST = TUNE.PAW_COST || [200, 35, 50, 70, 100, 140];      // letters for the first extra typist on each desk
   const PAW_DESK_STEP = TUNE.PAW_DESK_STEP != null ? TUNE.PAW_DESK_STEP : 0.35;   // later machines charge this much more per desk index for every typist hire
   const KEEPER_PERIOD = TUNE.KEEPER_PERIOD || [0.6, 1.2, 2, 3, 4, 5];     // seconds per banked word per desk, free keepers
+  const KEEPER_UP_STEP = TUNE.KEEPER_UP_STEP || 0.9;                      // each keeper level multiplies that period by this (Shop > Keepers, bananas)
+  const KEEPER_UP_MAX = TUNE.KEEPER_UP_MAX || 6;
+  const KEEPER_UP_GROW = TUNE.KEEPER_UP_GROW || 1.8;                      // each level costs this much more than the last
+  const KEEPER_UP_BASE = TUNE.KEEPER_UP_BASE || [100, 600, 3000, 30000, 4e5, 5e6];   // bananas for level 1, by desk
   const AUTH_PAY = TUNE.AUTH_PAY || [0.15, 0.4, 0.35, 0.2, 0.2, 0.2];                       // runtime multiplier on the pay of authored readers, by band
   const LIB_PAY = TUNE.LIB_PAY || [0, 0.03, 0.018, 0.018, 0, 0];                // runtime multiplier on the baked-in pay of the 5-, 7- and 9-letter-cap library stories, by band
   const KID_PAY = TUNE.KID_PAY || 0.1;                                          // runtime multiplier on the baked-in pay of kids' titles
@@ -150,7 +154,7 @@
   const newDesk = i => ({
     owned: i === 0, paws: 0, crew: [], mk: 0, letters: {}, tray: [],
     up: { fing: 0, rapid: 0, vowel: 0, ink: 0, practice: 0, stock: 0, ribbon: 0 },
-    keeper: { owned: i === 0, on: true, def: 0, targets: {} }
+    keeper: { owned: i === 0, on: true, def: 0, targets: {}, lv: 0 }
   });
   const fresh = () => ({ focus: null, autoFocus: true, printing: 0, legacy: { stars: 0, total: 0, ups: {} }, editions: {}, run: { earned: 0 }, challenge: null, chDone: {}, muses: { owned: {}, seated: [null, null, null] }, garden: { beds: [null, null] }, divs: { songs: 0, tv: 0, radio: 0, sketch: 0, film: 0 }, divTotal: 0, pitches: [], offers: [], market: { v: [1, 1, 1, 1, 1, 1], m: [0, 0, 0, 0, 0, 0], hist: [[1], [1], [1], [1], [1], [1]] }, agent: false, analyst: false, lamp: 0, lastSeen: 0, awards: {}, stats: { pitched: 0, pitchSold: 0, awayMax: 0, letters: 0, manual: 0, words: 0, lump: 0, rotten: 0, secs: 0, storm: 0, night: 0, byLetter: {} }, deals: {}, royTotal: 0, gold: 0, best: 0, hold: false, metro: false, dbl: false, contracts: false, sel: 0, written: {}, bank: {}, log: [], desks: DESKS.map((_, i) => newDesk(i)) });
   let S = (() => {
@@ -905,6 +909,16 @@
   const MK_BASE = [5000, 40000, 500000, 6e6, 8e7, 1e9], MK_NAMES = ['', 'Mk II', 'Mk III'];
   const deskMk = d => 1 + .25 * (d.mk || 0);
   const mkCost = i => Math.round(MK_BASE[i] * (S.desks[i].mk ? 12 : 1) * (chPerk('haiku') ? .8 : 1));
+  /* ---- keepers: each desk's keeper can be tuned up (faster banking) with bananas ---- */
+  const keeperLv = i => S.desks[i].keeper.lv || 0;
+  const keeperPeriod = i => KEEPER_PERIOD[i] * Math.pow(KEEPER_UP_STEP, keeperLv(i));      // seconds per banked word (the Muse multiplier is applied to the clock, not here)
+  const keeperUpCost = i => Math.round(KEEPER_UP_BASE[i] * Math.pow(KEEPER_UP_GROW, keeperLv(i)));
+  function keeperCard(i, have) {
+    const D = DESKS[i], lv = keeperLv(i), max = lv >= KEEPER_UP_MAX, cost = keeperUpCost(i), now = keeperPeriod(i);
+    return `<div class="o-card" style="--c:${D.color}"><div class="o-row"><h3>${D.name.split(' ')[0]} keeper</h3>${max ? '<span class="o-lvl">MAXED</span>' : price(cost)}</div>
+      ${pips(lv, KEEPER_UP_MAX)}<p>Banks a word every ${now.toFixed(2)}s${max ? '.' : `. Next level: ${(now * KEEPER_UP_STEP).toFixed(2)}s.`}${museOn('hemi') ? ' (Hemingwape doubles it.)' : ''}</p>
+      ${max ? '' : `<button type="button" class="o-btn gold" data-act="buy" data-what="keeper" data-i="${i}" ${have < cost ? 'disabled' : ''}>Tune up</button>`}</div>`;
+  }
   function mkCard(i, have) {
     const D = DESKS[i], d = S.desks[i], next = MK_NAMES[d.mk + 1];
     return `<div class="o-card" style="--c:${D.color}"><div class="o-row"><h3>${D.name}${d.mk ? ' ' + MK_NAMES[d.mk] : ''}</h3>${d.mk >= 2 ? '<span class="o-lvl">MAXED</span>' : price(mkCost(i))}</div>
@@ -1218,7 +1232,7 @@
           S.stats.letters += n; rep.letters += n;
           if (d.crew.length) { const each = n / d.crew.length; for (let q = 0; q < d.crew.length; q++) grantXp(d, q, each, true); }
         }
-        if (d.keeper.owned && d.keeper.on) keeperBulk(d, i, Math.max(2, Math.ceil(dt * eff * (museOn('hemi') ? 2 : 1) / KEEPER_PERIOD[i])));
+        if (d.keeper.owned && d.keeper.on) keeperBulk(d, i, Math.max(2, Math.ceil(dt * eff * (museOn('hemi') ? 2 : 1) / keeperPeriod(i))));
       });
     }
     S.desks.forEach((d, i) => {                                   // rebuild the tray from what is left in the drawers
@@ -1386,7 +1400,7 @@
   /* Balance harness hook (tools/balance.html): lets a bot drive the real game logic. Not used by the site itself. */
   Object.defineProperty(IMI.ops, 'dev', { configurable: true, get: () => ({
     S: () => S, holdRate, ui, tick, press, genPitch, newOffers, buyUp, buy, writeTitle, bankWord, keeperStep, canWrite, RECIPES, RBY, DESKS, KEEPER_PERIOD, UPS, upPlan, upLock, DIVS, divPlan, releaseDiv, DEALS, SHOP, LAMP, MUSES, MK_BASE, mkCost,
-    GARDEN_COSTS, MILES, focusNeeds, focusRecipe, stock, totalLetters, soldCount, kidsSold, kidsListed, KIDS, libSold, LIBS, touchBank: () => { bankV++; mark(); }, royBase, divBase, salePay, marketMult, checkAwards, starsNow, museSlots, registerPitch, pitchActive, PITCH_MAX, buffs, makeCopies,
+    GARDEN_COSTS, MILES, focusNeeds, focusRecipe, stock, totalLetters, soldCount, kidsSold, kidsListed, KIDS, libSold, LIBS, touchBank: () => { bankV++; mark(); }, keeperPeriod, keeperUpCost, keeperLv, KEEPER_UP_MAX, royBase, divBase, salePay, marketMult, checkAwards, starsNow, museSlots, registerPitch, pitchActive, PITCH_MAX, buffs, makeCopies,
     plant, harvest, gardenTime, gardenYield, BAND_WORDS, target, ensureCrew, doPrint, awayCap, awayEff, LEG, legLvl, ROY_BASE, RATE, comboHit: () => comboHit(), setSel: i => { S.sel = i; }
    }) });
 
@@ -1511,6 +1525,9 @@
     } else if (what === 'mk') {
       const d = S.desks[i]; if (!d || !d.owned || d.mk >= 2 || !bananas.spend(mkCost(i))) return;
       d.mk++; logIt(`${DESKS[i].name} restored to ${MK_NAMES[d.mk]}. It gleams.`);
+    } else if (what === 'keeper') {
+      const d = S.desks[i]; if (!d || !d.owned || keeperLv(i) >= KEEPER_UP_MAX || !bananas.spend(keeperUpCost(i))) return;
+      d.keeper.lv = keeperLv(i) + 1; logIt(`${DESKS[i].name} keeper tuned up to level ${d.keeper.lv}: a word every ${keeperPeriod(i).toFixed(2)}s.`);
     } else if (what === 'lamp') {
       const nx = LAMP[S.lamp]; if (!nx || !bananas.spend(nx.cost)) return;
       S.lamp++; logIt(`Lit a bigger Night Lamp: typists now work up to ${nx.cap}h while you are away.`);
@@ -1844,7 +1861,7 @@
     return `<div class="o-card o-kstrip" id="oKeepers"><div class="o-row"><h3>Keepers’ goal</h3><span class="o-seg"><button type="button" data-act="autofocus" aria-pressed="${S.autoFocus}">Auto</button><button type="button" data-act="go" data-tab="press" aria-pressed="${!S.autoFocus}">Manual</button></span></div>
       ${f ? `<p><b>${esc(f.title)}</b> <span class="o-dim">${progress(f)}/${f.total} words</span></p><div class="o-progrow">${bar(progress(f), f.total)}</div>` : '<p class="o-dim">No goal yet.</p>'}
       <div class="o-row o-left"><button type="button" class="o-btn sm" data-act="go" data-tab="press">Change</button></div>
-      <div class="o-chips">${DESKS.map((X, n) => S.desks[n].owned ? `<button type="button" class="o-chip o-kchip${S.desks[n].keeper.on ? '' : ' off'}" data-act="ktoggle" data-i="${n}" title="${KPAUSE}">${X.name.split(' ')[0]}: ${S.desks[n].keeper.on ? 'Collecting' : 'Paused'}</button>` : '').join('')}</div></div>`;
+      <div class="o-chips">${DESKS.map((X, n) => S.desks[n].owned ? `<button type="button" class="o-chip o-kchip${S.desks[n].keeper.on ? '' : ' off'}" data-act="ktoggle" data-i="${n}" title="${KPAUSE}">${X.name.split(' ')[0]}${keeperLv(n) ? ' Lv' + keeperLv(n) : ''}: ${S.desks[n].keeper.on ? 'Collecting' : 'Paused'}</button>` : '').join('')}</div></div>`;
   }
   function renderLab(force) {
     const pane = $('#o-lab'); if (!force && pane.contains(document.activeElement) && document.activeElement.matches('input')) return;
@@ -2014,6 +2031,7 @@
       }).join('')}</div>
       <h3 class="o-h">Publishing deals <span class="o-dim">(royalties ${fmtRate(royBase())}/s now)</span></h3><div class="o-grid">${DEALS.map(x => item(x.name, x.desc, x.cost, !!S.deals[x.id], soldCount() < x.need ? `Needs ${x.need} sold title${x.need > 1 ? 's' : ''}` : '', 'deal', x.id)).join('')}</div>
       <h3 class="o-h">Restorations</h3><div class="o-grid">${DESKS.map((D, i) => S.desks[i].owned ? mkCard(i, have) : '').join('')}</div>
+      <h3 class="o-h">Keepers</h3><div class="o-grid">${DESKS.map((D, i) => S.desks[i].owned ? keeperCard(i, have) : '').join('')}</div>
       <h3 class="o-h">Garden</h3><div class="o-grid">${gardenCard(have)}</div>
       <h3 class="o-h">Market tools</h3><div class="o-grid">
         ${item('Literary agent', 'Haggles: the market can never push your sale prices below x0.85.', SHOP.agent, S.agent, soldCount() < 2 ? 'Needs 2 sold titles' : '', 'agent')}
@@ -2052,7 +2070,8 @@
         (!S.hold && have >= SHOP.hold) || (blue && !S.metro && have >= SHOP.metro) || (blue && S.hold && !S.dbl && have >= SHOP.dbl) || (blue && !S.contracts && have >= SHOP.contracts);
       const plots = GARDEN_COSTS[S.garden.beds.length - 2] && have >= GARDEN_COSTS[S.garden.beds.length - 2];
       const mks = plots || S.desks.some((d, i) => d.owned && d.mk < 2 && have >= mkCost(i));
-      const tools = mks || (!S.agent && soldCount() >= 2 && have >= SHOP.agent) || (!S.analyst && soldCount() >= 2 && have >= SHOP.analyst);
+      const keepers = mks || S.desks.some((d, i) => d.owned && keeperLv(i) < KEEPER_UP_MAX && have >= keeperUpCost(i));
+      const tools = keepers || (!S.agent && soldCount() >= 2 && have >= SHOP.agent) || (!S.analyst && soldCount() >= 2 && have >= SHOP.analyst);
       const deal = tools || DEALS.some(x => !S.deals[x.id] && soldCount() >= x.need && have >= x.cost);
       return can || deal || (LAMP[S.lamp] && have >= LAMP[S.lamp].cost) ? '!' : '';
     }
@@ -2270,7 +2289,7 @@
     const stH = $('#oStage'); if (stH) stH.classList.toggle('holding', !!(holding && S.hold));
     if (holding && S.hold) { holdAcc += holdRate(cur()) * dt; let g = 0; while (holdAcc >= 1 && g++ < 12) { holdAcc -= 1; press(S.sel, false); } } else holdAcc = 0;
     focusClock += dt; if (focusClock >= 1) { focusClock = 0; if (!S.focus && S.autoFocus) pickAutoFocus(); }
-    S.desks.forEach((d, i) => { if (!d.owned) return; keeperT[i] = (keeperT[i] || 0) + dt * (museOn('hemi') ? 2 : 1); let g = 0; while (keeperT[i] >= KEEPER_PERIOD[i] && g++ < 4) { keeperT[i] -= KEEPER_PERIOD[i]; keeperStep(d, i); } if (g >= 4) keeperT[i] = 0; });
+    S.desks.forEach((d, i) => { if (!d.owned) return; keeperT[i] = (keeperT[i] || 0) + dt * (museOn('hemi') ? 2 : 1); let g = 0; while (keeperT[i] >= keeperPeriod(i) && g++ < 4) { keeperT[i] -= keeperPeriod(i); keeperStep(d, i); } if (g >= 4) keeperT[i] = 0; });
     if (S.challenge) { chalClock += dt; if (chalClock >= 1) { chalClock = 0; checkChallenge(); dirty = true; } }
     const buffNow = anyBuff(); if (buffNow || buffWas) dirty = true; buffWas = buffNow;
     marketClock += dt; if (marketClock >= 6) { marketClock = 0; marketStep(); }
