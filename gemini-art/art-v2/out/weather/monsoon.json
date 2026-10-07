@@ -1,0 +1,14 @@
+{
+  "id": "monsoon",
+  "category": "weather",
+  "size": [
+    32,
+    32
+  ],
+  "frameCount": 12,
+  "fps": 8,
+  "loop": true,
+  "staticFrame": 0,
+  "sparkles": [],
+  "notes": "Heavy two-lobed dark cloud with diagonal rain sheets sweeping across"
+}

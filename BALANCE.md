@@ -1,5 +1,19 @@
 # Typewriter Ops balance notes
 
+## Current playtest curve, 7 October 2026
+
+The current measured curve is in [playtest-results.md](docs/plan/playtest-results.md), compared with [the preserved baseline](docs/plan/playtest-baseline.md). The older sections below record earlier tuning rounds and use their historical monetary units.
+
+`economy.js` defines real banana units at x25, shared denomination-aware rounding, compact numbers and independently versioned save migration. Monetary `__TUNE` inputs remain nominal values and scale once in Ops. Letter training costs, recipe quantities, rates and multipliers retain their own units. Machine prices now resolve to 0 / 75K / 750K / 9.375M / 125M / 1.5625B; the additional machine-price rise is separate from the currency conversion.
+
+The first hire costs 100 letters and the required introduction protects those letters from keeper consumption. Train appears after 25 manual taps; Words and Titles open together ten manual taps after hiring. After the first sale, Shop opens and the coach can finish. In the first-hour seeds, active second machines arrive at 13.7-17.3 minutes; the idle opening reaches a first sale at 3.0-3.2 minutes. No standard idle seed buys the second machine in the first hour.
+
+Ordinary pickups use saved visible gameplay time: `max(125 * (1 + floor(playSecs / 600)), 2 * (sustainedRoyalties + sustainedDivisions))`, rounded to the 25-banana denomination. Offline time and menu time do not advance this clock. One 14-second pickup appears every 40-60 seconds when the Floor has room and no coach/modal covers it. Low effects and reduced motion keep a stationary catch. Measured ordinary income was 2.39% at a 60-second collection schedule and 2.95% at an aggressive 50-second schedule, both in seed 1.
+
+The twelve first-hour and six overnight comparisons record held and earned currency, crew, letter balances, intro milestones and actual duration. The overnight fixture advances the clock without running online timers, then applies the real cap/efficiency calculation. The runner accepts `--url`, `--output`, `--commit`, `--session` and `--away`, plus `PUPPETEER_MODULE` for an existing external dependency. `BALANCE_TUNE` can supply JSON without Windows argument-quoting loss. Guarded runs report their actual endpoint rather than claiming the requested hours.
+
+Browser/number/save acceptance is recorded separately in [the roadmap handoff](docs/plan/14-playtest-roadmap.md#completed-handoff). The bot batches taps once per second, so deliberate continuous streak rewards are a separate browser check. Physical-phone behavior and new-player comprehension still require human playtesting.
+
 ## How to measure
 `tools/balance.html` runs the real `ops.js` on a virtual clock with a seeded RNG, and `tools/bot.js` plays it. Both entry points need `python -m http.server 8123` in the repo root and a local Chrome (they import `puppeteer-core`, so run copies from a folder that has it installed).
 

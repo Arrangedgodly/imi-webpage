@@ -1,0 +1,211 @@
+{
+  "capturedAt": "2026-10-07T17:33:56.749Z",
+  "transport": "Puppeteer fallback after T3 explicitly reported no automation host",
+  "checks": [
+    {
+      "name": "fresh save exposes only Floor and mandatory coach",
+      "passed": true
+    },
+    {
+      "name": "25 manual taps reveal Train",
+      "passed": true
+    },
+    {
+      "name": "reload keeps earned opening milestone",
+      "passed": true
+    },
+    {
+      "name": "expanding an upgrade explanation keeps coach on hire control",
+      "passed": true
+    },
+    {
+      "name": "hire leaves Words locked",
+      "passed": true
+    },
+    {
+      "name": "nine post-hire taps leave Words locked",
+      "passed": true
+    },
+    {
+      "name": "Words and Titles reveal together",
+      "passed": true
+    },
+    {
+      "name": "first-sale coach recovers hidden ready title",
+      "passed": true
+    },
+    {
+      "name": "resize recovers visible coach target without overlap",
+      "passed": true
+    },
+    {
+      "name": "first sale and coach completion finish introduction",
+      "passed": true
+    },
+    {
+      "name": "pickup freezes value, pays once, preserves typewriter and reduced motion",
+      "passed": true
+    },
+    {
+      "name": "existing golden and rotten rewards collect once",
+      "passed": true
+    },
+    {
+      "name": "gold fill reserved for buff and overrides vowel caps",
+      "passed": true
+    },
+    {
+      "name": "Hold stops after focus leaves stage",
+      "passed": true
+    },
+    {
+      "name": "reset clears live rewards and rejects stale callbacks",
+      "passed": true
+    },
+    {
+      "name": "Second Printing preserves learned pages and playtime",
+      "passed": true
+    },
+    {
+      "name": "pixel 1280x800 has no page overflow and compact cards",
+      "passed": true
+    },
+    {
+      "name": "pixel 390x700 has no page overflow and compact cards",
+      "passed": true
+    },
+    {
+      "name": "pixel 360x560 has no page overflow and compact cards",
+      "passed": true
+    },
+    {
+      "name": "classic 1280x800 has no page overflow and compact cards",
+      "passed": true
+    },
+    {
+      "name": "classic 390x700 has no page overflow and compact cards",
+      "passed": true
+    },
+    {
+      "name": "classic 360x560 has no page overflow and compact cards",
+      "passed": true
+    },
+    {
+      "name": "runtime has no uncaught page errors",
+      "passed": true
+    }
+  ],
+  "geometry": [
+    {
+      "edition": "pixel",
+      "width": 1280,
+      "height": 800,
+      "scrollWidth": 1280,
+      "scrollHeight": 800,
+      "outsideCards": 0,
+      "current": "0% configured bias",
+      "next": "Next: 45% configured bias",
+      "closedDetails": true,
+      "hudExact": "Bananas: 1,250,000,000,000,000,000,000"
+    },
+    {
+      "edition": "pixel",
+      "width": 390,
+      "height": 700,
+      "scrollWidth": 390,
+      "scrollHeight": 700,
+      "outsideCards": 0,
+      "current": "0% configured bias",
+      "next": "Next: 45% configured bias",
+      "closedDetails": true,
+      "hudExact": "Bananas: 1,250,000,000,000,000,000,000"
+    },
+    {
+      "edition": "pixel",
+      "width": 360,
+      "height": 560,
+      "scrollWidth": 360,
+      "scrollHeight": 560,
+      "outsideCards": 0,
+      "current": "0% configured bias",
+      "next": "Next: 45% configured bias",
+      "closedDetails": true,
+      "hudExact": "Bananas: 1,250,000,000,000,000,000,000"
+    },
+    {
+      "edition": "classic",
+      "width": 1280,
+      "height": 800,
+      "scrollWidth": 1280,
+      "scrollHeight": 800,
+      "outsideCards": 0,
+      "current": "0% configured bias",
+      "next": "Next: 45% configured bias",
+      "closedDetails": true,
+      "hudExact": "Bananas: 2,500,000,000,000,000,000,000"
+    },
+    {
+      "edition": "classic",
+      "width": 390,
+      "height": 700,
+      "scrollWidth": 390,
+      "scrollHeight": 700,
+      "outsideCards": 0,
+      "current": "0% configured bias",
+      "next": "Next: 45% configured bias",
+      "closedDetails": true,
+      "hudExact": "Bananas: 2,500,000,000,000,000,000,000"
+    },
+    {
+      "edition": "classic",
+      "width": 360,
+      "height": 560,
+      "scrollWidth": 360,
+      "scrollHeight": 560,
+      "outsideCards": 0,
+      "current": "0% configured bias",
+      "next": "Next: 45% configured bias",
+      "closedDetails": true,
+      "hudExact": "Bananas: 2,500,000,000,000,000,000,000"
+    }
+  ],
+  "errors": [],
+  "saleGeometry": {
+    "bubble": {
+      "left": 32,
+      "right": 352,
+      "top": 391,
+      "bottom": 489.296875,
+      "height": 98.296875
+    },
+    "write": {
+      "left": 93,
+      "right": 227,
+      "top": 503.484375,
+      "bottom": 543.484375,
+      "height": 40
+    },
+    "text": "Your title is ready! Press Write & sell to earn bananas."
+  },
+  "pickup": {
+    "shown": "Collect banana: 125 bananas",
+    "stationary": true,
+    "paid": 125,
+    "manualDelta": 0,
+    "grown": 375,
+    "count": 1
+  },
+  "complete": true,
+  "sourceHashes": {
+    "economy.js": "55f5d493d48774eab0857e75e08894c3bebe63202259123a7a01036d964758a7",
+    "core.js": "af9bed4def371292baf7f080e5684cfd743ea0443569f5b0f9fe1416022b0425",
+    "ops.js": "5f01ce6064c8c0daaa0e6ebdb07abbfb9689be34655443e9425a683756b2fe23",
+    "tour.js": "0376a4df27db797405501840af4ea83a42833af8856018e699807b39d41eec9d",
+    "pickups.js": "b1348042aca4d7701adc09426cc43cb9ba7b8ca407ea7c5f84200d653b971e9b",
+    "ops.css": "51923f4ca50a1a27a1c49cb6422530b479c5c4fee8642d05e3f8f481c5e6a5a1",
+    "pickups.css": "e15b4abb25b358b0734b6f386bd2c5f7d337b0cac082aa6fc32faa4f598f7478",
+    "index.html": "b2f157c5445ca3d5d2cfef3f8b815c572a9d71b84253e5a81f6fd4f407ce1ade",
+    "classic.html": "eb532de1d9642e4db1b12f6a9f7a7acfed1fc552f8a3e48ace1d203f249ec68d",
+    "sw.js": "3bb29652fcf481b7e1f231ebe52aa677bb0d84616a210c85991f1936eda328e5"
+  }
+}

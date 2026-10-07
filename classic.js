@@ -22,6 +22,7 @@
     for (let i = 0; i < 14; i++) {
       const s = document.createElement('span');
       s.textContent = icons[i % icons.length]; s.style.left = rand(0, 100) + '%'; s.style.fontSize = rand(18, 40) + 'px';
+      if (icons[i % icons.length] === '🍌') s.classList.add('ambient-banana');
       s.style.animationDuration = rand(14, 30) + 's'; s.style.animationDelay = -rand(0, 30) + 's'; box.appendChild(s);
     }
     const motes = $('#heroMotes');

@@ -1,0 +1,549 @@
+{
+  "capturedAt": "2026-10-07T16:48:14.800Z",
+  "sourceCommit": "090e1d2143f8eef5df992bd42e59d7f2169b94c5",
+  "url": "http://127.0.0.1:8136/tools/balance.html",
+  "profile": "active",
+  "strategy": "collect",
+  "seed": 2,
+  "activeMinutes": 30,
+  "tune": {},
+  "requestedMinutes": 60,
+  "requestedAwayMinutes": 0,
+  "sessionMinutes": 60,
+  "actualMinutes": 60,
+  "complete": true,
+  "stopped": null,
+  "wallSeconds": 155.48,
+  "errors": [],
+  "report": {
+    "actualMinutes": 60,
+    "awayMinutes": 0,
+    "marks": [
+      [
+        "keeper_bamboo",
+        0
+      ],
+      [
+        "word_1",
+        0.1
+      ],
+      [
+        "titles_1",
+        1.5
+      ],
+      [
+        "sale_1",
+        1.5
+      ],
+      [
+        "typist_1",
+        2
+      ],
+      [
+        "titles_3",
+        2.2
+      ],
+      [
+        "muse_slot",
+        2.2
+      ],
+      [
+        "hold",
+        3.2
+      ],
+      [
+        "titles_6",
+        3.3
+      ],
+      [
+        "kids_1",
+        3.9
+      ],
+      [
+        "hibiscus",
+        12.6
+      ],
+      [
+        "desk_rose",
+        12.6
+      ],
+      [
+        "first_deal",
+        13.8
+      ],
+      [
+        "deal_reprints",
+        13.8
+      ],
+      [
+        "titles_10",
+        15.2
+      ],
+      [
+        "lib_1",
+        16
+      ],
+      [
+        "kids_25",
+        29.8
+      ],
+      [
+        "lib_25",
+        40.2
+      ]
+    ],
+    "samples": [
+      {
+        "min": 10,
+        "elapsedMin": 10,
+        "bananas": 1160,
+        "earned": 1940,
+        "sold": 6,
+        "allSold": 16,
+        "roy": 0.013,
+        "div": 0,
+        "lump": 1936,
+        "royT": 4,
+        "divT": 0,
+        "desks": 1,
+        "paws": 2,
+        "ups": 0,
+        "kids": 10,
+        "lib": 0,
+        "letters": [
+          335,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "bankedWords": 640,
+        "keeperLetters": 1759,
+        "keeperWords": 640,
+        "keepers": [
+          {
+            "on": true,
+            "level": 2
+          },
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "training": {
+          "0": {
+            "key": "paw",
+            "cost": 481,
+            "held": 331,
+            "deficit": 170
+          }
+        },
+        "publisher": 0,
+        "nextDesk": {
+          "id": 1,
+          "price": 2000,
+          "deficit": 840,
+          "passiveWaitMin": 1046.5
+        }
+      },
+      {
+        "min": 20,
+        "elapsedMin": 20,
+        "bananas": 9745,
+        "earned": 25995,
+        "sold": 10,
+        "allSold": 36,
+        "roy": 0.275,
+        "div": 0,
+        "lump": 25903,
+        "royT": 92,
+        "divT": 0,
+        "desks": 2,
+        "paws": 7,
+        "ups": 5,
+        "kids": 19,
+        "lib": 7,
+        "letters": [
+          135,
+          53,
+          null,
+          null,
+          null,
+          null
+        ],
+        "bankedWords": 1642,
+        "keeperLetters": 4889,
+        "keeperWords": 1642,
+        "keepers": [
+          {
+            "on": true,
+            "level": 6
+          },
+          {
+            "on": true,
+            "level": 4
+          },
+          null,
+          null,
+          null,
+          null
+        ],
+        "training": {
+          "0": {
+            "key": "paw",
+            "cost": 745,
+            "held": 131,
+            "deficit": 634
+          },
+          "1": {
+            "key": "paw",
+            "cost": 176,
+            "held": 53,
+            "deficit": 143
+          }
+        },
+        "publisher": 0,
+        "nextDesk": {
+          "id": 2,
+          "price": 25000,
+          "deficit": 15255,
+          "passiveWaitMin": 925.9
+        }
+      },
+      {
+        "min": 30,
+        "elapsedMin": 30,
+        "bananas": 16632,
+        "earned": 37882,
+        "sold": 10,
+        "allSold": 56,
+        "roy": 0.359,
+        "div": 0,
+        "lump": 37599,
+        "royT": 283,
+        "divT": 0,
+        "desks": 2,
+        "paws": 8,
+        "ups": 5,
+        "kids": 25,
+        "lib": 21,
+        "letters": [
+          308,
+          36,
+          null,
+          null,
+          null,
+          null
+        ],
+        "bankedWords": 2872,
+        "keeperLetters": 8870,
+        "keeperWords": 2872,
+        "keepers": [
+          {
+            "on": true,
+            "level": 6
+          },
+          {
+            "on": true,
+            "level": 4
+          },
+          null,
+          null,
+          null,
+          null
+        ],
+        "training": {
+          "0": {
+            "key": "paw",
+            "cost": 745,
+            "held": 308,
+            "deficit": 457
+          },
+          "1": {
+            "key": "paw",
+            "cost": 273,
+            "held": 36,
+            "deficit": 257
+          }
+        },
+        "publisher": 0,
+        "nextDesk": {
+          "id": 2,
+          "price": 25000,
+          "deficit": 8368,
+          "passiveWaitMin": 388.6
+        }
+      },
+      {
+        "min": 40,
+        "elapsedMin": 40,
+        "bananas": 20664,
+        "earned": 41914,
+        "sold": 10,
+        "allSold": 74,
+        "roy": 0.39,
+        "div": 0,
+        "lump": 41406,
+        "royT": 508,
+        "divT": 0,
+        "desks": 2,
+        "paws": 10,
+        "ups": 10,
+        "kids": 40,
+        "lib": 24,
+        "letters": [
+          379,
+          22,
+          null,
+          null,
+          null,
+          null
+        ],
+        "bankedWords": 3855,
+        "keeperLetters": 11744,
+        "keeperWords": 3855,
+        "keepers": [
+          {
+            "on": true,
+            "level": 6
+          },
+          {
+            "on": true,
+            "level": 4
+          },
+          null,
+          null,
+          null,
+          null
+        ],
+        "training": {
+          "0": {
+            "key": "paw",
+            "cost": 1154,
+            "held": 379,
+            "deficit": 795
+          },
+          "1": {
+            "key": "paw",
+            "cost": 423,
+            "held": 22,
+            "deficit": 421
+          }
+        },
+        "publisher": 0,
+        "nextDesk": {
+          "id": 2,
+          "price": 25000,
+          "deficit": 4336,
+          "passiveWaitMin": 185.3
+        }
+      },
+      {
+        "min": 50,
+        "elapsedMin": 50,
+        "bananas": 11414,
+        "earned": 47664,
+        "sold": 10,
+        "allSold": 97,
+        "roy": 0.651,
+        "div": 0,
+        "lump": 46836,
+        "royT": 828,
+        "divT": 0,
+        "desks": 2,
+        "paws": 12,
+        "ups": 10,
+        "kids": 60,
+        "lib": 27,
+        "letters": [
+          843,
+          15,
+          null,
+          null,
+          null,
+          null
+        ],
+        "bankedWords": 5066,
+        "keeperLetters": 15211,
+        "keeperWords": 5066,
+        "keepers": [
+          {
+            "on": true,
+            "level": 6
+          },
+          {
+            "on": true,
+            "level": 4
+          },
+          null,
+          null,
+          null,
+          null
+        ],
+        "training": {
+          "0": {
+            "key": "paw",
+            "cost": 1789,
+            "held": 843,
+            "deficit": 966
+          },
+          "1": {
+            "key": "paw",
+            "cost": 655,
+            "held": 15,
+            "deficit": 660
+          }
+        },
+        "publisher": 0,
+        "nextDesk": {
+          "id": 2,
+          "price": 25000,
+          "deficit": 13586,
+          "passiveWaitMin": 347.6
+        }
+      },
+      {
+        "min": 60,
+        "elapsedMin": 60,
+        "bananas": 18189,
+        "earned": 54439,
+        "sold": 10,
+        "allSold": 126,
+        "roy": 0.713,
+        "div": 0,
+        "lump": 53202,
+        "royT": 1237,
+        "divT": 0,
+        "desks": 2,
+        "paws": 13,
+        "ups": 10,
+        "kids": 87,
+        "lib": 29,
+        "letters": [
+          777,
+          649,
+          null,
+          null,
+          null,
+          null
+        ],
+        "bankedWords": 6588,
+        "keeperLetters": 19504,
+        "keeperWords": 6588,
+        "keepers": [
+          {
+            "on": true,
+            "level": 6
+          },
+          {
+            "on": true,
+            "level": 4
+          },
+          null,
+          null,
+          null,
+          null
+        ],
+        "training": {
+          "0": {
+            "key": "paw",
+            "cost": 2773,
+            "held": 777,
+            "deficit": 2016
+          },
+          "1": {
+            "key": "paw",
+            "cost": 655,
+            "held": 649,
+            "deficit": 26
+          }
+        },
+        "publisher": 0,
+        "nextDesk": {
+          "id": 2,
+          "price": 25000,
+          "deficit": 6811,
+          "passiveWaitMin": 159.1
+        }
+      }
+    ],
+    "final": {
+      "min": 60,
+      "elapsedMin": 60,
+      "bananas": 18189,
+      "earned": 54439,
+      "sold": 10,
+      "allSold": 126,
+      "roy": 0.713,
+      "div": 0,
+      "lump": 53202,
+      "royT": 1237,
+      "divT": 0,
+      "desks": 2,
+      "paws": 13,
+      "ups": 10,
+      "kids": 87,
+      "lib": 29,
+      "letters": [
+        777,
+        649,
+        null,
+        null,
+        null,
+        null
+      ],
+      "bankedWords": 6588,
+      "keeperLetters": 19504,
+      "keeperWords": 6588,
+      "keepers": [
+        {
+          "on": true,
+          "level": 6
+        },
+        {
+          "on": true,
+          "level": 4
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      "training": {
+        "0": {
+          "key": "paw",
+          "cost": 2773,
+          "held": 777,
+          "deficit": 2016
+        },
+        "1": {
+          "key": "paw",
+          "cost": 655,
+          "held": 649,
+          "deficit": 26
+        }
+      },
+      "publisher": 0,
+      "nextDesk": {
+        "id": 2,
+        "price": 25000,
+        "deficit": 6811,
+        "passiveWaitMin": 159.1
+      }
+    }
+  },
+  "omittedSystems": [
+    "Muses",
+    "garden",
+    "golden and rotten catches",
+    "daily crates",
+    "ordinary pickups",
+    "market timing decisions",
+    "challenges",
+    "prestige action",
+    "manual word banking",
+    "interactive onboarding"
+  ]
+}

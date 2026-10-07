@@ -8,12 +8,14 @@
 (function () {
   const D = IMI.ops.dev, bn = IMI.bananas;
   const bandOf = n => (n <= 3 ? 0 : n <= 5 ? 1 : n <= 7 ? 2 : n <= 9 ? 3 : n <= 11 ? 4 : 5);
-  const st = { t0: null, marks: [], seen: {}, samples: [], sec: 0, opts: {} };
+  const st = { marks: [], seen: {}, samples: [], sec: 0, awaySec: 0, keeperLetters: 0, keeperWords: 0, pickupCount: 0, pickupIncome: 0, giftMode: false, opts: {}, training: {} };
   const S = () => D.S();
   const topBand = () => S().desks.reduce((m, d, i) => (d.owned ? i : m), 0);
   const mark = k => { if (!st.seen[k]) { st.seen[k] = true; st.marks.push([k, Math.round(st.sec / 6) / 10]); } };   // minutes, 1 decimal
   function trainDesk(i) {
     const d = S().desks[i]; if (!d.owned) return;
+    delete st.training[i];
+    if (D.tabVisible && !D.tabVisible('training')) return;
     const order = ['paw', 'fing', 'vowel', 'ink', 'paw', 'fing', 'practice', 'stock', 'ribbon', 'paw', 'fing', 'rapid', 'practice', 'vowel', 'ink', 'stock', 'ribbon'];
     const want = [4, 3, 1, 1, 8, 6, 1, 1, 1, 12, 10, 2, (window.__TUNE || {}).BOT_TIERS3 ? 3 : 5, (window.__TUNE || {}).BOT_TIERS3 ? 3 : 5, (window.__TUNE || {}).BOT_TIERS3 ? 3 : 5, (window.__TUNE || {}).BOT_TIERS3 ? 3 : 5, (window.__TUNE || {}).BOT_TIERS3 ? 3 : 5];
     const prev = D.ui.buyN; D.ui.buyN = 1; let on = true;
@@ -21,7 +23,8 @@
       const u = D.UPS.find(x => x.k === key), lvl = key === 'paw' ? d.paws : d.up[key];
       if (lvl >= want[k] || D.upLock(u, d)) continue;
       const plan = D.upPlan(u, d, i, 1), have = D.totalLetters(d);
-      if (have >= plan.cost + 20) { const sel = S().sel; S().sel = i; D.buyUp(key); S().sel = sel; }
+      st.training[i] = { key, cost: plan.cost, held: have, deficit: Math.max(0, plan.cost + 20 - have) };
+      if (have >= plan.cost + 20) { const sel = S().sel; S().sel = i; D.buyUp(key); S().sel = sel; delete st.training[i]; }
       else if (st.opts.strategy === 'hoard' && (key === 'paw' || key === 'fing') && have >= plan.cost * (st.opts.hoardAt == null ? 0.5 : st.opts.hoardAt)) on = false;
       break;                                                       // one purchase per desk per second, in priority order
     }
@@ -29,6 +32,7 @@
   }
   const BT = () => window.__TUNE || {};
   function shop() {
+    if (D.tabVisible && !D.tabVisible('shop')) return;
     const s = S(), have = bn.get(), nextDesk = s.desks.findIndex(d => !d.owned), price = nextDesk >= 0 ? D.DESKS[nextDesk].price : Infinity;
     if (!s.hold && have >= D.SHOP.hold) D.buy('hold');
     if (nextDesk >= 0 && bn.get() >= price) {
@@ -73,15 +77,34 @@
     const BT = window.__TUNE || {};                              // BOT_SELL: 'pub' = buy the assistant and let it sell (rule BOT_PUB_RULE); default is the bot selling by hand at any price
     const viaPub = BT.BOT_SELL === 'pub' && s.pub && s.pub.tier > 0;
     if (viaPub) s.pub.rule = BT.BOT_PUB_RULE || 'fair';
-    else if (!BT.BOT_VISIT || Math.floor(st.sec / 60) % BT.BOT_VISIT === 0) for (const r of D.RECIPES) if (!s.written[r.id] && D.canWrite(r)) D.writeTitle(r.id);   // BOT_VISIT = N: a casual player who only checks in for one minute every N minutes
+    else if ((!D.tabVisible || D.tabVisible('press')) && (!BT.BOT_VISIT || Math.floor(st.sec / 60) % BT.BOT_VISIT === 0)) for (const r of D.RECIPES) if (!s.written[r.id] && D.canWrite(r)) D.writeTitle(r.id);   // BOT_VISIT = N: a casual player who only checks in for one minute every N minutes
+    if (s.intro && s.intro.shop && !s.intro.done && D.completeIntro) D.completeIntro();
+    const pickupEvery = +BT.BOT_PICKUP_EVERY || 0;
+    if (pickupEvery > 0 && st.sec % pickupEvery === 0) {
+      if (!IMI.ops.pickup) throw new Error('This game has no ordinary pickup simulation API');
+      const prev = D.ui.tab; D.ui.tab = 'floor';
+      if (IMI.ops.pickup.eligible()) {
+        const before = bn.get(); IMI.ops.pickup.collect(IMI.ops.pickup.value());
+        const income = bn.get() - before; if (income > 0) { st.pickupCount++; st.pickupIncome += income; }
+      }
+      D.ui.tab = prev;
+    }
+    if (+BT.BOT_GOLD_EVERY > 0 && st.sec % +BT.BOT_GOLD_EVERY === 0) {
+      st.giftMode = true; document.querySelector('.o-gold:not(.rotten)')?.click(); st.giftMode = false;
+    }
     s.desks.forEach((d, i) => trainDesk(i));
     shop(); pitches();
     const activeMin = st.opts.activeMinutes == null ? 180 : st.opts.activeMinutes;
     // idle = a casual finger: 1 tap a second until the first typist is hired, then walks away (opts.idleTps changes the rate)
-    if (st.opts.profile === 'idle' && s.desks[0].paws < 1 && st.sec < 1800) taps(st.opts.idleTps || 1);
+    if (st.opts.profile === 'idle' && (s.desks[0].paws < 1 || (s.intro && !s.intro.words)) && st.sec < 1800) taps(st.opts.idleTps || 1);
     if (st.opts.profile === 'active' && st.sec / 60 < activeMin) taps(s.hold ? Math.max(1, Math.round(D.holdRate(s.desks[0]))) : 3);
     // milestones
     const sold = D.soldCount(), kids = D.kidsSold(); [1, 3, 6, 10, 16, 24].forEach(n => { if (sold >= n) mark('titles_' + n); });
+    if (s.stats.words > 0) mark('word_1');
+    if (Object.keys(s.written).length > 0) mark('sale_1');
+    if (s.pub && s.pub.tier > 0) mark('publisher');
+    if (s.intro && s.intro.train) mark('train_visible');
+    if (s.intro && s.intro.words) mark('words_titles_visible');
     [1, 25, 100].forEach(n => { if (kids >= n) mark('kids_' + n); });
     if (D.libSold) [1, 25, 100, 300].forEach(n => { if (D.libSold() >= n) mark('lib_' + n); });
     if (s.desks[0].paws >= 1) mark('typist_1');
@@ -91,18 +114,44 @@
     ['rose', 'blue', 'amber', 'orchid', 'moon'].forEach((nm, k) => { if (s.desks[k + 1].owned) mark('desk_' + nm); });
     if (s.hold) mark('hold'); if (s.desks[0].keeper.owned) mark('keeper_bamboo');
     if (D.DIVS.some(x => (s.divs[x.id] || 0) > 0)) mark('first_division'); if (D.DIVS.every(x => (s.divs[x.id] || 0) > 0)) mark('all_divisions');
-    if (s.run.earned >= 5e5) mark('first_star'); if (D.starsNow() >= 10) mark('stars_10');
+    if (D.starsNow() >= 1) mark('first_star'); if (D.starsNow() >= 10) mark('stars_10');
     if (s.deals.reprints) mark('deal_reprints'); if (s.lamp) mark('lamp1');
   }
+  function snapshot() {
+    const s = S(), next = s.desks.findIndex(d => !d.owned), income = D.royBase() + D.divBase();
+    const deficit = next < 0 ? 0 : Math.max(0, D.DESKS[next].price - bn.get());
+    const training = Object.fromEntries(Object.entries(st.training).map(([i, plan]) => { const held = D.totalLetters(s.desks[i]); return [i, { ...plan, held, deficit: Math.max(0, plan.cost + 20 - held) }]; }));
+    return { min: st.sec / 60, elapsedMin: (st.sec + st.awaySec) / 60, bananas: Math.round(bn.get()), earned: Math.round(s.run.earned), sold: D.soldCount(), allSold: Object.keys(s.written).length,
+      roy: +D.royBase().toFixed(3), div: +D.divBase().toFixed(3), lump: Math.round(s.stats.lump), royT: Math.round(s.royTotal), divT: Math.round(s.divTotal),
+      desks: s.desks.filter(d => d.owned).length, paws: s.desks.reduce((a, d) => a + d.paws, 0), ups: s.desks.reduce((a, d) => a + Object.values(d.up).reduce((x, y) => x + y, 0), 0), kids: D.kidsSold(), lib: D.libSold ? D.libSold() : 0,
+      letters: s.desks.map(d => d.owned ? D.totalLetters(d) : null), bankedWords: s.stats.words, keeperLetters: st.keeperLetters, keeperWords: st.keeperWords,
+      keepers: s.desks.map((d, i) => d.owned ? { on: d.keeper.on, level: D.keeperLv ? D.keeperLv(i) : 0 } : null), training, publisher: s.pub ? s.pub.tier : 0,
+      pickups: { count: st.pickupCount, income: st.pickupIncome, gameCount: s.stats.pickups || 0 }, pickupEarned: s.stats.pickupEarned || 0, playSecs: s.stats.playSecs || 0, goldCaught: s.gold,
+      manualTaps: s.stats.manual, intro: s.intro ? { ...s.intro } : null,
+      nextDesk: next < 0 ? null : { id: next, price: D.DESKS[next].price, deficit: Math.round(deficit), passiveWaitMin: income > 0 ? +(deficit / income / 60).toFixed(1) : null } };
+  }
   window.Bot = {
-    start(opts) { st.opts = opts || {}; if (!st.opts.strategy) st.opts.strategy = 'collect'; st.sec = 0; st.marks = []; st.seen = {}; st.samples = []; D.ui.tab = 'shop'; if (st.opts.seed) window.__seed(st.opts.seed); },
-    run(minutes) {
-      for (let k = 0; k < minutes * 60; k++) {
-        __advance(1000); st.sec++; act();
-        if (st.sec % 600 === 0) st.samples.push({ min: st.sec / 60, bananas: Math.round(bn.get()), sold: D.soldCount(), roy: +D.royBase().toFixed(1), div: +D.divBase().toFixed(1), earned: Math.round(S().run.earned), lump: Math.round(S().stats.lump), royT: Math.round(S().royTotal), divT: Math.round(S().divTotal), desks: S().desks.filter(d => d.owned).length, paws: S().desks.reduce((a, d) => a + d.paws, 0), ups: S().desks.reduce((a, d) => a + Object.values(d.up).reduce((x, y) => x + y, 0), 0), kids: D.kidsSold() });
-      }
-      return { marks: st.marks, samples: st.samples.slice(-6) };
+    start(opts) {
+      st.opts = opts || {}; if (!st.opts.strategy) st.opts.strategy = 'collect'; st.sec = 0; st.awaySec = 0; st.keeperLetters = 0; st.keeperWords = 0; st.pickupCount = 0; st.pickupIncome = 0; st.giftMode = false; st.training = {}; st.marks = []; st.seen = {}; st.samples = []; D.ui.tab = 'shop';
+      if (st.opts.seed != null) window.__seed(st.opts.seed);
+      // Count keeper deposits before a sale consumes the bank; exclude gifts from optional golden catches.
+      S().bank = new Proxy(S().bank, { set(bank, word, value) { const added = st.giftMode ? 0 : Math.max(0, value - (bank[word] || 0)); st.keeperWords += added; st.keeperLetters += added * word.length; bank[word] = value; return true; } });
     },
-    report() { return { marks: st.marks, samples: st.samples }; }
+    run(minutes) {
+      if (!Number.isFinite(minutes) || minutes < 0) throw new Error('Invalid simulation duration');
+      for (let k = 0; k < Math.round(minutes * 60); k++) {
+        __advance(1000); st.sec++; act();
+        if (st.sec % 600 === 0) st.samples.push(snapshot());
+      }
+      return st.sec / 60;
+    },
+    away(minutes) {
+      if (!Number.isFinite(minutes) || minutes < 0) throw new Error('Invalid away duration');
+      if (typeof __skip !== 'function') throw new Error('Harness requires __skip for offline chronology');
+      const before = snapshot(); __skip(minutes * 60000);
+      const progress = IMI.ops.simulateAway(minutes * 60); st.awaySec += minutes * 60;
+      return { before, progress, after: snapshot() };
+    },
+    report() { return { actualMinutes: st.sec / 60, awayMinutes: st.awaySec / 60, marks: st.marks, samples: st.samples, final: snapshot() }; }
   };
 })();

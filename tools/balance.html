@@ -6,8 +6,12 @@
 <div id="opsRoot"></div><div id="hud"><b id="score">0</b></div><ol id="logList"></ol>
 <!-- ops.js builds its department tabs into the side rail and wires the menu button; the harness only needs somewhere for them to go -->
 <aside id="rail"><button id="railToggle" type="button"></button><nav id="oTabs"></nav></aside>
+<script src="../economy.js"></script>
 <script>
 window.__OPS_HEADLESS = true;
+// Ops runs at the site root; keep its archive requests rooted there in this /tools fixture.
+const siteFetch = window.fetch.bind(window);
+window.fetch = (input, options) => siteFetch(typeof input === 'string' && input.startsWith('library/') ? '../' + input : input, options);
 try { localStorage.clear(); } catch (e) {}
 /* seeded random */
 (function () {
@@ -35,6 +39,7 @@ try { localStorage.clear(); } catch (e) {}
     vnow = end;
   };
   window.__vnow = () => vnow;
+  window.__skip = ms => { vnow += ms; timers.forEach(t => { t.next += ms; }); };
 })();
 /* stub of the page bridge (classic edition, so no sprite engine is needed) */
 (function () {
@@ -43,7 +48,7 @@ try { localStorage.clear(); } catch (e) {}
   window.IMI = {
     edition: 'classic', reduceMotion: true, sfx: new Proxy({}, { get: () => () => {} }), centerOf: () => [0, 0], say() {}, banner() {}, burst() {}, fall() {},
     on() {}, off() {}, emit() {},
-    fmt: n => String(Math.round(n)), screen: () => 'game', onScreen() {}, whenPlaying: f => f(),
+    fmt: Economy.fmt, fmtRate: Economy.rate, exact: Economy.exact, screen: () => 'game', onScreen() {}, whenPlaying: f => f(),
     bananas: { get: () => score, add: n => { score += n; paint(); }, spend: n => { if (n > score) return false; score -= n; paint(); return true; }, earn: n => { score += n; paint(); }, watch: f => watchers.push(f) }
   };
 })();

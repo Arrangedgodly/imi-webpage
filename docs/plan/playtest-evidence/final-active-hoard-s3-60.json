@@ -1,0 +1,669 @@
+{
+  "capturedAt": "2026-10-07T17:16:21.264Z",
+  "sourceCommit": "090e1d2143f8eef5df992bd42e59d7f2169b94c5",
+  "sourceHashes": {
+    "/tools/balance.html": "ca55b5511b12f4f3438cf46541b1ba08d86e75be67d3ab3d47b273465e5afbff",
+    "/economy.js": "55f5d493d48774eab0857e75e08894c3bebe63202259123a7a01036d964758a7",
+    "/world.js": "2465f6fa1d29eac7a3aa717841aabce71b10b7bb9a7a61484795dcec5a9b7695",
+    "/ops.js": "5d668d56246ca0ae43fec34ef606758d61fcba1890f1f8c84842f23c64d4b5cd",
+    "/tools/bot.js": "2a19c7a6f2710765cbe5432d7862d99a9c633690de633ccb926903090a31a14d"
+  },
+  "url": "http://127.0.0.1:8137/tools/balance.html",
+  "profile": "active",
+  "strategy": "hoard",
+  "seed": 3,
+  "activeMinutes": 30,
+  "tune": {},
+  "requestedMinutes": 60,
+  "requestedAwayMinutes": 0,
+  "sessionMinutes": 60,
+  "actualMinutes": 60,
+  "complete": true,
+  "stopped": null,
+  "wallSeconds": 138.967,
+  "errors": [],
+  "report": {
+    "actualMinutes": 60,
+    "awayMinutes": 0,
+    "marks": [
+      [
+        "keeper_bamboo",
+        0
+      ],
+      [
+        "train_visible",
+        0.2
+      ],
+      [
+        "typist_1",
+        0.7
+      ],
+      [
+        "words_titles_visible",
+        0.7
+      ],
+      [
+        "word_1",
+        0.8
+      ],
+      [
+        "titles_1",
+        1.1
+      ],
+      [
+        "sale_1",
+        1.1
+      ],
+      [
+        "titles_3",
+        2.1
+      ],
+      [
+        "muse_slot",
+        2.1
+      ],
+      [
+        "hold",
+        2.9
+      ],
+      [
+        "titles_6",
+        3.1
+      ],
+      [
+        "kids_1",
+        3.5
+      ],
+      [
+        "kids_25",
+        16.9
+      ],
+      [
+        "hibiscus",
+        17.3
+      ],
+      [
+        "desk_rose",
+        17.3
+      ],
+      [
+        "first_deal",
+        21.6
+      ],
+      [
+        "deal_reprints",
+        21.6
+      ],
+      [
+        "titles_10",
+        22.7
+      ],
+      [
+        "kids_100",
+        54.1
+      ]
+    ],
+    "samples": [
+      {
+        "min": 10,
+        "elapsedMin": 10,
+        "bananas": 30300,
+        "earned": 57900,
+        "sold": 6,
+        "allSold": 18,
+        "roy": 0.368,
+        "div": 0,
+        "lump": 57800,
+        "royT": 100,
+        "divT": 0,
+        "desks": 1,
+        "paws": 4,
+        "ups": 5,
+        "kids": 12,
+        "lib": 0,
+        "letters": [
+          90,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "bankedWords": 690,
+        "keeperLetters": 1900,
+        "keeperWords": 690,
+        "keepers": [
+          {
+            "on": true,
+            "level": 3
+          },
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "training": {
+          "0": {
+            "key": "paw",
+            "cost": 577,
+            "held": 90,
+            "deficit": 507
+          }
+        },
+        "publisher": 0,
+        "pickups": {
+          "count": 0,
+          "income": 0,
+          "gameCount": 0
+        },
+        "pickupEarned": 0,
+        "playSecs": 600.000000000002,
+        "goldCaught": 0,
+        "manualTaps": 2226,
+        "intro": {
+          "version": 1,
+          "done": true,
+          "train": true,
+          "words": true,
+          "shop": true,
+          "hireAt": 120
+        },
+        "nextDesk": {
+          "id": 1,
+          "price": 75000,
+          "deficit": 44700,
+          "passiveWaitMin": 2027.2
+        }
+      },
+      {
+        "min": 20,
+        "elapsedMin": 20,
+        "bananas": 4950,
+        "earned": 107550,
+        "sold": 6,
+        "allSold": 33,
+        "roy": 0.643,
+        "div": 0,
+        "lump": 107125,
+        "royT": 425,
+        "divT": 0,
+        "desks": 2,
+        "paws": 11,
+        "ups": 6,
+        "kids": 27,
+        "lib": 0,
+        "letters": [
+          1878,
+          76,
+          null,
+          null,
+          null,
+          null
+        ],
+        "bankedWords": 1446,
+        "keeperLetters": 4018,
+        "keeperWords": 1446,
+        "keepers": [
+          {
+            "on": false,
+            "level": 3
+          },
+          {
+            "on": false,
+            "level": 0
+          },
+          null,
+          null,
+          null,
+          null
+        ],
+        "training": {
+          "0": {
+            "key": "paw",
+            "cost": 2149,
+            "held": 1878,
+            "deficit": 291
+          },
+          "1": {
+            "key": "fing",
+            "cost": 64,
+            "held": 76,
+            "deficit": 8
+          }
+        },
+        "publisher": 0,
+        "pickups": {
+          "count": 0,
+          "income": 0,
+          "gameCount": 0
+        },
+        "pickupEarned": 0,
+        "playSecs": 1199.9999999994563,
+        "goldCaught": 0,
+        "manualTaps": 4626,
+        "intro": {
+          "version": 1,
+          "done": true,
+          "train": true,
+          "words": true,
+          "shop": true,
+          "hireAt": 120
+        },
+        "nextDesk": {
+          "id": 2,
+          "price": 750000,
+          "deficit": 745050,
+          "passiveWaitMin": 19318.8
+        }
+      },
+      {
+        "min": 30,
+        "elapsedMin": 30,
+        "bananas": 175150,
+        "earned": 518925,
+        "sold": 10,
+        "allSold": 53,
+        "roy": 6.71,
+        "div": 0,
+        "lump": 515350,
+        "royT": 3575,
+        "divT": 0,
+        "desks": 2,
+        "paws": 15,
+        "ups": 16,
+        "kids": 43,
+        "lib": 0,
+        "letters": [
+          4829,
+          58,
+          null,
+          null,
+          null,
+          null
+        ],
+        "bankedWords": 2390,
+        "keeperLetters": 6713,
+        "keeperWords": 2390,
+        "keepers": [
+          {
+            "on": false,
+            "level": 6
+          },
+          {
+            "on": true,
+            "level": 3
+          },
+          null,
+          null,
+          null,
+          null
+        ],
+        "training": {
+          "0": {
+            "key": "paw",
+            "cost": 5164,
+            "held": 4829,
+            "deficit": 355
+          },
+          "1": {
+            "key": "paw",
+            "cost": 423,
+            "held": 58,
+            "deficit": 385
+          }
+        },
+        "publisher": 0,
+        "pickups": {
+          "count": 0,
+          "income": 0,
+          "gameCount": 0
+        },
+        "pickupEarned": 0,
+        "playSecs": 1799.9999999989107,
+        "goldCaught": 0,
+        "manualTaps": 7022,
+        "intro": {
+          "version": 1,
+          "done": true,
+          "train": true,
+          "words": true,
+          "shop": true,
+          "hireAt": 120
+        },
+        "nextDesk": {
+          "id": 2,
+          "price": 750000,
+          "deficit": 574850,
+          "passiveWaitMin": 1427.9
+        }
+      },
+      {
+        "min": 40,
+        "elapsedMin": 40,
+        "bananas": 190375,
+        "earned": 621625,
+        "sold": 10,
+        "allSold": 78,
+        "roy": 7.522,
+        "div": 0,
+        "lump": 613775,
+        "royT": 7850,
+        "divT": 0,
+        "desks": 2,
+        "paws": 18,
+        "ups": 16,
+        "kids": 68,
+        "lib": 0,
+        "letters": [
+          3071,
+          482,
+          null,
+          null,
+          null,
+          null
+        ],
+        "bankedWords": 3672,
+        "keeperLetters": 10270,
+        "keeperWords": 3672,
+        "keepers": [
+          {
+            "on": true,
+            "level": 6
+          },
+          {
+            "on": false,
+            "level": 4
+          },
+          null,
+          null,
+          null,
+          null
+        ],
+        "training": {
+          "0": {
+            "key": "paw",
+            "cost": 12406,
+            "held": 3071,
+            "deficit": 9355
+          },
+          "1": {
+            "key": "paw",
+            "cost": 655,
+            "held": 482,
+            "deficit": 193
+          }
+        },
+        "publisher": 0,
+        "pickups": {
+          "count": 0,
+          "income": 0,
+          "gameCount": 0
+        },
+        "pickupEarned": 0,
+        "playSecs": 2399.9999999999654,
+        "goldCaught": 0,
+        "manualTaps": 7022,
+        "intro": {
+          "version": 1,
+          "done": true,
+          "train": true,
+          "words": true,
+          "shop": true,
+          "hireAt": 120
+        },
+        "nextDesk": {
+          "id": 2,
+          "price": 750000,
+          "deficit": 559625,
+          "passiveWaitMin": 1240.1
+        }
+      },
+      {
+        "min": 50,
+        "elapsedMin": 50,
+        "bananas": 271825,
+        "earned": 703075,
+        "sold": 10,
+        "allSold": 97,
+        "roy": 8.13,
+        "div": 0,
+        "lump": 690475,
+        "royT": 12600,
+        "divT": 0,
+        "desks": 2,
+        "paws": 20,
+        "ups": 22,
+        "kids": 87,
+        "lib": 0,
+        "letters": [
+          1647,
+          76,
+          null,
+          null,
+          null,
+          null
+        ],
+        "bankedWords": 4685,
+        "keeperLetters": 13089,
+        "keeperWords": 4685,
+        "keepers": [
+          {
+            "on": false,
+            "level": 6
+          },
+          {
+            "on": true,
+            "level": 4
+          },
+          null,
+          null,
+          null,
+          null
+        ],
+        "training": {
+          "0": {
+            "key": "fing",
+            "cost": 1718,
+            "held": 1647,
+            "deficit": 91
+          },
+          "1": {
+            "key": "stock",
+            "cost": 80,
+            "held": 76,
+            "deficit": 24
+          }
+        },
+        "publisher": 0,
+        "pickups": {
+          "count": 0,
+          "income": 0,
+          "gameCount": 0
+        },
+        "pickupEarned": 0,
+        "playSecs": 3000.000000002148,
+        "goldCaught": 0,
+        "manualTaps": 7022,
+        "intro": {
+          "version": 1,
+          "done": true,
+          "train": true,
+          "words": true,
+          "shop": true,
+          "hireAt": 120
+        },
+        "nextDesk": {
+          "id": 2,
+          "price": 750000,
+          "deficit": 478175,
+          "passiveWaitMin": 980.2
+        }
+      },
+      {
+        "min": 60,
+        "elapsedMin": 60,
+        "bananas": 425175,
+        "earned": 856425,
+        "sold": 10,
+        "allSold": 130,
+        "roy": 9.102,
+        "div": 0,
+        "lump": 838675,
+        "royT": 17750,
+        "divT": 0,
+        "desks": 2,
+        "paws": 21,
+        "ups": 38,
+        "kids": 120,
+        "lib": 0,
+        "letters": [
+          19298,
+          508,
+          null,
+          null,
+          null,
+          null
+        ],
+        "bankedWords": 6427,
+        "keeperLetters": 17918,
+        "keeperWords": 6427,
+        "keepers": [
+          {
+            "on": true,
+            "level": 6
+          },
+          {
+            "on": true,
+            "level": 4
+          },
+          null,
+          null,
+          null,
+          null
+        ],
+        "training": {
+          "1": {
+            "key": "paw",
+            "cost": 1574,
+            "held": 508,
+            "deficit": 1086
+          }
+        },
+        "publisher": 0,
+        "pickups": {
+          "count": 0,
+          "income": 0,
+          "gameCount": 0
+        },
+        "pickupEarned": 0,
+        "playSecs": 3600.000000004331,
+        "goldCaught": 0,
+        "manualTaps": 7022,
+        "intro": {
+          "version": 1,
+          "done": true,
+          "train": true,
+          "words": true,
+          "shop": true,
+          "hireAt": 120
+        },
+        "nextDesk": {
+          "id": 2,
+          "price": 750000,
+          "deficit": 324825,
+          "passiveWaitMin": 594.8
+        }
+      }
+    ],
+    "final": {
+      "min": 60,
+      "elapsedMin": 60,
+      "bananas": 425175,
+      "earned": 856425,
+      "sold": 10,
+      "allSold": 130,
+      "roy": 9.102,
+      "div": 0,
+      "lump": 838675,
+      "royT": 17750,
+      "divT": 0,
+      "desks": 2,
+      "paws": 21,
+      "ups": 38,
+      "kids": 120,
+      "lib": 0,
+      "letters": [
+        19298,
+        508,
+        null,
+        null,
+        null,
+        null
+      ],
+      "bankedWords": 6427,
+      "keeperLetters": 17918,
+      "keeperWords": 6427,
+      "keepers": [
+        {
+          "on": true,
+          "level": 6
+        },
+        {
+          "on": true,
+          "level": 4
+        },
+        null,
+        null,
+        null,
+        null
+      ],
+      "training": {
+        "1": {
+          "key": "paw",
+          "cost": 1574,
+          "held": 508,
+          "deficit": 1086
+        }
+      },
+      "publisher": 0,
+      "pickups": {
+        "count": 0,
+        "income": 0,
+        "gameCount": 0
+      },
+      "pickupEarned": 0,
+      "playSecs": 3600.000000004331,
+      "goldCaught": 0,
+      "manualTaps": 7022,
+      "intro": {
+        "version": 1,
+        "done": true,
+        "train": true,
+        "words": true,
+        "shop": true,
+        "hireAt": 120
+      },
+      "nextDesk": {
+        "id": 2,
+        "price": 750000,
+        "deficit": 324825,
+        "passiveWaitMin": 594.8
+      }
+    }
+  },
+  "pickupEverySeconds": 0,
+  "goldCheckEverySeconds": 0,
+  "omittedSystems": [
+    "Muses",
+    "garden",
+    "golden and rotten catches",
+    "daily crates",
+    "ordinary pickups",
+    "market timing decisions",
+    "challenges",
+    "prestige action",
+    "manual word banking",
+    "interactive onboarding"
+  ]
+}

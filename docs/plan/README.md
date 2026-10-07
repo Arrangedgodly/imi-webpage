@@ -4,6 +4,8 @@ This folder is the work queue. Each `NN-*.md` file is one self-contained task fo
 
 ## Order of work
 
+The implemented batch is [14: Brother playtest implementation and roadmap](14-playtest-roadmap.md). It records completed work packets, acceptance evidence, and follow-up player checks. Its required first-run introduction supersedes task 09's older Skip and immediate-Train requirements. Keep `gemini-art/` outside this work.
+
 | # | Task | Size | Depends on |
 |---|---|---|---|
 | 01 | Settings button in the game (Pixel/Classic switch, sound, reset) | S | none |
@@ -103,3 +105,5 @@ Balance simulation (virtual clock, plays hours in seconds): see `BALANCE.md`. Qu
 ## Reporting back
 
 End your session by (1) updating the task file's Status and Handoff notes, (2) listing files changed, (3) stating what you verified (screens/sizes/editions) and what you could not.
+
+Playtest evidence: [baseline](playtest-baseline.md), [final balance comparison](playtest-results.md), and [browser acceptance](playtest-evidence/browser-acceptance.json). PT-07 remains deferred.

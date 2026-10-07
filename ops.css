@@ -3,6 +3,8 @@
    screen; the other panels scroll inside themselves. Shared layout first, then html[data-style="pixel"] (sprite frames from
    pixel.js) and html[data-style="classic"] (smooth). */
 #opsRoot { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.toy[hidden] { display: none; }
+.o-desk .o-ktog[hidden] { display: none; }
 .o-wrap { --tw: #78d9a0; --tw-font: inherit; position: relative; flex: 1; min-height: 0; width: 100%; max-width: 1040px; margin: 0 auto; padding: max(8px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) 10px; display: flex; flex-direction: column; gap: 8px; }
 .o-wrap * { box-sizing: border-box; }
 .o-wrap button { cursor: pointer; font: inherit; color: inherit; }
@@ -1105,12 +1107,11 @@ html[data-style="pixel"] .o-tw.p-bell.ding .o-bell { animation-timing-function: 
 .o-spool.l { left: -50px; } .o-spool.r { right: -50px; }
 .o-tw.p-ribbon2 .o-spool.r { --ink2: #1a0f14; box-shadow: inset 0 0 0 8px #c0283a; }
 html[data-style="pixel"] .o-tw.p-spools .o-spool { border-radius: 30%; animation-timing-function: steps(8); }
-/* Quick fingers 3+: brass key rings; 7+: gold keys */
+/* Quick fingers 3+: brass key rings; gold key fill belongs to the timed buff. */
 html[data-style="pixel"] .o-tw.p-brass .o-key { border-color: #8a5a12; box-shadow: 0 4px 0 #5a3517, inset 0 -4px 0 #dccb9c, inset 0 3px 0 #fff, 0 0 0 2px #d9a53a; }
 html[data-style="classic"] .o-tw.p-brass .o-key { border-color: #b8862a; box-shadow: 0 4px 0 #6b4a12, 0 0 0 2px #e0b04a; }
-.o-tw.p-gold .o-key, .o-tw.p-gold .o-space { background: linear-gradient(180deg, #fff6c0, #ffd84a); color: #5a3517; }
 /* Vowel rhythm: vowels wear green caps */
-.o-tw.p-vowels .o-key:is([data-k="A"], [data-k="E"], [data-k="I"], [data-k="O"], [data-k="U"]) { background: #d6f5b8; color: #17481f; }
+.o-stage:not(.golden) .o-tw.p-vowels .o-key:is([data-k="A"], [data-k="E"], [data-k="I"], [data-k="O"], [data-k="U"]) { background: #d6f5b8; color: #17481f; }
 /* A word keeper: a status light on the body, green while it collects */
 .o-tw.p-led .o-led { display: block; z-index: 3; left: 10px; top: -15px; width: 10px; height: 10px; background: #5a1a1a; border: 2px solid #1a0f14; }
 .o-tw.p-ledon .o-led { background: #7be05a; box-shadow: 0 0 6px 2px rgba(123,224,90,.7); animation: o-blink 1.6s steps(1) infinite; }
@@ -1215,10 +1216,20 @@ html[data-style="pixel"] .o-stage.holding::after { font-family: var(--font-px); 
 html[data-style="classic"] .o-stage.holding::after { font-family: var(--font-display); border-radius: 99px; border-width: 2px; }
 @media (max-width: 720px) { .o-stage.holding::after { left: 6px; } }
 
-/* ---- keys the focused title still needs glow; machine cards blink at their typing rate ---- */
+/* ---- ingredient hints stay blue while Golden Keys fills the keyboard gold ---- */
 .o-key.want { position: relative; }
-.o-key.want::after { content: ''; position: absolute; inset: -5px; border: 3px solid #ffd23a; pointer-events: none; }   /* static: up to 26 keys blinking forever cost a style update each, every frame */
-html[data-style="classic"] .o-key.want::after { border-radius: 50%; }
+.o-key.want::after { content: ''; position: absolute; left: 3px; right: 3px; bottom: 2px; height: 3px; background: #176c9e; pointer-events: none; }
+html[data-style="pixel"] .o-key.want::after { box-shadow: 0 1px 0 #fff6d6; }
+html[data-style="classic"] .o-key.want::after { border-radius: 3px; }
+.o-keyhelp { margin-left: auto; min-height: 40px; flex: none; }
+.o-upcurrent { color: #a9e6ff; }
+.o-upnext { opacity: .85; }
+.o-updetail { font-size: .85em; }
+.o-updetail summary { cursor: pointer; color: #bfd7c7; }
+.o-updetail p { margin-top: 8px; }
+html[data-style="pixel"] .o-upcurrent { font-size: 23px; }
+html[data-style="classic"] .o-upcurrent { font-size: 18px; font-weight: 700; }
+.o-desk [hidden] { display: none; }
 .o-desk { position: relative; }
 .o-dact { position: absolute; top: 4px; right: 6px; width: 8px; height: 8px; background: #7be05a; box-shadow: 0 0 0 2px #1a0f14, 0 0 6px 1px rgba(123,224,90,.7); }
 .o-desk[aria-pressed="true"] .o-dact { animation: o-blink var(--spd) steps(1) infinite; }   /* only the machine you are watching blinks at its typing rate */
@@ -1269,7 +1280,7 @@ html[data-style="classic"] .o-subtabs button[aria-selected="true"] { background:
 .tour-ring[hidden], .tour-bub[hidden] { display: none; }
 .tour-ring.still { animation: none; }
 @keyframes tour-pulse { 50% { box-shadow: 0 0 0 3px rgba(26,15,20,.75), 0 0 26px 10px rgba(255,210,58,.9); } }
-.tour-bub { position: fixed; z-index: 311; width: min(320px, calc(100vw - 16px)); display: flex; gap: 8px; align-items: flex-start; color: #3a210d; }
+.tour-bub { position: fixed; z-index: 311; width: min(320px, calc(100vw - 16px)); max-height: calc(100dvh - 16px); overflow-y: auto; display: flex; gap: 8px; align-items: flex-start; color: #3a210d; }
 .tour-bub[data-kind="tip"] { width: min(300px, calc(100vw - 16px)); }
 .tour-mk { flex: none; display: grid; place-items: center; width: 34px; min-height: 34px; font-size: 26px; line-height: 1; }
 .tour-body { flex: 1; min-width: 0; }

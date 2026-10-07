@@ -14,10 +14,10 @@ A monkey-themed incremental browser game. Work the typewriter, hire a crew, bank
 
 1. Choose **Play** and start at the Bamboo Classic typewriter.
 2. Click or tap the typewriter, or focus its stage and press **Space / Enter**, to generate random letters.
-3. Open **Train** to hire your first typist once you have the required letters.
-4. In **Words**, turn available letters into valid words. Letters belong to individual desks; completed words enter a shared bank.
+3. After 25 manual taps, **Train** appears. Spend 100 letters to hire your first typist.
+4. Make ten more manual taps after hiring to open **Words** and **Titles** together. Your keeper starts banking words for the shared goal; pause it to save letters for training.
 5. Open **Titles** to inspect a recipe. When its exact word requirements are available, **Write & sell** consumes them to publish that in-game title.
-6. Reinvest bananas in the **Shop**, new machines, and automation. Published titles can keep earning royalties.
+6. The first sale opens **Shop**. Reinvest bananas in new machines and automation. Published titles keep earning royalties; finish the required coach to complete your first shift.
 
 This is an incremental production game, not a free-text typing test. Clicking the machine generates letters; it does not ask you to transcribe a displayed sentence. Hold-to-type becomes available through a shop upgrade.
 
@@ -37,7 +37,7 @@ This is an incremental production game, not a free-text typing test. Clicking th
 | **Muses** | Purchase and seat patrons that modify production. |
 | **Awards** | Review statistics, awards, prestige, and challenge progress. |
 
-On mobile, the last four departments are collected under **More**. The menu button returns to the title screen; Escape also returns from gameplay when a modal is not taking precedence.
+Departments appear in the side rail as progression unlocks them. On narrow screens, the menu expands the rail into labelled controls. The menu button returns to the title screen; Escape also returns from gameplay when a modal is not taking precedence.
 
 ### Machines change what you can make
 
@@ -54,7 +54,7 @@ Machines are purchased in order, and later machines start with a typist. They al
 
 ### Put the crew to work
 
-Typists produce letters automatically and develop through traits, training, and levels. Keepers can then bank words, but their focus and stock targets matter: the default target is zero. Set the words or recipe you need rather than assuming a newly purchased keeper will build unlimited stock.
+Typists produce letters automatically and develop through traits, training, and levels. After their introduction, free keepers chase the shared title goal. Pause a keeper to save letters for training, or use Words to set additional stock targets. Upgrade cards show the active effect and the next purchase result; How it works expands the conditions and modifiers.
 
 The toys in the side menu also interact with the game. A banana snack can accelerate typists and a coconut can grant letters. The weather and day/night toys are read-only **gauges**: the sky follows the game clock (`world.js`, a day is 14 real minutes: 9 day, 1 dusk, 3 night, 1 dawn; weather changes every 2.5 minutes), the same for everyone and computed from the wall clock, so nothing is saved and time away counts. Each gauge shows a countdown to the next change and tapping it reads the forecast; the Shop barometer (two tiers) extends the forecast and names the titles each change lifts. The sky drives the rights market, some typists (Night Owl, Rain Lover, storms) and the Floor's sky chip. The sound toggle controls synthesized effects. The menu's “banana” typing hint is an Easter egg, separate from the main typewriter controls.
 
@@ -196,3 +196,12 @@ These simulations are not a complete regression suite. They do not cover every l
 | Standalone Library | `library.html`, `library.js`, `library.css`, `library/` |
 | Presentation switching | `style-swap.js` |
 | Balance tools | `tools/`, `BALANCE.md` |
+
+
+## Brother playtest update
+
+The first-run coach is required; experienced saves keep their learned pages. Blue key underlines identify missing ingredients, while the whole gold keyboard means Golden Keys is active: each manual tap produces two letters. Floor's Key guide explains the existing streak rewards.
+
+Ordinary room bananas are collectible after the introduction. A catch starts at 125 bananas in the new larger economy, grows with visible gameplay time, and stays useful through a sustained-income floor. Golden and rotten bananas retain their separate effects. Low effects and reduced motion offer stationary ordinary pickups.
+
+Banana income and costs use real x25 units, with additional machine-price tuning. Old balances and monetary statistics migrate once; letter counts and Legacy stars stay in their own units. Compact values use K/M/B/T/Qa and scientific notation, with exact prices and HUD values available through accessible labels and hover text. [The implementation roadmap](docs/plan/14-playtest-roadmap.md) and [measured comparisons](docs/plan/playtest-results.md) record the final values and verification limits.

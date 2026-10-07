@@ -1,0 +1,55 @@
+{
+  "capturedAt": "2026-10-07T17:37:31.903Z",
+  "checks": [
+    {
+      "name": "normal effects offers animated pickups",
+      "passed": true
+    },
+    {
+      "name": "real keyboard Enter collects without typing",
+      "passed": true
+    },
+    {
+      "name": "repeated catches leave bounded DOM",
+      "passed": true
+    },
+    {
+      "name": "prestige discards live old pickup and keeps correct seed grant",
+      "passed": true
+    },
+    {
+      "name": "gameplay pickup clock excludes the menu",
+      "passed": true
+    },
+    {
+      "name": "menu transition clears pickup",
+      "passed": true
+    },
+    {
+      "name": "14-second expiry removes pickup without paying",
+      "passed": true
+    },
+    {
+      "name": "existing 100-tap bonus pays real x25 units",
+      "passed": true
+    },
+    {
+      "name": "normal effects runtime has no uncaught errors",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "complete": true,
+  "sourceHashes": {
+    "economy.js": "55f5d493d48774eab0857e75e08894c3bebe63202259123a7a01036d964758a7",
+    "core.js": "af9bed4def371292baf7f080e5684cfd743ea0443569f5b0f9fe1416022b0425",
+    "ops.js": "5f01ce6064c8c0daaa0e6ebdb07abbfb9689be34655443e9425a683756b2fe23",
+    "tour.js": "0376a4df27db797405501840af4ea83a42833af8856018e699807b39d41eec9d",
+    "pickups.js": "b1348042aca4d7701adc09426cc43cb9ba7b8ca407ea7c5f84200d653b971e9b",
+    "ops.css": "51923f4ca50a1a27a1c49cb6422530b479c5c4fee8642d05e3f8f481c5e6a5a1",
+    "pickups.css": "e15b4abb25b358b0734b6f386bd2c5f7d337b0cac082aa6fc32faa4f598f7478",
+    "index.html": "b2f157c5445ca3d5d2cfef3f8b815c572a9d71b84253e5a81f6fd4f407ce1ade",
+    "classic.html": "eb532de1d9642e4db1b12f6a9f7a7acfed1fc552f8a3e48ace1d203f249ec68d",
+    "sw.js": "3bb29652fcf481b7e1f231ebe52aa677bb0d84616a210c85991f1936eda328e5"
+  }
+}

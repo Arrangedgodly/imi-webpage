@@ -11,27 +11,33 @@
   const TAB_NAME = { floor: 'Floor', training: 'Train', lab: 'Words', press: 'Titles', shop: 'Shop' };
 
   /* ---- persistence ---- */
-  let T = { step: 0, done: false, tips: {}, tipsOff: false }, fresh = true;
-  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === 'object') { T = { ...T, ...s, tips: { ...(s.tips || {}) } }; fresh = false; } } catch { /* corrupt: start over */ }
+  let T = { step: 0, done: false, tips: {}, tipsOff: false };
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === 'object') { T = { ...T, ...s, tips: { ...(s.tips || {}) } }; } } catch { /* corrupt: start over */ }
   const store = () => { try { localStorage.setItem(KEY, JSON.stringify(T)); } catch { /* storage blocked */ } };
-  if (fresh && snap().typed >= 200) { T.done = true; store(); }       // an existing save already knows the ropes
+  if (!IMI.ops.introActive()) T.done = true;
+  else if (T.version !== 2 || T.done) T = { ...T, version: 2, step: 0, done: false };
+  store();
 
   /* ---- the script. text: 1-2 short lines. done(s): the player did the thing (so a reload or a head start skips it).
         next: also offer a Next button. view(s): swap target/text for the current state. hint: nudge a slow player. ---- */
   const STEPS = [
-    { id: 'tap', tab: 'floor', target: '#oStage', text: 'Tap the typewriter (or press Space) to type letters.', done: s => s.typed >= 30 },
-    { id: 'tray', tab: 'floor', target: '#oTray', text: 'Letters collect here. Each typewriter keeps its own.', next: true },
-    { id: 'hire', tab: 'training', target: '.o-btn[data-act="up"][data-k="paw"]', text: 'Spend letters to hire a typist who types for you.', done: s => s.paws > 0,
-      view: s => (s.letters < s.hireCost ? { tab: null, target: '#oStage', text: `Hiring costs ${s.hireCost} letters. Keep tapping!` } : null) },
-    { id: 'work', tab: 'floor', target: '#oStage', text: 'Your typist works on its own. Keep tapping to go faster.', next: true },
-    { id: 'words', tab: 'lab', target: '#oKeepers', text: 'Keepers turn letters into words automatically, working toward your goal.', next: true },
-    { id: 'sell', tab: 'press', target: '#oGoal', text: 'A goal is a title. When all its words are banked, press Write & sell.', done: s => s.sold >= 1,
-      view: s => (s.ready ? { target: '#o-press .o-btn[data-act="write"]:not(:disabled)', text: 'Ready! Press Write & sell.' } : null),
-      hint: [60, 'Tap faster or hire more typists.'] },
-    { id: 'shop', tab: 'shop', target: '.o-btn[data-act="buy"][data-what="desk"][data-i="1"]', text: 'Bananas! Spend them on a new typewriter.', done: s => s.owned >= 2, next: true,
-      view: s => (s.bananas < s.deskPrice ? { text: `Bananas! Save up ${s.deskPrice.toLocaleString('en-US')} for a new typewriter.` } : null) },
-    { id: 'toys', tab: null, target: '#railToggle', text: 'The menu button holds the snack and coconut boosts, plus gauges for the weather and time of day. The sky runs on its own clock and changes what sells.', next: true },
-    { id: 'end', tab: null, target: '#railToggle', text: 'More departments appear in the side bar as you grow. Replay this tour in Settings, under the menu button.', next: true, last: true }
+    { id: 'tap', tab: 'floor', target: '#oStage', text: 'Tap the typewriter, or press Space or Enter, for random letters. Make 25 taps to open Train.', done: s => s.intro.train,
+      view: s => s.combo >= 10 ? { text: 'A 10-tap streak earns 3 bonus letters. At 25, typists get double speed for 15s. Keep tapping to open Train.' } : null },
+    { id: 'hire', tab: 'training', target: '.o-btn[data-act="up"][data-k="paw"]', text: 'Train is open! Spend letters to hire your first automatic typist.', done: s => s.paws > 0,
+      view: s => s.letters < s.hireCost ? { tab: 'floor', target: '#oStage', text: `Your first hire costs ${s.hireCost} letters. Keep tapping; your keeper leaves these letters for hiring.` } : null },
+    { id: 'work', tab: 'floor', target: '#oStage', text: 'Your typist works automatically. Make 10 more manual taps to introduce your keeper.', done: s => s.intro.words },
+    { id: 'words', tab: 'lab', target: '#oKeepers', text: 'Words and Titles are open! Your keeper now banks words. Pause it to save letters for Train.', next: true },
+    { id: 'sell', tab: 'press', target: '#oGoal', text: 'Blue key underlines mark needed letters. Taps stay random. Bank every word in the goal, then Write & sell.', done: s => s.sold >= 1,
+      view: s => {
+        if (!s.ready) return null;
+        if ($('#o-press .o-btn[data-act="write"]:not(:disabled)')) return { target: '#o-press .o-btn[data-act="write"]:not(:disabled)', text: 'Your title is ready! Press Write & sell to earn bananas.' };
+        if ($('#oLibQ')?.value.trim()) return { target: '#oLibQ', text: 'A title is ready. Clear the title search to find it.' };
+        if ($('#o-press [data-act="libcap"][data-c="all"]')?.getAttribute('aria-pressed') === 'false') return { target: '#o-press [data-act="libcap"][data-c="all"]', text: 'A title is ready. Choose All under Word max to find it.' };
+        return { target: '#o-press [data-act="libf"][data-f="ready"]', text: 'A title is ready. Choose Ready to find it, then Write & sell.' };
+      },
+      hint: [60, 'You can return to Floor and tap while the keeper works.'] },
+    { id: 'shop', tab: 'shop', target: '.o-btn[data-act="buy"][data-what="desk"][data-i="1"]', text: 'Shop is open! Bananas buy machines and boosts. Save for your second typewriter; you can finish this introduction now.', next: true },
+    { id: 'end', tab: null, target: '#railToggle', text: 'Keep typing and selling. More departments open as you grow. Floor has a Key guide. The menu holds Settings, the edition switch and tutorial Replay.', next: true, last: true }
   ];
 
   /* ---- one-shot tips (after the tour). when(s): condition; ev: an event that raises it ---- */
@@ -85,8 +91,8 @@
   function place(tr) {
     const vw = innerWidth, vh = innerHeight, bw = bub.offsetWidth, bh = bub.offsetHeight, m = 8, gap = 14;
     const lo = m, tabTop = vh;                                 // the departments sit in a side rail now, so the bubble may use the full height
-    const rl = ($('#rail') ? $('#rail').getBoundingClientRect().right : 0) + m;       // keep the bubble off the side rail
-    const clampX = cx => Math.max(rl, Math.min(vw - bw - m, cx - bw / 2));
+    const rl = Math.min(vw - bw - m, ($('#rail') ? $('#rail').getBoundingClientRect().right : 0) + m);       // keep the bubble off the side rail
+    const clampX = cx => Math.max(m, rl, Math.min(vw - bw - m, cx - bw / 2));
     const cx = tr ? tr.left + tr.width / 2 : vw / 2;
     const c = {
       below: tr && { x: clampX(cx), y: tr.bottom + gap, side: 'below' },
@@ -117,7 +123,7 @@
       const st = STEPS[T.step]; if (!st) return finish();
       const v = stepView(st, snap());
       target = resolve(v.target); text = v.text; num = `${T.step + 1}/${STEPS.length}`; canNext = !!st.next || replaying; last = !!st.last || (replaying && T.step === STEPS.length - 1);
-      skipEl.hidden = false; skipEl.textContent = 'Skip'; nextEl.hidden = !canNext || !!v.detour; nextEl.textContent = last ? 'Done' : 'Next';
+      skipEl.hidden = !replaying && IMI.ops.introActive(); skipEl.textContent = 'Skip'; nextEl.hidden = !canNext || !!v.detour; nextEl.textContent = last ? 'Done' : 'Next';
     } else {
       if (!tip) return hide();
       target = resolve(tip.target); text = tip.text; skipEl.hidden = true; nextEl.hidden = false; nextEl.textContent = 'Got it'; nEl.textContent = '';
@@ -126,7 +132,7 @@
     const key = mode + (mode === 'tour' ? T.step : tip.id) + '|' + text;
     const changed = key !== drawKey;
     if (changed) { drawKey = key; txtEl.innerHTML = text; }
-    if (changed && target) { const r = target.getBoundingClientRect(); if (r.bottom > innerHeight || r.top < 0) target.scrollIntoView({ block: 'nearest' }); }   // inside the pane; the page itself never scrolls
+    if (changed && target) { const r = target.getBoundingClientRect(); if (r.bottom > innerHeight || r.top < 0) target.scrollIntoView({ block: 'nearest', behavior: 'instant' }); }   // inside the pane; the page itself never scrolls
     bub.dataset.kind = mode; bub.hidden = false;
     const tr = target ? target.getBoundingClientRect() : null;
     if (tr) {
@@ -143,7 +149,7 @@
     const st = STEPS[T.step]; if (st && st.hint) hintTimer = setTimeout(() => draw(), st.hint[0] * 1000 + 50);
   }
   function finish() {
-    clearTimeout(hintTimer); T.done = true; replaying = false; mode = 'idle'; lastTip = performance.now(); store(); hide();
+    clearTimeout(hintTimer); if (!replaying) IMI.ops.completeIntro(); T.done = true; replaying = false; mode = 'idle'; lastTip = performance.now(); store(); hide();
   }
   function advance(dir = 1) {
     T.step += dir; store(); arm();
@@ -161,9 +167,10 @@
   nextEl.addEventListener('click', () => { if (mode === 'tour') advance(1); else dismissTip(); draw(); });
   skipEl.addEventListener('click', () => skip());
 
-  function skip() { if (mode === 'tour') { finish(); IMI.say('Tour skipped. Replay it any time from Settings.'); } }
+  function skip() { if (mode === 'tour' && (replaying || !IMI.ops.introActive())) { finish(); IMI.say('Tour skipped. Replay it any time from Settings.'); } }
   function replay() {
-    replaying = true; T.step = 0; T.done = false; mode = 'tour'; store(); arm(); drawKey = '';
+    if (IMI.ops.introActive()) { mode = 'tour'; check(); draw(); return; }
+    replaying = true; T.step = 0; mode = 'tour'; arm(); drawKey = '';
     if (tip) dismissTip(true);
     const f = $(tabBtn('floor')); if (f) f.click();
     draw();
@@ -192,14 +199,16 @@
   ['tap', 'letters', 'hire', 'bank', 'sold', 'desk', 'focus'].forEach(n => IMI.on(n, check));
   IMI.on('tab', () => { check(); draw(); });
   IMI.on('render', () => { check(); draw(); tryTips(); });
-  addEventListener('resize', () => draw());
+  $('#opsRoot').addEventListener('toggle', () => { drawKey = ''; draw(); }, true);
+  addEventListener('resize', () => requestAnimationFrame(() => { drawKey = ''; draw(); }));
+  if (window.ResizeObserver) new ResizeObserver(() => { drawKey = ''; draw(); }).observe($('#opsRoot'));
   IMI.onScreen(() => { check(); draw(); });
   addEventListener('keydown', e => {
-    if (e.key !== 'Escape' || bub.hidden) return;
+    if (e.key !== 'Escape' || bub.hidden || (mode === 'tour' && !replaying && IMI.ops.introActive())) return;
     e.stopImmediatePropagation();
     if (mode === 'tour') skip(); else dismissTip();
   }, true);
 
-  IMI.tour = { replay, skip, active: () => mode === 'tour', tipsOn };
+  IMI.tour = { replay, skip, reset: () => { T = { version: 2, step: 0, done: false, tips: {}, tipsOff: false }; replaying = false; mode = 'tour'; tip = null; clearTimeout(tipTimer); store(); arm(); hide(); }, active: () => mode === 'tour', tipsOn };
   arm(); setTimeout(() => { check(); draw(); }, 400);
 })();

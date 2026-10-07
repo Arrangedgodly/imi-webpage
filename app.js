@@ -40,6 +40,7 @@
     const box = $('#drifters'), names = ['leaf', 'leaf2', 'leaf', 'banana', 'coco-s', 'leaf2'];
     for (let i = 0; i < 14; i++) {
       const e = PXA.el(names[i % names.length], pick([1, 1, 2]));
+      if (names[i % names.length] === 'banana') e.classList.add('ambient-banana');
       e.style.left = rand(0, 100) + '%'; e.style.animationDuration = rand(14, 30) + 's'; e.style.animationDelay = -rand(0, 30) + 's';
       box.appendChild(e);
     }

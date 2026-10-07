@@ -1,0 +1,125 @@
+{
+    "sourceCommit":  "090e1d2143f8eef5df992bd42e59d7f2169b94c5",
+    "snapshotPath":  "C:\\Users\\arran\\AppData\\Local\\Temp\\monkeyos-pt00-baseline-20261007-104001",
+    "capturedLocal":  "2026-10-07 10:40:01 America/Denver",
+    "originalRuntime":  [
+                            {
+                                "sha256":  "D7A9C8504F57B2E80F57DB44AA954C0A5F5D5E77E879E104A39F4A456F718A5A",
+                                "file":  "app.js"
+                            },
+                            {
+                                "sha256":  "11277D9AE377B08250EB4D2A8398F75FA9A9E24137C3B959A3333FC239CD3CA0",
+                                "file":  "classic.css"
+                            },
+                            {
+                                "sha256":  "987BF4A2FC119959733EABA9A5E5D5CC06F802D26215D5B5ABAB4CF202DEDF74",
+                                "file":  "classic.html"
+                            },
+                            {
+                                "sha256":  "A080CEC270DAE33D910CA733DE97BEBD152384A577D54D93F3AA87ECEE3A6EB5",
+                                "file":  "classic.js"
+                            },
+                            {
+                                "sha256":  "F9BF9A7535759B1A5369F94DFB31EA9A5EEECDED1663EC341A6FC3654D284B1A",
+                                "file":  "core.js"
+                            },
+                            {
+                                "sha256":  "0E7385C265C3532D1237A6F6F8267657DC675A4CF7414158FC353C6A53D163B8",
+                                "file":  "index.html"
+                            },
+                            {
+                                "sha256":  "D6D2D1CB5C868841109ED0AF0BC833549A58974048D2DCD43C94AD7BF27F45C8",
+                                "file":  "library.css"
+                            },
+                            {
+                                "sha256":  "DEA63FCD346F71E2EE770E1ACAC38DF9865CA7D9B84D9603059E650815EA4E83",
+                                "file":  "library.html"
+                            },
+                            {
+                                "sha256":  "84BCB075C2735CB4101FDB69C40AAB9783085861DC2CC75EEAE0E8A98B9E96A3",
+                                "file":  "library.js"
+                            },
+                            {
+                                "sha256":  "B9F137308A1D51694A770181F3A757C2CC4B30C299E4EC0E2207195961FD3E4B",
+                                "file":  "mood.js"
+                            },
+                            {
+                                "sha256":  "2B673BB0C1227E89E2BD80C40A7BCD739113D75FA587A2860364473CD5EE9E4A",
+                                "file":  "ops.css"
+                            },
+                            {
+                                "sha256":  "60F40692268CE7C8D559F5B129428A21AD7CCCBD80FB9E4464C494E893FA8249",
+                                "file":  "ops.js"
+                            },
+                            {
+                                "sha256":  "406B7B0B22AC66C721327CCC2546E41BF915EB8850F1CC2818E9C3267BE5BFC8",
+                                "file":  "pixel.js"
+                            },
+                            {
+                                "sha256":  "137049606B7DA2B2DE91DEC9B0308E1AFD8CB2BEAA94BE4A75931FFD2A7E1F26",
+                                "file":  "pwa.js"
+                            },
+                            {
+                                "sha256":  "EEB3B7469F39B0D8BF9329ACF2DDE1F10C47AAD177856B616F4786257F7D4074",
+                                "file":  "readers-kids.js"
+                            },
+                            {
+                                "sha256":  "33F9BC3EBD34111DCAB294EBC09C0D1EB38E93B02C2406C8BCBDFFD14C0B65EC",
+                                "file":  "readers-w5.js"
+                            },
+                            {
+                                "sha256":  "C643E71610820A01E2C980FA31A51FC9458B39BE5A55DB6D9E5B2FE3494B3DCF",
+                                "file":  "readers-w7.js"
+                            },
+                            {
+                                "sha256":  "5BBC637ACFAFDFE64C6172D2EDF71AB626F3E687AB9CC5F4365A124E178D17E8",
+                                "file":  "readers-w9.js"
+                            },
+                            {
+                                "sha256":  "18979A2A2088050365DE3D5A305DBD036C43C32922E6AA91AAE82D2ECE679642",
+                                "file":  "readers.js"
+                            },
+                            {
+                                "sha256":  "1230A1CCD39197D331AA7B0C0315049FCD227534A2A3350BAF47FB21AD805687",
+                                "file":  "style-swap.js"
+                            },
+                            {
+                                "sha256":  "2771EFE231A75E8749021FE8FDD071585298DF394496A466E61696CF2B22EBC7",
+                                "file":  "styles.css"
+                            },
+                            {
+                                "sha256":  "251566ED1FD233B5AF1AFA05874E96C3D762743A5BC988686D18D3741C4FB87F",
+                                "file":  "sw.js"
+                            },
+                            {
+                                "sha256":  "EF9D91EC7CF305DCFB0AE23DE7846B349631AB0A9CB3C8755883863B09DB53BD",
+                                "file":  "tour.js"
+                            },
+                            {
+                                "sha256":  "E1E5DFC8DB165DF09AD70C407297224A66B2AC4FD4DA1F3B97A4D5252347BF01",
+                                "file":  "weather.js"
+                            },
+                            {
+                                "sha256":  "2465F6FA1D29EAC7A3AA717841AABCE71B10B7BB9A7A61484795DCEC5A9B7695",
+                                "file":  "world.js"
+                            }
+                        ],
+    "harnessChanges":  [
+                           "tools/bot.js replaced only with reporting policy extension",
+                           "tools/balance.html adds __skip helper only"
+                       ],
+    "deps":  {
+                 "module":  "C:\\Users\\arran\\AppData\\Local\\Temp\\pp\\node_modules\\puppeteer-core\\lib\\puppeteer\\puppeteer-core.js",
+                 "node":  "24.9.0",
+                 "version":  "25.12.0"
+             },
+    "server":  {
+                   "url":  "http://127.0.0.1:8136/tools/balance.html",
+                   "pid":  46356
+               },
+    "reportingNotes":  [
+                           "First-hour and overnight reports use original enhanced bot with last-check training metadata.",
+                           "Late idle report clears purchased/maxed training and captures current deficits.",
+                           "Current live bot adds department gating and optional scheduled pickup/golden capture; baseline runtime remains original."
+                       ]
+}

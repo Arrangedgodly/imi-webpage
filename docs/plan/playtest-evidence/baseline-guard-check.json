@@ -1,0 +1,132 @@
+{
+  "capturedAt": "2026-10-07T16:48:51.307Z",
+  "sourceCommit": "090e1d2143f8eef5df992bd42e59d7f2169b94c5",
+  "url": "http://127.0.0.1:8136/tools/balance.html",
+  "profile": "active",
+  "strategy": "collect",
+  "seed": 1,
+  "activeMinutes": 30,
+  "tune": {},
+  "requestedMinutes": 480,
+  "requestedAwayMinutes": 0,
+  "sessionMinutes": 480,
+  "actualMinutes": 6.2,
+  "complete": false,
+  "stopped": "wall-clock guard",
+  "wallSeconds": 3.424,
+  "errors": [],
+  "report": {
+    "actualMinutes": 6.2,
+    "awayMinutes": 0,
+    "marks": [
+      [
+        "keeper_bamboo",
+        0
+      ],
+      [
+        "word_1",
+        0.1
+      ],
+      [
+        "typist_1",
+        1.5
+      ],
+      [
+        "titles_1",
+        1.6
+      ],
+      [
+        "sale_1",
+        1.6
+      ],
+      [
+        "titles_3",
+        2.5
+      ],
+      [
+        "muse_slot",
+        2.5
+      ],
+      [
+        "hold",
+        3
+      ],
+      [
+        "titles_6",
+        3.5
+      ],
+      [
+        "kids_1",
+        4
+      ]
+    ],
+    "samples": [],
+    "final": {
+      "min": 6.2,
+      "elapsedMin": 6.2,
+      "bananas": 946,
+      "earned": 1726,
+      "sold": 6,
+      "allSold": 10,
+      "roy": 0.01,
+      "div": 0,
+      "lump": 1725,
+      "royT": 1,
+      "divT": 0,
+      "desks": 1,
+      "paws": 2,
+      "ups": 0,
+      "kids": 4,
+      "lib": 0,
+      "letters": [
+        103,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "bankedWords": 351,
+      "keeperLetters": 962,
+      "keeperWords": 351,
+      "keepers": [
+        {
+          "on": true,
+          "level": 2
+        },
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "training": {
+        "0": {
+          "key": "paw",
+          "cost": 481,
+          "held": 103,
+          "deficit": 398
+        }
+      },
+      "publisher": 0,
+      "nextDesk": {
+        "id": 1,
+        "price": 2000,
+        "deficit": 1054,
+        "passiveWaitMin": 1816.1
+      }
+    }
+  },
+  "omittedSystems": [
+    "Muses",
+    "garden",
+    "golden and rotten catches",
+    "daily crates",
+    "ordinary pickups",
+    "market timing decisions",
+    "challenges",
+    "prestige action",
+    "manual word banking",
+    "interactive onboarding"
+  ]
+}

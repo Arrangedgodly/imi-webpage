@@ -1,0 +1,47 @@
+{
+  "capturedAt": "2026-10-07T17:42:45.050Z",
+  "checks": [
+    {
+      "name": "updated offline shell caches shared economy and pickups",
+      "passed": true
+    },
+    {
+      "name": "actual browser converts legacy wallet and keeps earned star",
+      "passed": true
+    },
+    {
+      "name": "offline Classic boots and conversion does not repeat across editions",
+      "passed": true
+    },
+    {
+      "name": "offline runtime has no uncaught script errors",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "fixture": {
+    "before": {
+      "wallet": 50000,
+      "earned": 12500000,
+      "stars": 1,
+      "intro": true,
+      "price": 75000
+    },
+    "after": {
+      "wallet": 50000,
+      "earned": 12500000,
+      "stars": 1,
+      "intro": true,
+      "edition": "classic"
+    }
+  },
+  "complete": true,
+  "sourceHashes": {
+    "economy.js": "55f5d493d48774eab0857e75e08894c3bebe63202259123a7a01036d964758a7",
+    "core.js": "af9bed4def371292baf7f080e5684cfd743ea0443569f5b0f9fe1416022b0425",
+    "ops.js": "5f01ce6064c8c0daaa0e6ebdb07abbfb9689be34655443e9425a683756b2fe23",
+    "tour.js": "0376a4df27db797405501840af4ea83a42833af8856018e699807b39d41eec9d",
+    "pickups.js": "b1348042aca4d7701adc09426cc43cb9ba7b8ca407ea7c5f84200d653b971e9b",
+    "sw.js": "3bb29652fcf481b7e1f231ebe52aa677bb0d84616a210c85991f1936eda328e5"
+  }
+}

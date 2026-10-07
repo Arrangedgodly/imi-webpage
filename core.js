@@ -11,19 +11,8 @@ window.Core = (() => {
   const pick = a => a[Math.floor(Math.random() * a.length)];
   const centerOf = el => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
   const restart = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
-  const NF = new Intl.NumberFormat('en-US');                 // built once: toLocaleString builds a formatter on every call
-  const ABBR = [[1e15, 'Qa'], [1e12, 'T'], [1e9, 'B'], [1e6, 'M']];
-  const fmt = n => {                                       // commas below a million, then 1.23M / 4.5B / ...
-    n = Math.round(n); if (n < 1e6) return NF.format(n);
-    for (const [v, s] of ABBR) if (n >= v) { const x = n / v; return (x >= 100 ? x.toFixed(0) : x >= 10 ? x.toFixed(1) : x.toFixed(2)).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') + s; }
-    return NF.format(n);
-  };
-
-  const fmtHud = n => {                                    // the side-rail counter is 5 characters wide: 9,999 then 12.3K / 123K / 1.23M
-    n = Math.round(n); if (n < 1e4) return NF.format(n);
-    for (const [v, s] of [[1e15, 'Qa'], [1e12, 'T'], [1e9, 'B'], [1e6, 'M'], [1e3, 'K']]) if (n >= v) { const x = n / v; return (x >= 100 ? x.toFixed(0) : x >= 10 ? x.toFixed(1) : x.toFixed(2)).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') + s; }
-    return String(n);
-  };
+  const { fmt, exact, rate: fmtRate } = Economy;
+  const fmtHud = fmt;
 
   /* =====================  SOUND (synthesized, no assets)  ===================== */
   const audio = { ctx: null, on: localStorage.getItem('imi-sound') !== 'off' };
@@ -98,37 +87,38 @@ window.Core = (() => {
 
     /* ---------- the banana counter ---------- */
     const hud = $('#hud'), scoreEl = $('#score');
-    let score = Number(localStorage.getItem('imi-score')); if (!Number.isFinite(score) || score < 0) score = 0;
+    let score = Economy.loadScore();
     let shown = score, tweening = false, saveT = 0;
     const inGame = () => html.dataset.screen === 'game';
-    const persist = () => { clearTimeout(saveT); saveT = 0; try { localStorage.setItem('imi-score', String(score)); } catch { /* storage blocked */ } };
+    const persist = () => { clearTimeout(saveT); saveT = 0; Economy.saveScore(score); };
     addEventListener('pagehide', persist);
     document.addEventListener('visibilitychange', () => { if (document.hidden) persist(); });
     scoreEl.textContent = fmtHud(score);
     const watchers = [];
     function tweenScore() {                                  // the counter rolls toward the real total
       const d = score - shown;
-      if (!(Math.abs(d) >= 1)) { shown = score; scoreEl.textContent = fmtHud(shown); tweening = false; return; }
+      if (!(Math.abs(d) > Math.max(1, Math.abs(score) * Number.EPSILON * 4))) { shown = score; scoreEl.textContent = fmtHud(shown); tweening = false; return; }
       shown += d * 0.16 + Math.sign(d); scoreEl.textContent = fmtHud(shown); requestAnimationFrame(tweenScore);
     }
     function paintScore(bump) {
       if (!saveT) saveT = setTimeout(persist, 1500);
-      hud.title = 'Bananas: ' + NF.format(Math.round(score));
+      hud.title = 'Bananas: ' + exact(score);
+      hud.setAttribute('aria-label', 'Bananas: ' + exact(score));
       if (reduceMotion || !inGame()) { shown = score; scoreEl.textContent = fmtHud(score); } else if (!tweening) { tweening = true; requestAnimationFrame(tweenScore); }
       if (bump && inGame()) restart(hud, 'bump');
       watchers.forEach(f => f(score));
     }
     /* a "+n" with a banana flies from `from` into the counter, then the total changes */
     function earn(n, from) {
-      const done = () => { score += n; paintScore(true); sfx.coin(); };
-      if (reduceMotion || !inGame()) return done();
+      score += n; paintScore(true); sfx.coin();
+      if (reduceMotion || !inGame()) return;
       const [fx, fy] = from || [innerWidth / 2, innerHeight / 2], [hx, hy] = centerOf(hud);
       const f = document.createElement('div'); f.className = 'fly-plus'; f.textContent = `+${fmt(n)}`; f.style.left = fx + 'px'; f.style.top = fy + 'px';
       const b = art.bananaEl(1); b.style.marginLeft = '6px'; b.style.verticalAlign = 'middle'; f.appendChild(b); document.body.appendChild(f);
       f.animate([
         { transform: 'translate(-50%,-50%)', opacity: 0 }, { transform: 'translate(-50%,-90px)', opacity: 1, offset: .3 },
         { transform: `translate(${hx - fx - f.offsetWidth / 2}px, ${hy - fy}px)`, opacity: .9 }
-      ], { duration: 900, easing: art.ease || 'steps(14)' }).onfinish = () => { f.remove(); done(); };
+      ], { duration: 900, easing: art.ease || 'steps(14)' }).onfinish = () => f.remove();
     }
     function spend(n) {
       if (n > score) return false; score -= n; paintScore(true); sfx.tick();
@@ -202,6 +192,7 @@ window.Core = (() => {
     }
     function useToy(id) {
       const T = TOYS[id], o = toys[id], now = Date.now();
+      if (IMI.ops?.introActive()) { say('Finish learning the room to unlock boosts.'); return; }
       if ((readyAt[id] || 0) > now) { sfx.tick(); say(`${T.name} is recharging (${Math.ceil((readyAt[id] - now) / 1000)}s)`); restart(o.el, 'nope'); return; }
       const at = centerOf(o.el), msg = IMI.ops ? IMI.ops.perk(id, at) : '';
       readyAt[id] = now + T.cd * 1000; try { localStorage.setItem('imi-toys', JSON.stringify(readyAt)); } catch { /* storage blocked */ }
@@ -292,7 +283,8 @@ window.Core = (() => {
       if (e.target.matches('input, textarea') || e.key.length !== 1) return;
       typed = (typed + e.key.toLowerCase()).slice(-6);
       if (typed !== 'banana') return;
-      typed = ''; banner('BANANA RAIN!'); earn(5);
+      typed = ''; if (window.IMI?.ops?.introActive()) return;
+      banner('BANANA RAIN!'); earn(Economy.cash(5));
       if (reduceMotion) return;
       for (let i = 0; i < 40; i++) setTimeout(() => {
         const b = art.bananaEl(rand(2, 4)); b.className += ' pfx'; b.style.cssText += `;left:${rand(0, innerWidth)}px;top:-60px;z-index:250`; document.body.appendChild(b);
@@ -343,7 +335,7 @@ window.Core = (() => {
     /* ---------- the bridge ops.js plays through ---------- */
     window.IMI = {
       on, off, emit,
-      edition: art.edition, reduceMotion, sfx, centerOf, fmt, say, banner, heroSay: art.heroSay,
+      edition: art.edition, reduceMotion, sfx, centerOf, fmt, fmtRate, exact, say, banner, heroSay: art.heroSay,
       fx, setFx, bananaEl: art.bananaEl, forecastText,
       burst: (x, y, names, n = 12) => art.burst(x, y, names, fx.low ? Math.max(2, Math.ceil(n / 3)) : n),     // Low: a third of the particles
       fall: (x, y, name, life) => { if (fx.low && Math.random() < .5) return; art.fall(x, y, name, life); },
@@ -352,6 +344,7 @@ window.Core = (() => {
       onScreen: f => screenFns.push(f),
       whenPlaying: f => (inGame() ? f() : queued.push(f)),     // modals wait for the game screen instead of covering the menu
     };
+    on('render', () => { for (const id of ['snack', 'coconut']) toys[id].el.hidden = !!IMI.ops?.introActive(); });
     apply(true); applyFx(); watchFrameRate();
     skyStep(true); setInterval(() => skyStep(false), 1000);                // the sky starts once the event bus exists
     document.addEventListener('visibilitychange', () => { if (!document.hidden) skyStep(true); });
